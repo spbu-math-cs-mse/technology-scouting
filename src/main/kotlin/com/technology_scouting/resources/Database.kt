@@ -28,8 +28,8 @@ class DatabaseService {
             .build()
         mongoClient = MongoClients.create(settings)
 
-        database = mongoClient.getDatabase("default_db")
-        //database = mongoClient.getDatabase(dbDatabase)
+        //database = mongoClient.getDatabase("default_db")
+        database = mongoClient.getDatabase(dbDatabase)
     }
 
     fun closeConnection() {
