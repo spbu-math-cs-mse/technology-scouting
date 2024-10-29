@@ -6,3 +6,10 @@
 - Telegram-бот. На данном этапе поддерживает 3 команды:
 **/start** - начать работу с ботом, **/help** - получить справочную информацию об использовании бота, **/enquire msg** - записать сообщение msg в базу данных.
 - Тесты
+
+- # database
+<code>MONGODB_HOST=localhost
+MONGODB_PORT=27017
+MONGODB_USERNAME=myuser
+MONGODB_PASSWORD=mypassword
+MONGODB_DBNAME=users_db</code>
