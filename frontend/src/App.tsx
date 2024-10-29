@@ -1,9 +1,17 @@
 import React from 'react';
 import EntryPageVisual from "./components/EntryPage";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 export default function App() {
-  return <EntryPageVisual />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<EntryPageVisual />} />
+      </Routes>
+    </Router>
+  );
 }
+
 /*function App() {
   return (
     <div className="App">
