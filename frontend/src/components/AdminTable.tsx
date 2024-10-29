@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { UserMessage } from "../logic/types.ts";
 import { getUserDataTable } from "../logic/request.ts";
 import { getUserDataTableMock } from "../logic/request.ts";
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 export default function AdminTable() {
   const [tableContent, setTableContent] = useState<UserMessage[]>([]);

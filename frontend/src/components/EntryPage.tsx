@@ -59,13 +59,8 @@ export default function EntryPageVisual() {
 
   const handleLogin = () => {
     if (isMatch) {
-      navigate('/admin-panel');
+      navigate("/admin-panel");
     } else setEqMessage("Пользователя с таким ником и паролем не существует!");
-  };
-
-  const handleInputDelete = () => {
-    setInputUsernameString("");
-    setErrorAlertOpened(false);
   };
 
   const [errorAlertOpened, setErrorAlertOpened] = useState(false);
@@ -133,12 +128,10 @@ export default function EntryPageVisual() {
             {isMatch ? (
               "Пользователь с таким ником существует!"
             ) : (
-                <p style={{ fontSize: '12px' }}>{eqMessage}</p>
+              <p style={{ fontSize: "12px" }}>{eqMessage}</p>
             )}
           </Typography>
         </Grid>
-
-    
       </Grid>
       <ErrorAlert
         opened={errorAlertOpened}
