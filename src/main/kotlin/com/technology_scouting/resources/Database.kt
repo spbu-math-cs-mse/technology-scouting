@@ -21,7 +21,7 @@ class DatabaseService {
         val dbDatabase = System.getenv("MONGODB_DBNAME")
 
         val connectionString = ConnectionString(
-            "mongodb://gen_user:K%250%7BF2Y%3C%2BY_yL%5C@147.45.244.116:27017/default_db?authSource=admin&directConnection=true"
+            "mongodb://$dbUser:$dbPassword@$dbHost:$dbPort/$dbDatabase?authSource=admin&directConnection=true"
         )
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
