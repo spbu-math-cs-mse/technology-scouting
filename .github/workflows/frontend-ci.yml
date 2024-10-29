@@ -1,0 +1,24 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        cd frontend
+        docker build -t scouting-frontend .
+
+    - name: Run tests inside Docker container
+      run: |
+        docker run -e CI=true scouting-frontend npm test
