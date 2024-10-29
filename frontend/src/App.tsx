@@ -1,6 +1,10 @@
 import React from 'react';
+import EntryPageVisual from "./components/EntryPage";
 
-function App() {
+export default function App() {
+  return <EntryPageVisual />;
+}
+/*function App() {
   return (
     <div className="App">
       <header className="App-header">
@@ -20,4 +24,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;*/
