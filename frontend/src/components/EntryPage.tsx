@@ -5,18 +5,15 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import ErrorAlert from "./ErrorAlert";
 import * as React from "react";
-import Input from "@mui/material/Input";
 import FilledInput from "@mui/material/FilledInput";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,8 +35,13 @@ export default function EntryPageVisual() {
 
   const [inputUsernameString, setInputUsernameString] = useState("");
   const [inputPasswordString, setInputPasswordString] = useState("");
-  const targetUsernameValue = "test";
-  const isMatch = inputUsernameString === targetUsernameValue;
+
+  const [targetUsernameValue, setTargetUsernameValue] = useState("test");
+  const [targetPasswordValue, setTargetPasswordValue] = useState("12345");
+  const [eqMessage, setEqMessage] = useState("");
+  const isMatch =
+    inputUsernameString === targetUsernameValue &&
+    inputPasswordString === targetPasswordValue;
 
   const handleInputUsernameChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -56,13 +58,9 @@ export default function EntryPageVisual() {
   };
 
   const handleLogin = () => {
-    const targetUsernameValue = "test";
-    const targetPasswordValue = '12345';
-    if (inputUsernameString === targetUsernameValue && inputPasswordString === targetPasswordValue) {
-      navigate('/target-page');
-    } else {
-      alert('Incorrect value');
-    }
+    if (isMatch) {
+      navigate("/home-page");
+    } else setEqMessage("Пользователя с таким ником и паролем не существует!");
   };
 
   const handleInputDelete = () => {
@@ -74,7 +72,7 @@ export default function EntryPageVisual() {
   const [errorText, setErrorText] = useState("");
 
   return (
-    <Box sx={{ width: "70%" }}>
+    <Box sx={{ width: "90%" }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
         <Grid size={10}>
           <TextField
@@ -85,12 +83,10 @@ export default function EntryPageVisual() {
             onChange={handleInputUsernameChange}
             sx={{ m: "5%", width: "100%" }}
           />
-          <Typography variant="body1" color={isMatch ? "green" : "red"}>
-            {isMatch ? "Значение совпадает!" : "Значение не совпадает"}
-          </Typography>
         </Grid>
-        <Grid size={10}>
-          <FormControl sx={{ m: 1, width: "100%" }} variant="filled">
+
+        <Grid size={6}>
+          <FormControl sx={{ m: "10%", width: "120%" }} variant="filled">
             <InputLabel htmlFor="filled-adornment-password">
               Password
             </InputLabel>
@@ -119,10 +115,31 @@ export default function EntryPageVisual() {
             />
           </FormControl>
         </Grid>
+        <Grid size={6}>
+          <Button
+            onClick={handleLogin}
+            variant="contained"
+            sx={{ marginTop: "15%", marginLeft: "50%" }}
+          >
+            Enter
+          </Button>
+        </Grid>
+        <Grid size={12}>
+          <Typography
+            variant="body1"
+            color={isMatch ? "green" : "red"}
+            sx={{ marginBottom: "1rem", marginLeft: "20px" }}
+          >
+            {isMatch ? (
+              "Пользователь с таким ником существует!"
+            ) : (
+                <p style={{ fontSize: '12px' }}>{eqMessage}</p>
+            )}
+          </Typography>
+        </Grid>
+
+    
       </Grid>
-      <Button onClick={handleLogin} variant="contained" style={{ marginTop: '1rem' }}>
-        Submit
-      </Button>
       <ErrorAlert
         opened={errorAlertOpened}
         setOpened={(open: boolean) => setErrorAlertOpened(open)}

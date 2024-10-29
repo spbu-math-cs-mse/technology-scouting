@@ -1,5 +1,6 @@
 import React from 'react';
 import EntryPageVisual from "./components/EntryPage";
+import HomePageVisual from './components/HomePage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 export default function App() {
@@ -7,6 +8,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<EntryPageVisual />} />
+        <Route path="/home-page" element={<HomePageVisual/>} /> {/* Главная страница */}
       </Routes>
     </Router>
   );
