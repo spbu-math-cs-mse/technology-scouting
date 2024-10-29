@@ -14,8 +14,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<EntryPageVisual />} />
-        <Route path="/admin-panel" element={<AdminTable />} />{" "}
-        {/* Главная страница */}
+        <Route path="/admin-panel" element={<AdminTable />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

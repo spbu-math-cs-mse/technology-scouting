@@ -6,10 +6,16 @@ export function getUserDataTable(): Promise<UserMessage[]> {
     headers: {
       "Content-type": "application/json",
     },
-  }).then(
-    async (response) =>
-      ((await response.json()) as UserDataTableResponse).messages
-  );
+  })
+    .then((response) => response.json())
+    .then(async (response) => {
+      console.log("Get response from server: ", response);
+      return (response as UserDataTableResponse).messages;
+    })
+    .catch((error) => {
+      console.error("Get error from server: ", error);
+      return [];
+    });
 }
 
 export function getUserDataTableMock(): Promise<UserMessage[]> {
