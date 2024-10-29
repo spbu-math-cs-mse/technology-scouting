@@ -18,6 +18,9 @@ import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.*
 import com.technology_scouting.resources.DatabaseService
 import com.technology_scouting.resources.UserService
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 
@@ -36,12 +39,7 @@ fun Application.configureRouting() {
             token = BOT_TOKEN
             dispatch {
                 command("start") {
-                    val result = bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Hi!")
-                    result.fold({
-                        // do something here with the response
-                    },{
-                        // do something with the error
-                    })
+                    bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Hi!" + message.chat.username)
                 }
                 command("help") {
                     bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "При помощи команды /enquire вы можете отправить свой запрос в базу данных.\n" +
@@ -54,7 +52,7 @@ fun Application.configureRouting() {
                         val userMessage = message.text!!.substring(8, message.text!!.length).trim()
                         userService.addUserRecord(userId, userMessage)
                     },{
-                        // do something with the error
+                        logger.info("wrong message")
                     })
                 }
             }
