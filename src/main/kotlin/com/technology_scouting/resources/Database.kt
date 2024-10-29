@@ -1,4 +1,4 @@
-package com.technology_scouting
+package com.technology_scouting.resources
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
