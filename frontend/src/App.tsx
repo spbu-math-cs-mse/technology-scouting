@@ -1,14 +1,16 @@
 import React from 'react';
 import EntryPageVisual from "./components/EntryPage";
 import HomePageVisual from './components/HomePage';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import AdminTable from './components/AdminTable';
 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<EntryPageVisual />} />
-        <Route path="/home-page" element={<HomePageVisual/>} /> {/* Главная страница */}
+        <Route path="/admin-panel" element={<AdminTable/>} /> {/* Главная страница */}
+        <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );

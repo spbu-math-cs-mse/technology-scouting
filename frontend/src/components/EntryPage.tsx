@@ -59,7 +59,7 @@ export default function EntryPageVisual() {
 
   const handleLogin = () => {
     if (isMatch) {
-      navigate("/home-page");
+      navigate('/admin-panel');
     } else setEqMessage("Пользователя с таким ником и паролем не существует!");
   };
 
