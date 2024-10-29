@@ -10,22 +10,19 @@ import io.github.cdimascio.dotenv.Dotenv
 import org.bson.Document
 
 class DatabaseService {
-    //private val dotenv = Dotenv.load()
+    private val dotenv = Dotenv.load()
     private val mongoClient: MongoClient
     val database: MongoDatabase
     init {
-        /*val dbHost = dotenv["MONGODB_HOST"]
+        val dbHost = dotenv["MONGODB_HOST"]
         val dbPort = dotenv["MONGODB_PORT"]
         val dbUser = dotenv["MONGODB_USERNAME"]
         val dbPassword = dotenv["MONGODB_PASSWORD"]
-        val dbDatabase = dotenv["MONGODB_DBNAME"]*/
+        val dbDatabase = dotenv["MONGODB_DBNAME"]
 
         val connectionString = ConnectionString(
-            "mongodb://gen_user:K%250%7BF2Y%3C%2BY_yL%5C@147.45.244.116:27017/default_db?authSource=admin&directConnection=true"
-        )
-        /*val connectionString = ConnectionString(
             "mongodb://$dbUser:$dbPassword@$dbHost:$dbPort/$dbDatabase?authSource=admin&directConnection=true"
-        )*/
+        )
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .build()
