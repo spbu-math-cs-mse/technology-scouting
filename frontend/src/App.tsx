@@ -1,6 +1,5 @@
 import React from 'react';
 import EntryPageVisual from "./components/EntryPage";
-import HomePageVisual from './components/HomePage';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import AdminTable from './components/AdminTable';
 
