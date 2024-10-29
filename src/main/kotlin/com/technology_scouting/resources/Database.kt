@@ -14,21 +14,19 @@ class DatabaseService {
     private val mongoClient: MongoClient
     val database: MongoDatabase
     init {
-        val dbHost = dotenv["MONGODB_HOST"]
-        val dbPort = dotenv["MONGODB_PORT"]
-        val dbUser = dotenv["MONGODB_USERNAME"]
-        val dbPassword = dotenv["MONGODB_PASSWORD"]
-        val dbDatabase = dotenv["MONGODB_DBNAME"]
+        val dbHost = System.getenv("MONGODB_HOST")
+        val dbPort = System.getenv("MONGODB_PORT")
+        val dbUser = System.getenv("MONGODB_USERNAME")
+        val dbPassword = System.getenv("MONGODB_PASSWORD")
+        val dbDatabase = System.getenv("MONGODB_DBNAME")
 
         val connectionString = ConnectionString(
-            "mongodb://$dbUser:$dbPassword@$dbHost:$dbPort/$dbDatabase?authSource=admin&directConnection=true"
+            "mongodb://gen_user:K%250%7BF2Y%3C%2BY_yL%5C@147.45.244.116:27017/default_db?authSource=admin&directConnection=true"
         )
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .build()
         mongoClient = MongoClients.create(settings)
-
-        //database = mongoClient.getDatabase("default_db")
         database = mongoClient.getDatabase(dbDatabase)
     }
 
