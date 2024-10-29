@@ -8,6 +8,12 @@ import com.github.kotlintelegrambot.entities.*
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 
 fun main() {
+    /*val dbService = DatabaseService()
+    val userService = UserService(dbService.database)
+
+    val users = userService.getUserRecords()
+
+    dbService.closeConnection()*/
     val bot = bot {
         token = BOT_TOKEN
         dispatch {
