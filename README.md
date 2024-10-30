@@ -73,8 +73,8 @@ docker-compose up --build
 ```
 
 После успешного запуска:
-- Frontend будет доступен по адресу: http://localhost:3000
-- Backend API будет доступен по адресу: http://localhost:8080
+- Frontend будет доступен по адресу: http://localhost
+- Backend API будет доступен по адресу: http://localhost/api
 - Swagger UI будет доступен по адресу: http://localhost:8080/swagger
 
 
