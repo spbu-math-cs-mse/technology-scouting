@@ -30,5 +30,5 @@ components:
       properties:
         telegramId:
           type: "string"
-          message:
-            type: "string"
+        message:
+          type: "string"

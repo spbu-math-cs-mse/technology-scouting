@@ -29,16 +29,9 @@ val userService = UserService(dbService.database)
 
 fun Application.configureRouting() {
     routing {
-
         staticResources("static", "static")
-
-        val users = userService.getUserRecords()
-        users.forEach { println(it) }
-
         val bot = CreateBot()
         bot.startPolling()
-        //dbService.closeConnection()
-
         install(CORS) {
             anyHost()
             allowHeader(HttpHeaders.ContentType)
