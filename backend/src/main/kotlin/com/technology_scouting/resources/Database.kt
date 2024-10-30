@@ -20,9 +20,7 @@ class DatabaseService {
         val dbPassword = System.getenv("MONGODB_PASSWORD")
         val dbDatabase = System.getenv("MONGODB_DBNAME")
 
-        val connectionString = ConnectionString(
-            "mongodb://$dbUser:$dbPassword@$dbHost:$dbPort/$dbDatabase?authSource=admin&directConnection=true"
-        )
+        val connectionString = ConnectionString("mongodb://localhost:27017")
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .build()

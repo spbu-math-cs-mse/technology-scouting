@@ -1,5 +1,6 @@
 package com.technology_scouting.plugins
 
+import com.github.kotlintelegrambot.Bot
 import com.technology_scouting.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -16,49 +17,25 @@ import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.*
+import com.technology_scouting.resources.CreateBot
 import com.technology_scouting.resources.DatabaseService
 import com.technology_scouting.resources.UserService
+import mu.KotlinLogging
 
-private val BOT_TOKEN = System.getenv("BOT_TOKEN")
+val logger = KotlinLogging.logger {}
+
+val dbService = DatabaseService()
+val userService = UserService(dbService.database)
 
 fun Application.configureRouting() {
     routing {
 
         staticResources("static", "static")
 
-        val dbService = DatabaseService()
-        val userService = UserService(dbService.database)
-
         val users = userService.getUserRecords()
         users.forEach { println(it) }
 
-        val bot = bot {
-            token = BOT_TOKEN
-            dispatch {
-                command("start") {
-                    val result = bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Hi!")
-                    result.fold({
-                        // do something here with the response
-                    },{
-                        // do something with the error
-                    })
-                }
-                command("help") {
-                    bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "При помощи команды /enquire вы можете отправить свой запрос в базу данных.\n" +
-                            "Для этого напишите свой текст в одном сообщении после данной команды.")
-                }
-                command("enquire") {
-                    val result = bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Записал ваше сообщение")
-                    result.fold({
-                        val userId = message.chat.username.toString()
-                        val userMessage = message.text!!.substring(8, message.text!!.length).trim()
-                        userService.addUserRecord(userId, userMessage)
-                    },{
-                        // do something with the error
-                    })
-                }
-            }
-        }
+        val bot = CreateBot()
         bot.startPolling()
         //dbService.closeConnection()
 
