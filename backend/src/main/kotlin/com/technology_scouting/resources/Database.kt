@@ -6,11 +6,9 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import io.github.cdimascio.dotenv.Dotenv
 import org.bson.Document
 
 class DatabaseService {
-    private val dotenv = Dotenv.load()
     private val mongoClient: MongoClient
     val database: MongoDatabase
     init {
