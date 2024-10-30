@@ -1,8 +1,8 @@
 import { UserDataTableResponse, UserMessage } from './types';
 
 export function getUserDataTable(): Promise<UserMessage[]> {
-  return fetch('/api/user-list', {
-    method: 'GET',
+  return fetch("/api/user-list", {
+    method: "GET",
     headers: {
       'Content-type': 'application/json',
     },
