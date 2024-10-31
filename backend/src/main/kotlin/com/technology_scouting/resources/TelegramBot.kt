@@ -24,7 +24,7 @@ fun CreateBot(): Bot {
 }
 private fun Dispatcher.SetUpCommands() {
     command("start") {
-        bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Hi!" + message.chat.username)
+        bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Hi! " + message.chat.username)
     }
     command("help") {
         bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "При помощи команды /enquire вы можете отправить свой запрос в базу данных.\n" +

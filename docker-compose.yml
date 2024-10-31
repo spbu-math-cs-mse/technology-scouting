@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
       - MONGODB_HOST=${MONGODB_HOST:-mongodb}
       - MONGODB_PORT=${MONGODB_PORT:-27017}
@@ -27,6 +29,8 @@ services:
     ports:
       - "27017:27017"
     environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGODB_DBNAME}
     volumes:
       - mongodb_data:/data/db
