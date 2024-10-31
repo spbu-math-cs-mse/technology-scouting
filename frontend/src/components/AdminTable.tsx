@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserMessage } from "../logic/types.ts";
 import { getUserDataTable } from "../logic/request.ts";
-import { getUserDataTableMock } from "../logic/request.ts";
+// import { getUserDataTableMock } from "../logic/request.ts";
 import {
   Paper,
   Table,
@@ -16,7 +16,7 @@ export default function AdminTable() {
   const [tableContent, setTableContent] = useState<UserMessage[]>([]);
 
   useEffect(() => {
-    getUserDataTableMock().then((messages) => setTableContent(messages));
+    getUserDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
       getUserDataTable().then((messages) => setTableContent(messages));
       // getUserDataTableMock().then((messages) => setTableContent(messages));
