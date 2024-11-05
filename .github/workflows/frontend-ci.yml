@@ -18,11 +18,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build Docker image
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18.x'
+
+    - name: Install dependencies
       run: |
         cd frontend
-        docker build -t scouting-frontend .
+        npm ci
 
-    - name: Run tests inside Docker container
+    - name: Build the app
       run: |
-        docker run -e CI=true scouting-frontend npm test
+        cd frontend
+        npm run build
+
+    - name: Run tests
+      run: |
+        cd frontend
+        npm test
