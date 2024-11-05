@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("io.ktor.plugin") version "3.0.0-rc-1"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    id("com.diffplug.spotless") version "7.0.0.BETA3"
 }
 
 group = "org.example"
@@ -61,4 +62,23 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(11)
+}
+
+spotless {
+    kotlin {
+        ktlint("1.0.0")
+            .setEditorConfigPath("$projectDir/.editorconfig")
+            .editorConfigOverride(
+                mapOf(
+                    "indent_size" to 2,
+                    "ktlint_code_style" to "intellij_idea",
+                )
+            )
+            .customRuleSets(
+                listOf(
+                    "io.nlopez.compose.rules:ktlint:0.3.3"
+                )
+            )
+        target("**/*.kt")
+    }
 }
