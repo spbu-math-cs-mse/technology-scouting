@@ -103,7 +103,7 @@ export default function EntryPageVisual() {
                     onMouseUp={handleMouseUpPassword}
                     edge="end"
                   >
-                    {showPassword ? <Visibility />:<VisibilityOff />}
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               }
