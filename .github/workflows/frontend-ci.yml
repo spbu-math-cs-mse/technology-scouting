@@ -30,18 +30,14 @@ jobs:
         cd frontend
         npm install
 
-    - name: Check formatting with Prettier
-      run: |
-        cd frontend
-        npx prettier --check .
-
     - name: Run Prettier with Reviewdog
-      uses: reviewdog/action-prettier@v1
+      uses: EPMatt/reviewdog-action-prettier@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: github-pr-review
         level: error
-        prettier_flags: '--check .'
+        workdir: frontend
+        prettier_flags: '.'
 
     - name: Run tests
       run: |
