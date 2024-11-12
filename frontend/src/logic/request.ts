@@ -3,7 +3,7 @@ import {RequestDataTableResponse, RequestMessage } from "./types";
 import {ResourceDataTableResponse, ResourceMessage } from "./types";
 
 export function getUserDataTable(): Promise<UserMessage[]> {
-  return fetch("http://0.0.0.0:8080/api/user-list", {
+  return fetch("/api/user-list", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
