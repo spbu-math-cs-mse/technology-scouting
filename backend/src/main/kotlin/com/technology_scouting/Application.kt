@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Item(val telegramId: String, val message: String?)
+
 @Serializable
 data class History(val messages: MutableList<Item>)
 

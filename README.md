@@ -90,13 +90,13 @@ docker-compose up --build
 Чтобы проверить форматирование, выполните:
 ```bash
 cd backend
-./gradlew spotlessCheck
+./gradlew ktlintCheck
 ```
 
 Чтобы автоматически применить форматирование, выполните:
 ```bash
 cd backend
-./gradlew spotlessApply
+./gradlew ktlintFormat
 ```
 
 Файл `.editorconfig` в директории `backend` содержит некоторые дополнительные правила форматирования.
