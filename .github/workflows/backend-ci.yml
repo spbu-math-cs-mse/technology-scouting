@@ -28,6 +28,23 @@ jobs:
         cd backend
         ./gradlew ktlintCheck
 
+    - name: Upload KtLint Report
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: ktlint-report
+        path: backend/build/reports/ktlint/
+
+    - name: Reviewdog - KtLint
+      if: failure()
+      uses: reviewdog/action-ktlint@v2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        level: error
+        ktlint_flags: '--reporter=plain'
+        fail_on_error: true
+        
     - name: Build with Gradle
       run: |
         cd backend
@@ -37,4 +54,3 @@ jobs:
       run: |
         cd backend
         ./gradlew test
-
