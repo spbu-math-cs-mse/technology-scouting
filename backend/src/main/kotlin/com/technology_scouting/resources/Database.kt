@@ -11,6 +11,7 @@ import org.bson.Document
 class DatabaseService {
     private val mongoClient: MongoClient
     val database: MongoDatabase
+
     init {
         val dbHost = System.getenv("MONGODB_HOST")
         val dbPort = System.getenv("MONGODB_PORT")
@@ -30,6 +31,81 @@ class DatabaseService {
         mongoClient.close()
     }
 }
+
+class RequestsService(private val database: MongoDatabase) {
+    private val connection: MongoCollection<Document> = database.getCollection("requests");
+
+    fun addRequest(
+        tgId: String,
+        requestDate: Date?,
+        requestType: String?,
+        requestDescription: String?
+    ) {
+        addRequest(
+            Document("tg_id", tgId).append("request_date", requestDate)
+                .append("request_type", requestType).append("request_description", requestDescription)
+        )
+    }
+
+    fun addRequest(document: Document) {
+        connection.insertOne(document)
+    }
+    fun deleteRequest(requestId: String): Boolean {
+        val objectId = ObjectId(requestId)
+        val filter = Document("_id", objectId)
+        val deleteRequest = connection.deleteOne(filter)
+        return deleteRequest.deletedCount > 0
+    }
+
+    fun getRequest(requestId: String): Document? {
+        val objectId = ObjectId(requestId)
+        val filter = Document("_id", objectId)
+        return connection.find(filter).firstOrNull()
+    }
+
+    fun getAllRequest(): List<Document> {
+        return connection.find().toList()
+    }
+};
+
+class ResourcesService(private val database: MongoDatabase) {
+    private val connection = database.getCollection("resources")
+
+    fun addResource(
+        tgId: String,
+        resourceName: String?,
+        resourceDescription: String?,
+        resourceType: String?,
+        availableQuantity: Int = 1
+    ) {
+        addResource(
+            Document("tg_id", tgId).append("resource_name", resourceName)
+                .append("resource_description", resourceDescription).append("resource_type", resourceType)
+                .append("available_quantity", availableQuantity)
+        )
+    }
+
+    fun addResource(document: Document) {
+        connection.insertOne(document)
+    }
+
+    fun deleteResource(resourceId: String): Boolean {
+        val objectId = ObjectId(resourceId)
+        val filter = Document("_id", objectId)
+        val deleteResource = connection.deleteOne(filter)
+        return deleteResource.deletedCount > 0
+    }
+
+    fun getResource(resourceId: String): Document? {
+        val objectId = ObjectId(resourceId)
+        val filter = Document("_id", objectId)
+        return connection.find(filter).firstOrNull()
+    }
+    fun getAllResources(): List<Document> {
+        return connection.find().toList()
+    }
+}
+
 
 class UserService(private val database: MongoDatabase) {
     private val collection: MongoCollection<Document> = database.getCollection("users")
