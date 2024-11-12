@@ -70,7 +70,7 @@ export function postDeleteRequest(id: string) {
     body: JSON.stringify({ id }),
   })
     .then(async (response) => {
-      const data = await response.json();
+      await response.json();
       if (response.ok)
         console.log(`Request with ID ${id} deleted successfully.`);
       else
@@ -93,7 +93,7 @@ export function postDeleteResource(id: string) {
     body: JSON.stringify({ id }),
   })
     .then(async (response) => {
-      const data = await response.json();
+      await response.json();
       if (response.ok)
         console.log(`Resource with ID ${id} deleted successfully.`);
       else
