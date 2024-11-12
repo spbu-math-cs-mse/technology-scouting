@@ -5,10 +5,13 @@ on:
     branches: [ main ]
     paths:
       - 'backend/**'
-  pull_request:
+  pull_request_target:
     branches: [ main ]
     paths:
       - 'backend/**'
+
+permissions:
+  pull-requests: write
 
 jobs:
   build:
