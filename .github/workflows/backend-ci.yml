@@ -34,18 +34,15 @@ jobs:
 
     - name: Run tests
       env:
-        MONGODB_HOST: localhost
         MONGODB_PORT: 27017
         MONGODB_USERNAME: test_user
         MONGODB_PASSWORD: test_password
         MONGODB_DBNAME: test_db
       run: |
         docker run \
-          -e MONGODB_HOST \
           -e MONGODB_PORT \
           -e MONGODB_USERNAME \
           -e MONGODB_PASSWORD \
           -e MONGODB_DBNAME \
-          --network host \
           scouting-backend \
           ./gradlew test
