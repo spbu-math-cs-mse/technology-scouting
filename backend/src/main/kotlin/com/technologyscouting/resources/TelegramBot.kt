@@ -6,8 +6,8 @@ import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.Dispatcher
 import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.entities.ChatId
-import com.technology_scouting.plugins.logger
-import com.technology_scouting.plugins.userService
+import com.technologyscouting.plugins.logger
+import com.technologyscouting.plugins.userService
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 

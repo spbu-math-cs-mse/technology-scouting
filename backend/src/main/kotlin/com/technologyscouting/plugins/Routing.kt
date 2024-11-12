@@ -1,12 +1,12 @@
-package com.technology_scouting.plugins
+package com.technologyscouting.plugins
 
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.*
-import com.technology_scouting.*
-import com.technology_scouting.resources.CreateBot
-import com.technology_scouting.resources.DatabaseService
-import com.technology_scouting.resources.UserService
+import com.technologyscouting.*
+import com.technologyscouting.resources.CreateBot
+import com.technologyscouting.resources.DatabaseService
+import com.technologyscouting.resources.UserService
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -47,9 +47,9 @@ fun Application.configureRouting() {
         get("/api/user-list") {
             try {
                 var items: MutableList<Item> = mutableListOf()
-                var items_from_db = userService.getUserRecords()
+                val itemsFromDb = userService.getUserRecords()
 
-                for (item in items_from_db) {
+                for (item in itemsFromDb) {
                     items.add(Item(item.first, item.second))
                 }
 
