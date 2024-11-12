@@ -1,6 +1,6 @@
-import { UserDataTableResponse, UserMessage} from "./types";
-import {RequestDataTableResponse, RequestMessage } from "./types";
-import {ResourceDataTableResponse, ResourceMessage } from "./types";
+import { UserDataTableResponse, UserMessage } from "./types";
+import { RequestDataTableResponse, RequestMessage } from "./types";
+import { ResourceDataTableResponse, ResourceMessage } from "./types";
 
 export function getUserDataTable(): Promise<UserMessage[]> {
   return fetch("/api/user-list", {
@@ -76,13 +76,25 @@ export function getUserDataTableMock(): Promise<UserMessage[]> {
   );
 }
 
-
 export function getRequestDataTableMock(): Promise<RequestMessage[]> {
   return new Promise((resolve, _reject) =>
     resolve([
-      { _id: "1", tg_id: "1", request_date: "21.01.2024", request_type: "get sth", request_desciption: "a lot of", status_id: "in process" },
-      { _id: "2", tg_id: "2", request_date: "11.01.2024", request_type: "get sth", request_desciption: "a lot of", status_id: "in process" },
-      
+      {
+        _id: "1",
+        tg_id: "1",
+        request_date: "21.01.2024",
+        request_type: "get sth",
+        request_desciption: "a lot of",
+        status_id: "in process",
+      },
+      {
+        _id: "2",
+        tg_id: "2",
+        request_date: "11.01.2024",
+        request_type: "get sth",
+        request_desciption: "a lot of",
+        status_id: "in process",
+      },
     ])
   );
 }
@@ -90,9 +102,22 @@ export function getRequestDataTableMock(): Promise<RequestMessage[]> {
 export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
   return new Promise((resolve, _reject) =>
     resolve([
-      { _id: "1", tg_id: "1", resource_name: "kids", resource_description: "get sth", resourse_type: "a lot of", available_quantity: "4" },
-      { _id: "2", tg_id: "1", resource_name: "parents", resource_description: "teach", resourse_type: "a lot of", available_quantity: "3" },
-      
+      {
+        _id: "1",
+        tg_id: "1",
+        resource_name: "kids",
+        resource_description: "get sth",
+        resourse_type: "a lot of",
+        available_quantity: "4",
+      },
+      {
+        _id: "2",
+        tg_id: "1",
+        resource_name: "parents",
+        resource_description: "teach",
+        resourse_type: "a lot of",
+        available_quantity: "3",
+      },
     ])
   );
 }

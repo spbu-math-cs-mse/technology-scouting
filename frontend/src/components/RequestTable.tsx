@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { RequestMessage } from "../logic/types.ts";
 import { getRequestDataTable } from "../logic/request.ts";
-import {
-  getRequestDataTableMock,
-} from "../logic/request.ts";
+import { getRequestDataTableMock } from "../logic/request.ts";
 import {
   Paper,
   Table,
@@ -20,9 +18,7 @@ import IconButton from "@mui/material/IconButton";
 export default function RequestTable() {
   const [tableContent, setTableContent] = useState<RequestMessage[]>([]);
 
-  const handleInputDelete = () => {
-
-  };
+  const handleInputDelete = () => {};
 
   useEffect(() => {
     getRequestDataTable().then((messages) => setTableContent(messages));

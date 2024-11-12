@@ -1,5 +1,3 @@
-
-
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
@@ -16,7 +14,6 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-
 
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,8 +32,6 @@ export default function EntryPageVisual() {
   ) => {
     event.preventDefault();
   };
-
-
 
   const [inputUsernameString, setInputUsernameString] = useState("");
   const [inputPasswordString, setInputPasswordString] = useState("");
@@ -63,36 +58,36 @@ export default function EntryPageVisual() {
   };
 
   // Function to store token in sessionStorage
-function storeToken(token: string): void {
-      sessionStorage.setItem("authToken", token);
+  function storeToken(token: string): void {
+    sessionStorage.setItem("authToken", token);
   }
-  
+
   // Function to retrieve the token from sessionStorage
   function getToken(): string | null {
-      return sessionStorage.getItem("authToken");
+    return sessionStorage.getItem("authToken");
   }
-  
+
   // Function to perform login and store token
   async function login(username: string, password: string): Promise<boolean> {
-      const response = await fetch("/login", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-      });
-  
-      const result = await response.json();
-  
-      if (result.success && result.token) {
-          storeToken(result.token); // Store token instead of password
-          return true;
-      } else {
-          console.error(result.message || "Login failed");
-          return false;
-      }
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const result = await response.json();
+
+    if (result.success && result.token) {
+      storeToken(result.token); // Store token instead of password
+      return true;
+    } else {
+      console.error(result.message || "Login failed");
+      return false;
+    }
   }
-  
+
   // Function to fetch protected data using stored token
   /*async function getData(): Promise<DataResponse | null> {
       const token = getToken();
@@ -116,8 +111,6 @@ function storeToken(token: string): void {
       }
   }*/
 
-  
-  
   /*const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -129,23 +122,17 @@ function storeToken(token: string): void {
         console.error("Login failed");
     }
 };*/
-const handleLogin = () => {
-  if (isMatch) {
-    navigate("/admin-panel");
-  } else setEqMessage("Пользователя с таким ником и паролем не существует!");
-};
-
+  const handleLogin = () => {
+    if (isMatch) {
+      navigate("/admin-panel");
+    } else setEqMessage("Пользователя с таким ником и паролем не существует!");
+  };
 
   const [errorAlertOpened, setErrorAlertOpened] = useState(false);
   const [errorText, setErrorText] = useState("");
-  
 
-  
-  
-  
-return(
-
-   <Box sx={{ width: "90%" }}>
+  return (
+    <Box sx={{ width: "90%" }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
         <Grid size={10}>
           <TextField
