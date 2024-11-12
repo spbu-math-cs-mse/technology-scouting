@@ -7,6 +7,10 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
+data class Id(
+    val id: String
+)
+@Serializable
 data class Resource(
     val id: String,
     val tgId: String,

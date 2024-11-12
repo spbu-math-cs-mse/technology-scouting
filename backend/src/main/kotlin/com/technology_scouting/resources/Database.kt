@@ -31,6 +31,7 @@ class DatabaseService {
             .applyConnectionString(connectionString)
             .build()
         mongoClient = MongoClients.create(settings)
+
         database = mongoClient.getDatabase(dbDatabase)
     }
 

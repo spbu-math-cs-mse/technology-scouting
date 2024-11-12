@@ -60,6 +60,32 @@ paths:
                           type: string
                         available_quantity:
                           type: integer
+  /api/delete_resource:
+    post:
+      summary: Deletes resource from DataBase
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+  /api/delete_request:
+    post:
+      summary: Deletes request from DataBase
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
 components:
   schemas:
     items:
