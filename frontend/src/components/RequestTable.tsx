@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { RequestMessage } from "../logic/types.ts";
 import { getRequestDataTable } from "../logic/request.ts";
-import { getRequestDataTableMock } from "../logic/request.ts";
 import {
   Paper,
   Table,
@@ -10,7 +9,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";

@@ -2,33 +2,33 @@ import { getToken, storeToken } from "./authToken";
 import { RequestDataTableResponse, RequestMessage } from "./types";
 import { ResourceDataTableResponse, ResourceMessage } from "./types";
 
-  // Function to perform login and store token
-  async function login(username: string, password: string): Promise<boolean> {
-    const response = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+// Function to perform login and store token
+async function login(username: string, password: string): Promise<boolean> {
+  const response = await fetch("/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  });
 
-    const result = await response.json();
+  const result = await response.json();
 
-    if (result.success && result.token) {
-      storeToken(result.token); // Store token instead of password
-      return true;
-    } else {
-      console.error(result.message || "Login failed");
-      return false;
-    }
+  if (result.success && result.token) {
+    storeToken(result.token); // Store token instead of password
+    return true;
+  } else {
+    console.error(result.message || "Login failed");
+    return false;
   }
+}
 
 export function getRequestDataTable(): Promise<RequestMessage[]> {
   return fetch("/api/requests", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   })
     .then((response) => response.json())
@@ -47,7 +47,7 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
     method: "GET",
     headers: {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   })
     .then((response) => response.json())
