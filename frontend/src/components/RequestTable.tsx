@@ -37,8 +37,7 @@ export default function RequestTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Telegram ID</TableCell>
-            <TableCell>Request Date</TableCell>
+            <TableCell>Telegram ID</TableCell>x
             <TableCell>Request Type</TableCell>
             <TableCell>Request Description</TableCell>
             <TableCell>Status</TableCell>
