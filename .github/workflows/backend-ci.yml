@@ -15,18 +15,20 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set up JDK 21
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '21'
         distribution: 'adopt'
 
-    - name: Check formatting 
-      run: |
-        cd backend
-        ./gradlew ktlintCheck
+    - name: Run KtLint with Reviewdog
+      uses: ScaCap/action-ktlint@v1.9.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        level: error
 
     - name: Upload KtLint Report
       if: failure()
@@ -35,16 +37,6 @@ jobs:
         name: ktlint-report
         path: backend/build/reports/ktlint/
 
-    - name: Reviewdog - KtLint
-      if: failure()
-      uses: reviewdog/action-ktlint@v2
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: github-pr-review
-        level: error
-        ktlint_flags: '--reporter=plain'
-        fail_on_error: true
-        
     - name: Build with Gradle
       run: |
         cd backend
