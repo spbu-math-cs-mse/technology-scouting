@@ -28,9 +28,9 @@ data class Request(
     val statusId: String?
 )
 @Serializable
-data class Resources(val resource: List<Resource>)
+data class Resources(val resources: List<Resource>)
 @Serializable
-data class Requests(val resource: List<Request>)
+data class Requests(val requests: List<Request>)
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
