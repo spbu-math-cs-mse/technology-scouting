@@ -25,7 +25,7 @@ export default function RequestTable() {
   };
 
   useEffect(() => {
-    getRequestDataTableMock().then((messages) => setTableContent(messages));
+    getRequestDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
       getRequestDataTable().then((messages) => setTableContent(messages));
     }, 5000);

@@ -21,7 +21,7 @@ export default function ResourceTable() {
   };
 
   useEffect(() => {
-    getResourcesDataTableMock().then((messages) => setTableContent(messages));
+    getResourcesDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
       getResourcesDataTable().then((messages) => setTableContent(messages));
     }, 5000);
