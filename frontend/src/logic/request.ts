@@ -34,7 +34,7 @@ export function getRequestDataTable(): Promise<RequestMessage[]> {
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      return (response as RequestDataTableResponse).messages;
+      return (response as RequestDataTableResponse).requests;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);
@@ -53,7 +53,7 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      return (response as ResourceDataTableResponse).messages;
+      return (response as ResourceDataTableResponse).resources;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);

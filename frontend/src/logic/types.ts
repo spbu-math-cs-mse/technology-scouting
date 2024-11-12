@@ -17,9 +17,9 @@ export type ResourceMessage = {
 };
 
 export type RequestDataTableResponse = {
-  messages: RequestMessage[];
+  requests: RequestMessage[];
 };
 
 export type ResourceDataTableResponse = {
-  messages: ResourceMessage[];
+  resources: ResourceMessage[];
 };
