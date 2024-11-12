@@ -1,3 +1,4 @@
+import { getToken, storeToken } from "./authToken";
 import { RequestDataTableResponse, RequestMessage } from "./types";
 import { ResourceDataTableResponse, ResourceMessage } from "./types";
 
