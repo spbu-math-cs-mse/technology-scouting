@@ -60,3 +60,12 @@ paths:
                           type: string
                         available_quantity:
                           type: integer
+components:
+  schemas:
+    items:
+      type: "object"
+      properties:
+        telegramId:
+          type: "string"
+          message:
+            type: "string"

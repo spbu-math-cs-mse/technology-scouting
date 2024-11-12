@@ -6,9 +6,13 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import org.bson.Document
 import org.bson.types.ObjectId
 import java.time.LocalDateTime
+import com.technology_scouting.Request
+import com.technology_scouting.Resource
 
 class DatabaseService {
     private val mongoClient: MongoClient
@@ -22,6 +26,7 @@ class DatabaseService {
         val dbDatabase = System.getenv("MONGODB_DBNAME")
 
         val connectionString = ConnectionString("mongodb://$dbHost:$dbPort")
+
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .build()
@@ -33,21 +38,6 @@ class DatabaseService {
         mongoClient.close()
     }
 }
-
-data class Resource(
-    val tgId: String,
-    val resourceName: String?,
-    val resourceDescription: String?,
-    val resourceType: String?,
-    val availableQuantity: Int = 1
-)
-
-data class Request(
-    val tgId: String,
-    val requestDate: LocalDateTime?,
-    val requestType: String?,
-    val requestDescription: String?
-)
 
 class RequestsService(private val database: MongoDatabase) {
     private val connection: MongoCollection<Document> = database.getCollection("requests");
@@ -82,11 +72,24 @@ class RequestsService(private val database: MongoDatabase) {
 
     fun addRequest(request: Request) {
         val document = Document("tg_id", request.tgId)
-            .append("request_date", request.requestDate)
+            //.append("request_date", request.requestDate)
             .append("request_type", request.requestType)
             .append("request_description", request.requestDescription)
 
         connection.insertOne(document)
+    }
+
+    fun getAllRequests(): List<Request> {
+        return connection.find().map { document ->
+            Request(
+                Id = document.getString("_id"),
+                tgId = document.getString("tg_id"),
+                //requestDate = document.get("request_date", LocalDateTime::class.java),
+                requestType = document.getString("request_type"),
+                requestDescription = document.getString("request_description"),
+                statusId = document.getString("status_id")
+            )
+        }.toList()
     }
 };
 
@@ -126,6 +129,7 @@ class ResourcesService(private val database: MongoDatabase) {
     fun getAllResources(): List<Resource> {
         return connection.find().map { document ->
             Resource(
+                Id = document.getString("_id"),
                 tgId = document.getString("tg_id"),
                 resourceName = document.getString("resource_name"),
                 resourceDescription = document.getString("resource_description"),

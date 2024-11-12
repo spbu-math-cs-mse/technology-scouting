@@ -2,12 +2,31 @@ package com.technology_scouting
 
 import com.technology_scouting.plugins.*
 import io.ktor.server.application.*
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
 @Serializable
-data class Item(val telegramId: String, val message: String?)
+data class Resource(
+    val Id: String,
+    val tgId: String,
+    val resourceName: String?,
+    val resourceDescription: String?,
+    val resourceType: String?,
+    val availableQuantity: Int = 1
+)
 @Serializable
-data class History(val messages: MutableList<Item>)
+data class Request(
+    val Id: String,
+    val tgId: String,
+    val requestType: String?,
+    val requestDescription: String?,
+    val statusId: String?
+)
+@Serializable
+data class Resources(val resource: List<Resource>)
+@Serializable
+data class Requests(val resource: List<Request>)
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)

@@ -23,7 +23,6 @@ import mu.KotlinLogging
 val logger = KotlinLogging.logger {}
 
 val dbService = DatabaseService()
-val userService = UserService(dbService.database)
 val requestsService = RequestsService(dbService.database)
 val resourcesService = ResourcesService(dbService.database)
 
@@ -31,9 +30,6 @@ fun Application.configureRouting() {
     routing {
 
         staticResources("static", "static")
-
-        val users = userService.getUserRecords()
-        users.forEach { println(it) }
 
         val bot = CreateBot()
         bot.startPolling()
@@ -47,17 +43,21 @@ fun Application.configureRouting() {
             json()
         }
 
-        get("/api/user-list") {
+        get("/api/requests") {
             try{
-                var items: MutableList<Item> = mutableListOf()
-                var items_from_db = userService.getUserRecords()
+                var requests: List<Request> =  requestsService.getAllRequests()
 
-                for(item in items_from_db)
-                {
-                    items.add(Item(item.first, item.second))
-                }
+                call.respond(Requests(requests))
+            }
+            catch (e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
+            }
+        }
+        get("/api/resources") {
+            try{
+                var resources: List<Resource> = resourcesService.getAllResources()
 
-                call.respond(History(items))
+                call.respond(Resources(resources))
             }
             catch (e: Exception){
                 call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
