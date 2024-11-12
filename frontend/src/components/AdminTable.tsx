@@ -45,12 +45,5 @@ export default function AdminTable() {
         </TableBody>
       </Table>
     </TableContainer>
-
-
-
-
-
-
-
   );
 }
