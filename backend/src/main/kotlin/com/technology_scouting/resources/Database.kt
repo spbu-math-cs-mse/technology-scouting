@@ -50,7 +50,7 @@ class RequestsService(private val database: MongoDatabase) {
     ) {
         addRequest(
             Document("tg_id", tgId).append("request_date", requestDate)
-                .append("request_type", requestType).append("request_description", requestDescription)
+                .append("request_type", requestType).append("request_description", requestDescription).append("status_id", "In review")
         )
     }
 
@@ -82,9 +82,8 @@ class RequestsService(private val database: MongoDatabase) {
     fun getAllRequests(): List<Request> {
         return connection.find().map { document ->
             Request(
-                Id = document.getString("_id"),
+                id = document.getObjectId("_id").toHexString(),
                 tgId = document.getString("tg_id"),
-                //requestDate = document.get("request_date", LocalDateTime::class.java),
                 requestType = document.getString("request_type"),
                 requestDescription = document.getString("request_description"),
                 statusId = document.getString("status_id")
@@ -129,7 +128,7 @@ class ResourcesService(private val database: MongoDatabase) {
     fun getAllResources(): List<Resource> {
         return connection.find().map { document ->
             Resource(
-                Id = document.getString("_id"),
+                id = document.getObjectId("_id").toHexString(),
                 tgId = document.getString("tg_id"),
                 resourceName = document.getString("resource_name"),
                 resourceDescription = document.getString("resource_description"),

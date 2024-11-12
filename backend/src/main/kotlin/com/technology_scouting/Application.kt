@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 
 @Serializable
 data class Resource(
-    val Id: String,
+    val id: String,
     val tgId: String,
     val resourceName: String?,
     val resourceDescription: String?,
@@ -17,7 +17,7 @@ data class Resource(
 )
 @Serializable
 data class Request(
-    val Id: String,
+    val id: String,
     val tgId: String,
     val requestType: String?,
     val requestDescription: String?,
