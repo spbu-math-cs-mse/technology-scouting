@@ -11,7 +11,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 
@@ -38,7 +37,6 @@ export default function EntryPageVisual() {
 
   const [targetUsernameValue, setTargetUsernameValue] = useState("test");
   const [targetPasswordValue, setTargetPasswordValue] = useState("12345");
-  const [eqMessage, setEqMessage] = useState("");
   const isMatch =
     inputUsernameString === targetUsernameValue &&
     inputPasswordString === targetPasswordValue;
@@ -57,14 +55,25 @@ export default function EntryPageVisual() {
     setErrorAlertOpened(false);
   };
 
+  /*const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const success = await login(inputUsernameString, inputPasswordString);
+
+    if (success) {
+        navigate("/admin-panel"); // Переход на следующую страницу
+    } else {
+      setErrorAlertOpened(true);
+      console.error("Login failed");
+    }
+};*/
   const handleLogin = () => {
     if (isMatch) {
       navigate("/admin-panel");
-    } else setEqMessage("Пользователя с таким ником и паролем не существует!");
+    }
   };
 
   const [errorAlertOpened, setErrorAlertOpened] = useState(false);
-  const [errorText, setErrorText] = useState("");
 
   return (
     <Box sx={{ width: "90%" }}>
@@ -119,24 +128,11 @@ export default function EntryPageVisual() {
             Enter
           </Button>
         </Grid>
-        <Grid size={12}>
-          <Typography
-            variant="body1"
-            color={isMatch ? "green" : "red"}
-            sx={{ marginBottom: "1rem", marginLeft: "20px" }}
-          >
-            {isMatch ? (
-              "Пользователь с таким ником существует!"
-            ) : (
-              <p style={{ fontSize: "12px" }}>{eqMessage}</p>
-            )}
-          </Typography>
-        </Grid>
       </Grid>
       <ErrorAlert
         opened={errorAlertOpened}
         setOpened={(open: boolean) => setErrorAlertOpened(open)}
-        errorText={errorText}
+        errorText={"Wrong username or password"}
       />
     </Box>
   );
