@@ -7,6 +7,8 @@ import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import org.bson.Document
+import org.bson.types.ObjectId
+import java.time.LocalDateTime
 
 class DatabaseService {
     private val mongoClient: MongoClient
@@ -37,7 +39,7 @@ class RequestsService(private val database: MongoDatabase) {
 
     fun addRequest(
         tgId: String,
-        requestDate: Date?,
+        requestDate: LocalDateTime?,
         requestType: String?,
         requestDescription: String?
     ) {

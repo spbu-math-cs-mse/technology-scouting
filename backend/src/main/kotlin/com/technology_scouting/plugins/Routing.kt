@@ -17,15 +17,15 @@ import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.*
-import com.technology_scouting.resources.CreateBot
-import com.technology_scouting.resources.DatabaseService
-import com.technology_scouting.resources.UserService
+import com.technology_scouting.resources.*
 import mu.KotlinLogging
 
 val logger = KotlinLogging.logger {}
 
 val dbService = DatabaseService()
 val userService = UserService(dbService.database)
+val requestsService = RequestsService(dbService.database)
+val resourcesService = ResourcesService(dbService.database)
 
 fun Application.configureRouting() {
     routing {
