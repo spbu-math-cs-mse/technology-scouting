@@ -23,10 +23,10 @@ jobs:
         java-version: '21'
         distribution: 'adopt'
 
-    - name: Check formatting with Spotless
+    - name: Check formatting 
       run: |
         cd backend
-        ./gradlew spotlessCheck
+        ./gradlew ktlintCheck
 
     - name: Build with Gradle
       run: |
