@@ -1,8 +1,3 @@
-export type UserMessage = {
-  telegramId: string;
-  message: string;
-};
-
 export type RequestMessage = {
   _id: string;
   tg_id: string;
@@ -19,10 +14,6 @@ export type ResourceMessage = {
   resource_description: string;
   resourse_type: string;
   available_quantity: string;
-};
-
-export type UserDataTableResponse = {
-  messages: UserMessage[];
 };
 
 export type RequestDataTableResponse = {

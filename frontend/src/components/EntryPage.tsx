@@ -11,7 +11,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 
@@ -38,7 +37,6 @@ export default function EntryPageVisual() {
 
   const [targetUsernameValue, setTargetUsernameValue] = useState("test");
   const [targetPasswordValue, setTargetPasswordValue] = useState("12345");
-  const [eqMessage, setEqMessage] = useState("");
   const isMatch =
     inputUsernameString === targetUsernameValue &&
     inputPasswordString === targetPasswordValue;
@@ -57,60 +55,6 @@ export default function EntryPageVisual() {
     setErrorAlertOpened(false);
   };
 
-  // Function to store token in sessionStorage
-  function storeToken(token: string): void {
-    sessionStorage.setItem("authToken", token);
-  }
-
-  // Function to retrieve the token from sessionStorage
-  function getToken(): string | null {
-    return sessionStorage.getItem("authToken");
-  }
-
-  // Function to perform login and store token
-  async function login(username: string, password: string): Promise<boolean> {
-    const response = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-
-    const result = await response.json();
-
-    if (result.success && result.token) {
-      storeToken(result.token); // Store token instead of password
-      return true;
-    } else {
-      console.error(result.message || "Login failed");
-      return false;
-    }
-  }
-
-  // Function to fetch protected data using stored token
-  /*async function getData(): Promise<DataResponse | null> {
-      const token = getToken();
-      if (!token) {
-          console.error("No token found. Please log in first.");
-          return null;
-      }
-  
-      const response = await fetch("/get-data", {
-          method: "GET",
-          headers: {
-              "Authorization": `Bearer ${token}`, // Use the token for authorization
-          },
-      });
-  
-      if (response.ok) {
-          return await response.json() as DataResponse;
-      } else {
-          console.error("Failed to fetch data");
-          return null;
-      }
-  }*/
-
   /*const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -119,17 +63,17 @@ export default function EntryPageVisual() {
     if (success) {
         navigate("/admin-panel"); // Переход на следующую страницу
     } else {
-        console.error("Login failed");
+      setErrorAlertOpened(true);
+      console.error("Login failed");
     }
 };*/
   const handleLogin = () => {
     if (isMatch) {
       navigate("/admin-panel");
-    } else setEqMessage("Пользователя с таким ником и паролем не существует!");
+    }
   };
 
   const [errorAlertOpened, setErrorAlertOpened] = useState(false);
-  const [errorText, setErrorText] = useState("");
 
   return (
     <Box sx={{ width: "90%" }}>
@@ -184,24 +128,11 @@ export default function EntryPageVisual() {
             Enter
           </Button>
         </Grid>
-        <Grid size={12}>
-          <Typography
-            variant="body1"
-            color={isMatch ? "green" : "red"}
-            sx={{ marginBottom: "1rem", marginLeft: "20px" }}
-          >
-            {isMatch ? (
-              "Пользователь с таким ником существует!"
-            ) : (
-              <p style={{ fontSize: "12px" }}>{eqMessage}</p>
-            )}
-          </Typography>
-        </Grid>
       </Grid>
       <ErrorAlert
         opened={errorAlertOpened}
         setOpened={(open: boolean) => setErrorAlertOpened(open)}
-        errorText={errorText}
+        errorText={"Wrong username or password"}
       />
     </Box>
   );
