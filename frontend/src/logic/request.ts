@@ -1,19 +1,19 @@
-import { UserDataTableResponse, UserMessage } from "./types";
+import { UserDataTableResponse, UserMessage } from './types';
 
 export function getUserDataTable(): Promise<UserMessage[]> {
-  return fetch("/api/user-list", {
-    method: "GET",
+  return fetch('/api/user-list', {
+    method: 'GET',
     headers: {
-      "Content-type": "application/json",
+      'Content-type': 'application/json',
     },
   })
     .then((response) => response.json())
     .then(async (response) => {
-      console.log("Get response from server: ", response);
+      console.log('Get response from server: ', response);
       return (response as UserDataTableResponse).messages;
     })
     .catch((error) => {
-      console.error("Get error from server: ", error);
+      console.error('Get error from server: ', error);
       return [];
     });
 }
