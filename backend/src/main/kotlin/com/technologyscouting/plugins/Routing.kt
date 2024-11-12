@@ -4,8 +4,8 @@ import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.*
 import com.technologyscouting.*
-import com.technologyscouting.resources.CreateBot
 import com.technologyscouting.resources.DatabaseService
+import com.technologyscouting.resources.TelegramBot
 import com.technologyscouting.resources.UserService
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -32,7 +32,9 @@ fun Application.configureRouting() {
         val users = userService.getUserRecords()
         users.forEach { println(it) }
 
-        val bot = CreateBot()
+        val bot =
+            TelegramBot()
+                .bot()
         bot.startPolling()
         // dbService.closeConnection()
 

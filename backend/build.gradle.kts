@@ -1,11 +1,11 @@
-val kotlinVersion = "1.8.0"
-val logbackVersion = "1.4.6"
-val ktorVersion = "2.2.4"
-val swaggerCodegenVersion = "3.0.0"
+val kotlinVersion = "1.9.10"
+val logbackVersion = "1.4.11"
+val ktorVersion = "3.0.1"
+val swaggerCodegenVersion = "1.0.52"
 
 plugins {
     kotlin("jvm") version "1.9.22"
-    id("io.ktor.plugin") version "3.0.0-rc-1"
+    id("io.ktor.plugin") version "3.0.1"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }

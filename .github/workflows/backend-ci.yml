@@ -33,13 +33,6 @@ jobs:
         reporter: github-pr-review
         level: error
 
-    - name: Upload KtLint Report
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: ktlint-report
-        path: backend/build/reports/ktlint/
-
     - name: Build with Gradle
       run: |
         cd backend
