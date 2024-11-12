@@ -116,7 +116,6 @@ export function getRequestDataTableMock(): Promise<RequestMessage[]> {
       {
         _id: "1",
         tg_id: "1",
-        request_date: "21.01.2024",
         request_type: "get sth",
         request_desciption: "a lot of",
         status_id: "in process",
@@ -124,7 +123,6 @@ export function getRequestDataTableMock(): Promise<RequestMessage[]> {
       {
         _id: "2",
         tg_id: "2",
-        request_date: "11.01.2024",
         request_type: "get sth",
         request_desciption: "a lot of",
         status_id: "in process",

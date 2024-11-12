@@ -1,7 +1,6 @@
 export type RequestMessage = {
   _id: string;
   tg_id: string;
-  request_date: string;
   request_type: string;
   request_desciption: string;
   status_id: string;
