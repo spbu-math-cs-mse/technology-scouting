@@ -34,6 +34,21 @@ class DatabaseService {
     }
 }
 
+data class Resource(
+    val tgId: String,
+    val resourceName: String?,
+    val resourceDescription: String?,
+    val resourceType: String?,
+    val availableQuantity: Int = 1
+)
+
+data class Request(
+    val tgId: String,
+    val requestDate: LocalDateTime?,
+    val requestType: String?,
+    val requestDescription: String?
+)
+
 class RequestsService(private val database: MongoDatabase) {
     private val connection: MongoCollection<Document> = database.getCollection("requests");
 
@@ -65,8 +80,13 @@ class RequestsService(private val database: MongoDatabase) {
         return connection.find(filter).firstOrNull()
     }
 
-    fun getAllRequest(): List<Document> {
-        return connection.find().toList()
+    fun addRequest(request: Request) {
+        val document = Document("tg_id", request.tgId)
+            .append("request_date", request.requestDate)
+            .append("request_type", request.requestType)
+            .append("request_description", request.requestDescription)
+
+        connection.insertOne(document)
     }
 };
 
@@ -103,8 +123,16 @@ class ResourcesService(private val database: MongoDatabase) {
         val filter = Document("_id", objectId)
         return connection.find(filter).firstOrNull()
     }
-    fun getAllResources(): List<Document> {
-        return connection.find().toList()
+    fun getAllResources(): List<Resource> {
+        return connection.find().map { document ->
+            Resource(
+                tgId = document.getString("tg_id"),
+                resourceName = document.getString("resource_name"),
+                resourceDescription = document.getString("resource_description"),
+                resourceType = document.getString("resource_type"),
+                availableQuantity = document.getInteger("available_quantity", 1)
+            )
+        }.toList()
     }
 }
 
