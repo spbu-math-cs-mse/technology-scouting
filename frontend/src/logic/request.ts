@@ -21,7 +21,7 @@ export function getUserDataTable(): Promise<UserMessage[]> {
 }
 
 export function getRequestDataTable(): Promise<RequestMessage[]> {
-  return fetch("http://0.0.0.0:8080/api/requests", {
+  return fetch("/api/requests", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
@@ -39,7 +39,7 @@ export function getRequestDataTable(): Promise<RequestMessage[]> {
 }
 
 export function getResourcesDataTable(): Promise<ResourceMessage[]> {
-  return fetch("http://0.0.0.0:8080/api/resources", {
+  return fetch("/api/resources", {
     method: "GET",
     headers: {
       "Content-type": "application/json",

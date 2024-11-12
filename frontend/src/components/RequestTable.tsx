@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { UserMessage, RequestMessage } from "../logic/types.ts";
-import { getUserDataTable, getRequestDataTable } from "../logic/request.ts";
-import { getUserDataTableMock, getRequestDataTableMock } from "../logic/request.ts";
+import { RequestMessage } from "../logic/types.ts";
+import { getRequestDataTable } from "../logic/request.ts";
+import {
+  getRequestDataTableMock,
+} from "../logic/request.ts";
 import {
   Paper,
   Table,
@@ -10,16 +12,22 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Button,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 
 export default function RequestTable() {
   const [tableContent, setTableContent] = useState<RequestMessage[]>([]);
+
+  const handleInputDelete = () => {
+
+  };
 
   useEffect(() => {
     getRequestDataTableMock().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
       getRequestDataTable().then((messages) => setTableContent(messages));
-      // getUserDataTableMock().then((messages) => setTableContent(messages));
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -36,6 +44,7 @@ export default function RequestTable() {
             <TableCell>Request Type</TableCell>
             <TableCell>Request Description</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -46,6 +55,15 @@ export default function RequestTable() {
               <TableCell>{requestMessage.request_type}</TableCell>
               <TableCell>{requestMessage.request_desciption}</TableCell>
               <TableCell>{requestMessage.status_id}</TableCell>
+              <TableCell>
+                <IconButton
+                  aria-label="delete"
+                  size="large"
+                  onClick={handleInputDelete}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

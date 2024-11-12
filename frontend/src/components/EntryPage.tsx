@@ -62,30 +62,60 @@ export default function EntryPageVisual() {
     setErrorAlertOpened(false);
   };
 
-  
-  function storeToken(token: string): void {
-      sessionStorage.setItem("authToken", token);
+  // Function to store token in sessionStorage
+function storeToken(token: string): void {
+      sessionStorage.setItem("authToken", token);
   }
   
+  // Function to retrieve the token from sessionStorage
+  function getToken(): string | null {
+      return sessionStorage.getItem("authToken");
+  }
+  
+  // Function to perform login and store token
   async function login(username: string, password: string): Promise<boolean> {
-      const response = await fetch("/login", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-      });
+      const response = await fetch("/login", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+      });
   
-      const result = await response.json();
+      const result = await response.json();
   
-      if (result.success && result.token) {
-          storeToken(result.token);
-          return true;
-      } else {
-          console.error(result.message || "Login failed");
-          return false;
-      }
+      if (result.success && result.token) {
+          storeToken(result.token); // Store token instead of password
+          return true;
+      } else {
+          console.error(result.message || "Login failed");
+          return false;
+      }
   }
+  
+  // Function to fetch protected data using stored token
+  /*async function getData(): Promise<DataResponse | null> {
+      const token = getToken();
+      if (!token) {
+          console.error("No token found. Please log in first.");
+          return null;
+      }
+  
+      const response = await fetch("/get-data", {
+          method: "GET",
+          headers: {
+              "Authorization": `Bearer ${token}`, // Use the token for authorization
+          },
+      });
+  
+      if (response.ok) {
+          return await response.json() as DataResponse;
+      } else {
+          console.error("Failed to fetch data");
+          return null;
+      }
+  }*/
+
   
   
   /*const handleLogin = async (event: React.FormEvent) => {
