@@ -52,14 +52,13 @@ cd technology-scouting
 ```
 
 2. Установите следующие переменные окружения:
-   - `MONGODB_HOST`, `MONGODB_PORT`, `MONGODB_USERNAME`, `MONGODB_PASSWORD`, `MONGODB_DBNAME` - для подключения к MongoDB
+   - `MONGODB_PORT`, `MONGODB_USERNAME`, `MONGODB_PASSWORD`, `MONGODB_DBNAME` - для подключения к MongoDB
    - `BOT_TOKEN` - для авторизации Telegram бота
 
    Вы можете установить эти переменные либо через файл `.env` в корневой директории проекта, либо экспортировать их в терминале перед запуском приложения, используя команду `export`.
 
    Пример файла `.env`:
    ```bash
-   MONGODB_HOST=mongodb
    MONGODB_PORT=27017
    MONGODB_USERNAME=myuser
    MONGODB_PASSWORD=mypassword
@@ -75,8 +74,6 @@ docker-compose up --build
 После успешного запуска:
 - Frontend будет доступен по адресу: http://localhost
 - Backend API будет доступен по адресу: http://localhost/api
-- Swagger UI будет доступен по адресу: http://localhost:8080/swagger
-
 
 # Реализованный функционал бекенда
 - Swagger. Используется для связи админ-панели и базы данных. При помощи get-запроса **/api/user-list** можно получить список с историей всех сообщений в виде пары **(telegramId, message)**
