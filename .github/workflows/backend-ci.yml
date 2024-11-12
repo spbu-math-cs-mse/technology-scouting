@@ -33,11 +33,6 @@ jobs:
         reporter: github-pr-review
         level: error
 
-    - name: Build with Gradle
-      run: |
-        cd backend
-        ./gradlew build
-
     - name: Run tests
       run: |
         cd backend
