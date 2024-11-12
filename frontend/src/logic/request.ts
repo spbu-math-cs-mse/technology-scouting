@@ -1,30 +1,33 @@
-import { UserDataTableResponse, UserMessage } from "./types";
 import { RequestDataTableResponse, RequestMessage } from "./types";
 import { ResourceDataTableResponse, ResourceMessage } from "./types";
 
-export function getUserDataTable(): Promise<UserMessage[]> {
-  return fetch("/api/user-list", {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then(async (response) => {
-      console.log("Get response from server: ", response);
-      return (response as UserDataTableResponse).messages;
-    })
-    .catch((error) => {
-      console.error("Get error from server: ", error);
-      return [];
+  // Function to perform login and store token
+  async function login(username: string, password: string): Promise<boolean> {
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
     });
-}
+
+    const result = await response.json();
+
+    if (result.success && result.token) {
+      storeToken(result.token); // Store token instead of password
+      return true;
+    } else {
+      console.error(result.message || "Login failed");
+      return false;
+    }
+  }
 
 export function getRequestDataTable(): Promise<RequestMessage[]> {
   return fetch("/api/requests", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
+      "Authorization": `Bearer ${getToken()}`,
     },
   })
     .then((response) => response.json())
@@ -43,6 +46,7 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
     method: "GET",
     headers: {
       "Content-type": "application/json",
+      "Authorization": `Bearer ${getToken()}`,
     },
   })
     .then((response) => response.json())
@@ -54,26 +58,6 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
       console.error("Get error from server: ", error);
       return [];
     });
-}
-
-export function getUserDataTableMock(): Promise<UserMessage[]> {
-  return new Promise((resolve, _reject) =>
-    resolve([
-      { telegramId: "1", message: "hi" },
-      { telegramId: "2", message: "ih" },
-      { telegramId: "3", message: "oh" },
-      {
-        telegramId: "4",
-        message:
-          "Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong message",
-      },
-      { telegramId: "1", message: "Same id nnumber 1" },
-      {
-        telegramId: "Loooooooooooooooooooooooooooooooooong id",
-        message: "hello",
-      },
-    ])
-  );
 }
 
 export function getRequestDataTableMock(): Promise<RequestMessage[]> {
