@@ -1,13 +1,12 @@
-import EntryPageVisual from "./components/EntryPage";
+import EntryPageVisual from './components/EntryPage';
 
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
-} from "react-router-dom";
-import AdminTable from "./components/AdminTable";
-
+} from 'react-router-dom';
+import AdminTable from './components/AdminTable';
 
 export default function App() {
   return (

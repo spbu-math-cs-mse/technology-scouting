@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class HelloJunit5Test {
-
     @Test
     fun `Base assertions`() {
         assertEquals("a", "a")

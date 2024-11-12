@@ -1,4 +1,4 @@
-package com.technology_scouting.resources
+package com.technologyscouting.resources
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
@@ -11,6 +11,7 @@ import org.bson.Document
 class DatabaseService {
     private val mongoClient: MongoClient
     val database: MongoDatabase
+
     init {
         val dbHost = System.getenv("MONGODB_HOST")
         val dbPort = System.getenv("MONGODB_PORT")
@@ -19,9 +20,10 @@ class DatabaseService {
         val dbDatabase = System.getenv("MONGODB_DBNAME")
 
         val connectionString = ConnectionString("mongodb://$dbHost:$dbPort")
-        val settings = MongoClientSettings.builder()
-            .applyConnectionString(connectionString)
-            .build()
+        val settings =
+            MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build()
         mongoClient = MongoClients.create(settings)
         database = mongoClient.getDatabase(dbDatabase)
     }
@@ -34,7 +36,10 @@ class DatabaseService {
 class UserService(private val database: MongoDatabase) {
     private val collection: MongoCollection<Document> = database.getCollection("users")
 
-    fun addUserRecord(telegram: String, message: String): Boolean {
+    fun addUserRecord(
+        telegram: String,
+        message: String,
+    ): Boolean {
         val document = Document("tg_id", telegram).append("message", message)
         return try {
             collection.insertOne(document)

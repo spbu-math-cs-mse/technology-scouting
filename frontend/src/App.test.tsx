@@ -1,3 +1,3 @@
-test("dummy id test", () => {
-  "a" === "a"
+test('dummy id test', () => {
+  'a' === 'a';
 });
