@@ -1,36 +1,44 @@
-# Calculator frontend
+# Technology Scouting Frontend
+
+React-based frontend application for the Technology Scouting platform, connecting universities with businesses.
 
 ## Available Scripts
 
-In the project directory, you can run:
+The following npm scripts are available for development:
 
-### `npm start`
+### Development Server
+```bash
+npm start
+```
+- Starts the development server
+- Opens [http://localhost:3000](http://localhost:3000) in your browser
+- Enables hot reload for file changes
+- Shows lint errors in the console
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Testing
+```bash
+npm test
+```
+- Launches the test runner in watch mode
+- Runs tests interactively
+- For more details, see [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Production Build
+```bash
+npm run build
+```
+- Creates optimized production build in `build/` folder
+- Bundles and minifies React in production mode
+- Adds content hashes to filenames
+- Ready for deployment
+- See [deployment guide](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm test`
+## Project Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The project follows a standard React application structure:
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Project structure
-
-index.tsx - react setup
-App.tsx - entry point
-components/ - react components
-logic/ - all logic, including any logic computations and request to backend
-styles/ - .css files, configuring style of the components
+- `index.tsx`: The entry point of the application, where the React setup is done.
+- `App.tsx`: The main component that serves as the entry point for the application's component tree.
+- `components/`: Contains all the React components used in the application. Each component is typically placed in its own file.
+- `logic/`: Includes all the application logic, such as complex computations, data manipulation, and communication with the backend API.
+- `styles/`: Contains CSS files for styling the components. Each component's styles are usually placed in a separate file with a matching name.
