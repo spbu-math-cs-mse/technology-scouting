@@ -30,7 +30,7 @@ jobs:
 
     - name: Upload KtLint Report
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ktlint-report
         path: backend/build/reports/ktlint/
