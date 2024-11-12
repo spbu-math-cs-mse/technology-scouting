@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ResourceMessage } from "../logic/types.ts";
-import { getResourcesDataTable } from "../logic/request.ts";
+import { getResourcesDataTable, postDeleteResource } from "../logic/request.ts";
 import { getResourcesDataTableMock } from "../logic/request.ts";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
@@ -16,7 +16,11 @@ import {
 
 export default function ResourceTable() {
   const [tableContent, setTableContent] = useState<ResourceMessage[]>([]);
-  const handleInputDelete = () => {};
+
+  const handleInputDelete = (id: string) => {
+    postDeleteResource(id);
+    getResourcesDataTable().then((messages) => setTableContent(messages));
+  };
 
   useEffect(() => {
     getResourcesDataTable().then((messages) => setTableContent(messages));
@@ -53,7 +57,9 @@ export default function ResourceTable() {
                 <IconButton
                   aria-label="delete"
                   size="large"
-                  onClick={handleInputDelete}
+                  onClick={() => {
+                    handleInputDelete(resourceMessage._id);
+                  }}
                 >
                   <DeleteIcon />
                 </IconButton>

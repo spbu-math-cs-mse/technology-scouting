@@ -56,6 +56,52 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
     });
 }
 
+export function postDeleteRequest(id: string) {
+  fetch("/api/delete_request", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  })
+    .then(async (response) => {
+      const data = await response.json();
+      if (response.ok)
+        console.log(`Request with ID ${id} deleted successfully.`);
+      else
+        return console.error("Failed to delete request", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
+export function postDeleteResource(id: string) {
+  fetch("/api/delete_resource", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  })
+    .then(async (response) => {
+      const data = await response.json();
+      if (response.ok)
+        console.log(`Resource with ID ${id} deleted successfully.`);
+      else
+        return console.error("Failed to delete resource", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
 export function getUserDataTableMock(): Promise<UserMessage[]> {
   return new Promise((resolve, _reject) =>
     resolve([

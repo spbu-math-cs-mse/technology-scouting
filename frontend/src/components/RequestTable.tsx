@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { RequestMessage } from "../logic/types.ts";
-import { getRequestDataTable } from "../logic/request.ts";
+import { getRequestDataTable, postDeleteRequest } from "../logic/request.ts";
 import { getRequestDataTableMock } from "../logic/request.ts";
 import {
   Paper,
@@ -18,7 +18,10 @@ import IconButton from "@mui/material/IconButton";
 export default function RequestTable() {
   const [tableContent, setTableContent] = useState<RequestMessage[]>([]);
 
-  const handleInputDelete = () => {};
+  const handleInputDelete = (id: string) => {
+    postDeleteRequest(id);
+    getRequestDataTable().then((messages) => setTableContent(messages));
+  };
 
   useEffect(() => {
     getRequestDataTable().then((messages) => setTableContent(messages));
@@ -55,7 +58,7 @@ export default function RequestTable() {
                 <IconButton
                   aria-label="delete"
                   size="large"
-                  onClick={handleInputDelete}
+                  onClick={() => handleInputDelete(requestMessage._id)}
                 >
                   <DeleteIcon />
                 </IconButton>
