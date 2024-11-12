@@ -23,9 +23,6 @@ paths:
                           type: string
                         tg_id:
                           type: string
-                        request_date:
-                          type: string
-                          format: date
                         request_type:
                           type: string
                         request_description:

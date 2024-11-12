@@ -72,10 +72,10 @@ class RequestsService(private val database: MongoDatabase) {
     }
 
     fun addRequest(request: Request) {
-        val document = Document("tg_id", request.tgId)
+        val document = Document("tg_id", request.tg_id)
             //.append("request_date", request.requestDate)
-            .append("request_type", request.requestType)
-            .append("request_description", request.requestDescription)
+            .append("request_type", request.request_type)
+            .append("request_description", request.request_description)
 
         connection.insertOne(document)
     }
@@ -83,11 +83,11 @@ class RequestsService(private val database: MongoDatabase) {
     fun getAllRequests(): List<Request> {
         return connection.find().map { document ->
             Request(
-                id = document.getObjectId("_id").toHexString(),
-                tgId = document.getString("tg_id"),
-                requestType = document.getString("request_type"),
-                requestDescription = document.getString("request_description"),
-                statusId = document.getString("status_id")
+                _id = document.getObjectId("_id").toHexString(),
+                tg_id = document.getString("tg_id"),
+                request_type = document.getString("request_type"),
+                request_description = document.getString("request_description"),
+                status_id = document.getString("status_id")
             )
         }.toList()
     }
@@ -129,12 +129,12 @@ class ResourcesService(private val database: MongoDatabase) {
     fun getAllResources(): List<Resource> {
         return connection.find().map { document ->
             Resource(
-                id = document.getObjectId("_id").toHexString(),
-                tgId = document.getString("tg_id"),
-                resourceName = document.getString("resource_name"),
-                resourceDescription = document.getString("resource_description"),
-                resourceType = document.getString("resource_type"),
-                availableQuantity = document.getInteger("available_quantity", 1)
+                _id = document.getObjectId("_id").toHexString(),
+                tg_id = document.getString("tg_id"),
+                resource_name = document.getString("resource_name"),
+                resource_description = document.getString("resource_description"),
+                resource_type = document.getString("resource_type"),
+                available_quantity = document.getInteger("available_quantity", 1)
             )
         }.toList()
     }

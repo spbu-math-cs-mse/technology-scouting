@@ -12,20 +12,20 @@ data class Id(
 )
 @Serializable
 data class Resource(
-    val id: String,
-    val tgId: String,
-    val resourceName: String?,
-    val resourceDescription: String?,
-    val resourceType: String?,
-    val availableQuantity: Int = 1
+    val _id: String,
+    val tg_id: String,
+    val resource_name: String?,
+    val resource_description: String?,
+    val resource_type: String?,
+    val available_quantity: Int = 1
 )
 @Serializable
 data class Request(
-    val id: String,
-    val tgId: String,
-    val requestType: String?,
-    val requestDescription: String?,
-    val statusId: String?
+    val _id: String,
+    val tg_id: String,
+    val request_type: String?,
+    val request_description: String?,
+    val status_id: String?
 )
 @Serializable
 data class Resources(val resources: List<Resource>)
