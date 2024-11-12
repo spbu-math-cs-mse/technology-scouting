@@ -11,7 +11,7 @@ export type ResourceMessage = {
   tg_id: string;
   resource_name: string;
   resource_description: string;
-  resourse_type: string;
+  resource_type: string;
   available_quantity: string;
 };
 

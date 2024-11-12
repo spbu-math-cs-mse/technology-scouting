@@ -139,7 +139,7 @@ export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
         tg_id: "1",
         resource_name: "kids",
         resource_description: "get sth",
-        resourse_type: "a lot of",
+        resource_type: "a lot of",
         available_quantity: "4",
       },
       {
@@ -147,7 +147,7 @@ export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
         tg_id: "1",
         resource_name: "parents",
         resource_description: "teach",
-        resourse_type: "a lot of",
+        resource_type: "a lot of",
         available_quantity: "3",
       },
     ])
