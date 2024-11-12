@@ -1,3 +1,5 @@
+
+
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
@@ -14,6 +16,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
+
 
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +35,8 @@ export default function EntryPageVisual() {
   ) => {
     event.preventDefault();
   };
+
+
 
   const [inputUsernameString, setInputUsernameString] = useState("");
   const [inputPasswordString, setInputPasswordString] = useState("");
@@ -57,17 +62,60 @@ export default function EntryPageVisual() {
     setErrorAlertOpened(false);
   };
 
-  const handleLogin = () => {
-    if (isMatch) {
-      navigate("/admin-panel");
-    } else setEqMessage("Пользователя с таким ником и паролем не существует!");
-  };
+  
+  function storeToken(token: string): void {
+      sessionStorage.setItem("authToken", token);
+  }
+  
+  async function login(username: string, password: string): Promise<boolean> {
+      const response = await fetch("/login", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+      });
+  
+      const result = await response.json();
+  
+      if (result.success && result.token) {
+          storeToken(result.token);
+          return true;
+      } else {
+          console.error(result.message || "Login failed");
+          return false;
+      }
+  }
+  
+  
+  /*const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const success = await login(inputUsernameString, inputPasswordString);
+
+    if (success) {
+        navigate("/admin-panel"); // Переход на следующую страницу
+    } else {
+        console.error("Login failed");
+    }
+};*/
+const handleLogin = () => {
+  if (isMatch) {
+    navigate("/admin-panel");
+  } else setEqMessage("Пользователя с таким ником и паролем не существует!");
+};
+
 
   const [errorAlertOpened, setErrorAlertOpened] = useState(false);
   const [errorText, setErrorText] = useState("");
+  
 
-  return (
-    <Box sx={{ width: "90%" }}>
+  
+  
+  
+return(
+
+   <Box sx={{ width: "90%" }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
         <Grid size={10}>
           <TextField
