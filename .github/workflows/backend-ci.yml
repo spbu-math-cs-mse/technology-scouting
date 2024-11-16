@@ -10,42 +10,30 @@ on:
     paths:
       - 'backend/**'
 
+permissions:
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-22.04
 
-    services:
-      mongodb:
-        image: mongo:6.0
-        env:
-          MONGO_INITDB_ROOT_USERNAME: test_user
-          MONGO_INITDB_ROOT_PASSWORD: test_password
-          MONGO_INITDB_DATABASE: test_db
-        ports:
-          - 27017:27017
-
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - name: Build Docker image
-      run: |
-        cd backend
-        docker build -t scouting-backend .
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'adopt'
+
+    - name: Run KtLint with Reviewdog
+      uses: ScaCap/action-ktlint@v1.9.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        level: error
 
     - name: Run tests
-      env:
-        MONGODB_HOST: localhost
-        MONGODB_PORT: 27017
-        MONGODB_USERNAME: test_user
-        MONGODB_PASSWORD: test_password
-        MONGODB_DBNAME: test_db
       run: |
-        docker run \
-          -e MONGODB_HOST \
-          -e MONGODB_PORT \
-          -e MONGODB_USERNAME \
-          -e MONGODB_PASSWORD \
-          -e MONGODB_DBNAME \
-          --network host \
-          scouting-backend \
-          ./gradlew test
+        cd backend
+        ./gradlew test

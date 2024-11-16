@@ -38,7 +38,6 @@ export default function RequestTable() {
         <TableHead>
           <TableRow>
             <TableCell>Telegram ID</TableCell>
-            <TableCell>Request Date</TableCell>
             <TableCell>Request Type</TableCell>
             <TableCell>Request Description</TableCell>
             <TableCell>Status</TableCell>
@@ -49,7 +48,6 @@ export default function RequestTable() {
           {tableContent.map((requestMessage, ind) => (
             <TableRow key={ind}>
               <TableCell>{requestMessage.tg_id}</TableCell>
-              <TableCell>{requestMessage.request_date}</TableCell>
               <TableCell>{requestMessage.request_type}</TableCell>
               <TableCell>{requestMessage.request_desciption}</TableCell>
               <TableCell>{requestMessage.status_id}</TableCell>

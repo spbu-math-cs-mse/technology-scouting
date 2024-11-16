@@ -1,7 +1,6 @@
 export type RequestMessage = {
   _id: string;
   tg_id: string;
-  request_date: string;
   request_type: string;
   request_desciption: string;
   status_id: string;
@@ -12,14 +11,14 @@ export type ResourceMessage = {
   tg_id: string;
   resource_name: string;
   resource_description: string;
-  resourse_type: string;
+  resource_type: string;
   available_quantity: string;
 };
 
 export type RequestDataTableResponse = {
-  messages: RequestMessage[];
+  requests: RequestMessage[];
 };
 
 export type ResourceDataTableResponse = {
-  messages: ResourceMessage[];
+  resources: ResourceMessage[];
 };

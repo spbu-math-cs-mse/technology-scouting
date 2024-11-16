@@ -34,7 +34,7 @@ export function getRequestDataTable(): Promise<RequestMessage[]> {
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      return (response as RequestDataTableResponse).messages;
+      return (response as RequestDataTableResponse).requests;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);
@@ -53,7 +53,7 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      return (response as ResourceDataTableResponse).messages;
+      return (response as ResourceDataTableResponse).resources;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);
@@ -116,7 +116,6 @@ export function getRequestDataTableMock(): Promise<RequestMessage[]> {
       {
         _id: "1",
         tg_id: "1",
-        request_date: "21.01.2024",
         request_type: "get sth",
         request_desciption: "a lot of",
         status_id: "in process",
@@ -124,7 +123,6 @@ export function getRequestDataTableMock(): Promise<RequestMessage[]> {
       {
         _id: "2",
         tg_id: "2",
-        request_date: "11.01.2024",
         request_type: "get sth",
         request_desciption: "a lot of",
         status_id: "in process",
@@ -141,7 +139,7 @@ export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
         tg_id: "1",
         resource_name: "kids",
         resource_description: "get sth",
-        resourse_type: "a lot of",
+        resource_type: "a lot of",
         available_quantity: "4",
       },
       {
@@ -149,7 +147,7 @@ export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
         tg_id: "1",
         resource_name: "parents",
         resource_description: "teach",
-        resourse_type: "a lot of",
+        resource_type: "a lot of",
         available_quantity: "3",
       },
     ])

@@ -10,19 +10,36 @@ on:
     paths:
       - 'frontend/**'
 
-jobs:
+permissions:
+  pull-requests: write
 
+jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - name: Build Docker image
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install dependencies
       run: |
         cd frontend
-        docker build -t scouting-frontend .
+        npm install
 
-    - name: Run tests inside Docker container
+    - name: Run Prettier with Reviewdog
+      uses: EPMatt/reviewdog-action-prettier@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        level: error
+        workdir: frontend
+        prettier_flags: '.'
+
+    - name: Run tests
       run: |
-        docker run -e CI=true scouting-frontend npm test
+        cd frontend
+        npm test

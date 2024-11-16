@@ -52,7 +52,7 @@ export default function ResourceTable() {
               <TableCell>{resourceMessage.tg_id}</TableCell>
               <TableCell>{resourceMessage.resource_name}</TableCell>
               <TableCell>{resourceMessage.resource_description}</TableCell>
-              <TableCell>{resourceMessage.resourse_type}</TableCell>
+              <TableCell>{resourceMessage.resource_type}</TableCell>
               <TableCell>{resourceMessage.available_quantity}</TableCell>
               <TableCell>
                 <IconButton
