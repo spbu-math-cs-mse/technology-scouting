@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Box,
   Grid,
@@ -10,12 +10,11 @@ import {
   IconButton,
   Button,
   Typography,
-} from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import ErrorAlert from './ErrorAlert';
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,11 +34,12 @@ export default function EntryPageVisual() {
     event.preventDefault();
   };
 
-  const [inputUsername, setInputUsername] = useState('');
-  const [inputPassword, setInputPassword] = useState('');
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [targetUsernameValue] = useState('test');
-  const [targetPasswordValue] = useState('12345');
+  const [targetUsernameValue] = useState("test");
+  const [targetPasswordValue] = useState("12345");
   const isMatch =
     inputUsername === targetUsernameValue &&
     inputPassword === targetPasswordValue;
@@ -58,36 +58,36 @@ export default function EntryPageVisual() {
 };*/
   const handleLogin = () => {
     if (isMatch) {
-      navigate('/admin-panel');
+      navigate("/admin-panel");
+    } else {
+      setErrorMessage("Invalid username or password.");
     }
   };
-
-  const [errorAlertOpened, setErrorAlertOpened] = useState(false);
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        backgroundColor: '#f5f5f5',
-        padding: '16px',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#f5f5f5",
+        padding: "16px",
       }}
     >
       <Box
         sx={{
-          width: '400px',
-          padding: '32px',
-          borderRadius: '8px',
+          width: "400px",
+          padding: "32px",
+          borderRadius: "8px",
           boxShadow: 3,
-          backgroundColor: '#fff',
+          backgroundColor: "#fff",
         }}
       >
         <Typography
           variant="h5"
           component="h1"
-          sx={{ textAlign: 'center', marginBottom: '24px', fontWeight: 'bold' }}
+          sx={{ textAlign: "center", marginBottom: "24px", fontWeight: "bold" }}
         >
           Login
         </Typography>
@@ -100,7 +100,7 @@ export default function EntryPageVisual() {
               value={inputUsername}
               onChange={(e) => {
                 setInputUsername(e.target.value);
-                setErrorAlertOpened(false);
+                setErrorMessage("");
               }}
             />
           </Grid>
@@ -111,11 +111,11 @@ export default function EntryPageVisual() {
               </InputLabel>
               <FilledInput
                 id="filled-adornment-password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 value={inputPassword}
                 onChange={(e) => {
                   setInputPassword(e.target.value);
-                  setErrorAlertOpened(false);
+                  setErrorMessage("");
                 }}
                 endAdornment={
                   <InputAdornment position="end">
@@ -132,22 +132,24 @@ export default function EntryPageVisual() {
               />
             </FormControl>
           </Grid>
+          {errorMessage && (
+            <Grid item xs={12}>
+              <Typography color="error" variant="body2">
+                {errorMessage}
+              </Typography>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Button
               variant="contained"
               fullWidth
               onClick={handleLogin}
-              sx={{ padding: '10px 0', fontSize: '16px' }}
+              sx={{ padding: "10px 0", fontSize: "16px" }}
             >
               Enter
             </Button>
           </Grid>
         </Grid>
-        <ErrorAlert
-          opened={errorAlertOpened}
-          setOpened={(open: boolean) => setErrorAlertOpened(open)}
-          errorText={'Wrong username or password'}
-        />
       </Box>
     </Box>
   );
