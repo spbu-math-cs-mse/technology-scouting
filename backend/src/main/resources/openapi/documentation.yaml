@@ -3,32 +3,60 @@ info:
   title: Swagger Petstore - OpenAPI 3.0
   version: '1.0'
 paths:
-  /api/user-list:
+  /api/requests:
     get:
-      summary: Returns all user data from DB
+      summary: Returns all requests from database
       responses:
         '200':
-          description: All user data retrieved
+          description: All requests from database
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  messages:
+                  requests:
                     type: array
                     items:
                       type: object
                       properties:
-                        telegramId:
+                        _id:
                           type: string
-                        message:
+                        tg_id:
                           type: string
-components:
-  schemas:
-    items:
-      type: "object"
-      properties:
-        telegramId:
-          type: "string"
-          message:
-            type: "string"
+                        request_date:
+                          type: string
+                          format: date
+                        request_type:
+                          type: string
+                        request_description:
+                          type: string
+                        status_id:
+                          type: string
+  /api/resources:
+    get:
+      summary: Returns all resources from database
+      responses:
+        '200':
+          description: All resources from database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        tg_id:
+                          type: string
+                        resource_name:
+                          type: string
+                        resource_description:
+                          type: string
+                        resource_type:
+                          type: string
+                        available_quantity:
+                          type: integer
