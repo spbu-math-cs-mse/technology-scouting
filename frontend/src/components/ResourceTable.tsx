@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { ResourceMessage } from "../logic/types.ts";
 import { getResourcesDataTable, postDeleteResource } from "../logic/request.ts";
 
-
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import {

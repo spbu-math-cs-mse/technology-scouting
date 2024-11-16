@@ -107,9 +107,6 @@ export function postDeleteResource(id: string) {
     });
 }
 
-
-
-
 export function getRequestDataTableMock(): Promise<RequestMessage[]> {
   return new Promise((resolve, _reject) =>
     resolve([
