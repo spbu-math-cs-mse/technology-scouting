@@ -1,4 +1,5 @@
 package com.technology_scouting.resources
+
 import org.mindrot.jbcrypt.*
 
 import com.mongodb.ConnectionString
@@ -20,8 +21,6 @@ class DatabaseService {
     init {
         val dbHost = System.getenv("MONGODB_HOST")
         val dbPort = System.getenv("MONGODB_PORT")
-        val dbUser = System.getenv("MONGODB_USERNAME")
-        val dbPassword = System.getenv("MONGODB_PASSWORD")
         val dbDatabase = System.getenv("MONGODB_DBNAME")
 
         val connectionString = ConnectionString("mongodb://$dbHost:$dbPort")
@@ -30,7 +29,6 @@ class DatabaseService {
             .applyConnectionString(connectionString)
             .build()
         mongoClient = MongoClients.create(settings)
-
         database = mongoClient.getDatabase(dbDatabase)
     }
 
@@ -39,158 +37,250 @@ class DatabaseService {
     }
 }
 
+object RequestFields {
+    const val ID = "_id"
+    const val DATE = "date"
+    const val ORGANIZATION = "organization"
+    const val CONTACT = "contact"
+    const val CONTACT_LINK = "contact_link"
+    const val REQUEST = "request"
+    const val THEME = "theme"
+    const val STATUS = "status"
+}
+
+object FieldValidator {
+    fun validateFields(updates: Map<String, Any?>, allowedFields: List<String>): Document {
+        val validUpdates = Document()
+        for ((key, value) in updates) {
+            if (key in allowedFields) {
+                validUpdates.append(key, value)
+            }
+        }
+        return validUpdates
+    }
+}
+
+
 class RequestsService(private val database: MongoDatabase) {
-    private val connection: MongoCollection<Document> = database.getCollection("requests");
+    private val connection: MongoCollection<Document> = database.getCollection("requests")
+
+    private val allowedFields = listOf(
+        RequestFields.ORGANIZATION,
+        RequestFields.CONTACT,
+        RequestFields.CONTACT_LINK,
+        RequestFields.REQUEST,
+        RequestFields.THEME,
+        RequestFields.STATUS
+    )
 
     fun addRequest(
-        tgId: String,
-        requestDate: LocalDateTime?,
-        requestType: String?,
-        requestDescription: String?
+        organization: String,
+        contact: String,
+        contactLink: String,
+        description: String,
+        theme: String,
+        status: String = "In review"
     ) {
-        addRequest(
-            Document("tg_id", tgId).append("request_date", requestDate)
-                .append("request_type", requestType).append("request_description", requestDescription).append("status_id", "In review")
-        )
-    }
+        val document = Document()
+            .append(RequestFields.DATE, LocalDateTime.now().toString())
+            .append(RequestFields.ORGANIZATION, organization)
+            .append(RequestFields.CONTACT, contact)
+            .append(RequestFields.CONTACT_LINK, contactLink)
+            .append(RequestFields.REQUEST, description)
+            .append(RequestFields.THEME, theme)
+            .append(RequestFields.STATUS, status)
 
-    fun addRequest(document: Document) {
         connection.insertOne(document)
     }
+
+    fun updateRequest(requestId: String, updates: Map<String, Any?>): Boolean {
+        val objectId = ObjectId(requestId)
+        val filter = Document(RequestFields.ID, objectId)
+
+        val updateDocument = FieldValidator.validateFields(updates, allowedFields)
+        if (updateDocument.isEmpty()) {
+            throw IllegalArgumentException("No valid fields provided for update.")
+        }
+
+        val update = Document("\$set", updateDocument)
+        val updateResult = connection.updateOne(filter, update)
+        return updateResult.matchedCount > 0
+    }
+
     fun deleteRequest(requestId: String): Boolean {
         val objectId = ObjectId(requestId)
-        val filter = Document("_id", objectId)
-        val deleteRequest = connection.deleteOne(filter)
-        return deleteRequest.deletedCount > 0
+        val filter = Document(RequestFields.ID, objectId)
+        val deleteResult = connection.deleteOne(filter)
+        return deleteResult.deletedCount > 0
     }
 
-    fun getRequest(requestId: String): Document? {
+    fun getRequest(requestId: String): Request? {
         val objectId = ObjectId(requestId)
-        val filter = Document("_id", objectId)
-        return connection.find(filter).firstOrNull()
-    }
-
-    fun addRequest(request: Request) {
-        val document = Document("tg_id", request.tg_id)
-            //.append("request_date", request.requestDate)
-            .append("request_type", request.request_type)
-            .append("request_description", request.request_description)
-
-        connection.insertOne(document)
+        val filter = Document(RequestFields.ID, objectId)
+        val document = connection.find(filter).firstOrNull()
+        return document?.toRequest()
     }
 
     fun getAllRequests(): List<Request> {
-        return connection.find().map { document ->
-            Request(
-                _id = document.getObjectId("_id").toHexString(),
-                tg_id = document.getString("tg_id"),
-                request_type = document.getString("request_type"),
-                request_description = document.getString("request_description"),
-                status_id = document.getString("status_id")
-            )
-        }.toList()
+        return connection.find().map { it.toRequest() }.toList()
     }
-};
 
-class ResourcesService(private val database: MongoDatabase) {
-    private val connection = database.getCollection("resources")
-
-    fun addResource(
-        tgId: String,
-        resourceName: String?,
-        resourceDescription: String?,
-        resourceType: String?,
-        availableQuantity: Int = 1
-    ) {
-        addResource(
-            Document("tg_id", tgId).append("resource_name", resourceName)
-                .append("resource_description", resourceDescription).append("resource_type", resourceType)
-                .append("available_quantity", availableQuantity)
+    private fun Document.toRequest(): Request {
+        return Request(
+            id = this.getObjectId(RequestFields.ID).toHexString(),
+            date = this.getString(RequestFields.DATE),
+            organization = this.getString(RequestFields.ORGANIZATION),
+            contact = this.getString(RequestFields.CONTACT),
+            contactLink = this.getString(RequestFields.CONTACT_LINK),
+            description = this.getString(RequestFields.REQUEST),
+            theme = this.getString(RequestFields.THEME),
+            status = this.getString(RequestFields.STATUS)
         )
     }
+}
 
-    fun addResource(document: Document) {
+object ResourceFields {
+    const val ID = "_id"
+    const val DATE = "date"
+    const val ORGANIZATION = "organization"
+    const val CONTACT = "contact"
+    const val CONTACT_LINK = "contact_link"
+    const val AREA = "area"
+    const val DESCRIPTION = "description"
+    const val TAGS = "tags"
+    const val RESOURCE_TYPES = "resource_types"
+    const val STATUS = "status"
+}
+
+
+class ResourcesService(private val database: MongoDatabase) {
+    private val connection: MongoCollection<Document> = database.getCollection("resources")
+
+    private val allowedFields = listOf(
+        ResourceFields.ORGANIZATION,
+        ResourceFields.CONTACT,
+        ResourceFields.CONTACT_LINK,
+        ResourceFields.AREA,
+        ResourceFields.DESCRIPTION,
+        ResourceFields.TAGS,
+        ResourceFields.RESOURCE_TYPES,
+        ResourceFields.STATUS
+    )
+
+    fun addResource(
+        date: String,
+        organization: String,
+        contact: String,
+        contactLink: String,
+        area: String,
+        description: String,
+        tags: List<String>,
+        resourceTypes: List<String>,
+        status: String
+    ) {
+        val document = Document()
+            .append(ResourceFields.DATE, date)
+            .append(ResourceFields.ORGANIZATION, organization)
+            .append(ResourceFields.CONTACT, contact)
+            .append(ResourceFields.CONTACT_LINK, contactLink)
+            .append(ResourceFields.AREA, area)
+            .append(ResourceFields.DESCRIPTION, description)
+            .append(ResourceFields.TAGS, tags)
+            .append(ResourceFields.RESOURCE_TYPES, resourceTypes)
+            .append(ResourceFields.STATUS, status)
+
         connection.insertOne(document)
+    }
+
+    fun updateResource(resourceId: String, updates: Map<String, Any?>): Boolean {
+        val objectId = ObjectId(resourceId)
+        val filter = Document(ResourceFields.ID, objectId)
+        val updateDocument = FieldValidator.validateFields(updates, allowedFields)
+        if (updateDocument.isEmpty()) {
+            throw IllegalArgumentException("No valid fields provided for update.")
+        }
+
+        val update = Document("\$set", updateDocument)
+        val updateResult = connection.updateOne(filter, update)
+        return updateResult.matchedCount > 0
     }
 
     fun deleteResource(resourceId: String): Boolean {
         val objectId = ObjectId(resourceId)
-        val filter = Document("_id", objectId)
-        val deleteResource = connection.deleteOne(filter)
-        return deleteResource.deletedCount > 0
+        val filter = Document(ResourceFields.ID, objectId)
+        val deleteResult = connection.deleteOne(filter)
+        return deleteResult.deletedCount > 0
     }
 
-    fun getResource(resourceId: String): Document? {
+    fun getResource(resourceId: String): Resource? {
         val objectId = ObjectId(resourceId)
-        val filter = Document("_id", objectId)
-        return connection.find(filter).firstOrNull()
+        val filter = Document(ResourceFields.ID, objectId)
+        val document = connection.find(filter).firstOrNull()
+        return document?.toResource()
     }
+
+
     fun getAllResources(): List<Resource> {
-        return connection.find().map { document ->
-            Resource(
-                _id = document.getObjectId("_id").toHexString(),
-                tg_id = document.getString("tg_id"),
-                resource_name = document.getString("resource_name"),
-                resource_description = document.getString("resource_description"),
-                resource_type = document.getString("resource_type"),
-                available_quantity = document.getInteger("available_quantity", 1)
-            )
-        }.toList()
+        return connection.find().map { it.toResource() }.toList()
+    }
+
+    private fun Document.toResource(): Resource {
+        return Resource(
+            id = this.getObjectId(ResourceFields.ID).toHexString(),
+            date = this.getString(ResourceFields.DATE),
+            organization = this.getString(ResourceFields.ORGANIZATION),
+            contact = this.getString(ResourceFields.CONTACT),
+            contactLink = this.getString(ResourceFields.CONTACT_LINK),
+            area = this.getString(ResourceFields.AREA),
+            description = this.getString(ResourceFields.DESCRIPTION),
+            tags = this.getList(ResourceFields.TAGS, String::class.java),
+            resourceTypes = this.getList(ResourceFields.RESOURCE_TYPES, String::class.java),
+            status = this.getString(ResourceFields.STATUS)
+        )
     }
 }
 
-
-class UserService(private val database: MongoDatabase) {
-    private val collection: MongoCollection<Document> = database.getCollection("users")
-
-    fun addUserRecord(telegram: String, message: String): Boolean {
-        val document = Document("tg_id", telegram).append("message", message)
-        return try {
-            collection.insertOne(document)
-            true
-        } catch (e: Exception) {
-            println("Error adding user record: ${e.message}")
-            false
-        }
-    }
-
-    fun getUserRecords(): List<Pair<String, String>> {
-        return collection.find().map { Pair(it.getString("tg_id"), it.getString("message")) }.toList()
-    }
-}
-
-object PasswordHasher {
+object PasswordHelper {
     fun hashPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
+
     fun verifyPassword(password: String, hashedPassword: String): Boolean {
         return BCrypt.checkpw(password, hashedPassword)
     }
 }
 
+object AdminFields {
+    const val ID = "_id"
+    const val USERNAME = "username"
+    const val PASSWORD = "password"
+}
 
 class AdminAuthService(private val database: MongoDatabase) {
     private val connection: MongoCollection<Document> = database.getCollection("admins")
+
     fun addAdmin(username: String, password: String) {
-        val document = Document("username", username)
-            .append("password", PasswordHasher.hashPassword(password))
+        val document = Document()
+            .append(AdminFields.USERNAME, username)
+            .append(AdminFields.PASSWORD, PasswordHelper.hashPassword(password))
         connection.insertOne(document)
-    };
+    }
+
     fun deleteAdmin(adminId: String): Boolean {
         val objectId = ObjectId(adminId)
-        val filter = Document("_id", objectId)
-        val deleteAdmin = connection.deleteOne(filter)
-        return deleteAdmin.deletedCount > 0
-    };
-    fun verifyAdmin(username: String, password: String): Boolean {
-        val filter = Document("username", username)
-        val admin = connection.find(filter).firstOrNull()
-        if (admin != null) {
-            val hashedPassword = admin.getString("password")
-            return PasswordHasher.verifyPassword(password, hashedPassword)
-        }
-        return false;
-    };
-}
+        val filter = Document(AdminFields.ID, objectId)
+        val deleteResult = connection.deleteOne(filter)
+        return deleteResult.deletedCount > 0
+    }
 
+    fun verifyAdmin(username: String, password: String): Boolean {
+        val filter = Document(AdminFields.USERNAME, username)
+        val admin = connection.find(filter).firstOrNull()
+
+        return admin?.let {
+            val hashedPassword = it.getString(AdminFields.PASSWORD)
+            PasswordHelper.verifyPassword(password, hashedPassword)
+        } ?: false
+    }
+}
 
