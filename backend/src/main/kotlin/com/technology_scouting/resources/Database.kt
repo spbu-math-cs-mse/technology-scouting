@@ -1,4 +1,5 @@
 package com.technology_scouting.resources
+import org.mindrot.jbcrypt.*
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
@@ -6,13 +7,11 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
+import com.technology_scouting.Request
+import com.technology_scouting.Resource
 import org.bson.Document
 import org.bson.types.ObjectId
 import java.time.LocalDateTime
-import com.technology_scouting.Request
-import com.technology_scouting.Resource
 
 class DatabaseService {
     private val mongoClient: MongoClient
@@ -159,3 +158,39 @@ class UserService(private val database: MongoDatabase) {
         return collection.find().map { Pair(it.getString("tg_id"), it.getString("message")) }.toList()
     }
 }
+
+object PasswordHasher {
+    fun hashPassword(password: String): String {
+        return BCrypt.hashpw(password, BCrypt.gensalt())
+    }
+    fun verifyPassword(password: String, hashedPassword: String): Boolean {
+        return BCrypt.checkpw(password, hashedPassword)
+    }
+}
+
+
+class AdminAuthService(private val database: MongoDatabase) {
+    private val connection: MongoCollection<Document> = database.getCollection("admins")
+    fun addAdmin(username: String, password: String) {
+        val document = Document("username", username)
+            .append("password", PasswordHasher.hashPassword(password))
+        connection.insertOne(document)
+    };
+    fun deleteAdmin(adminId: String): Boolean {
+        val objectId = ObjectId(adminId)
+        val filter = Document("_id", objectId)
+        val deleteAdmin = connection.deleteOne(filter)
+        return deleteAdmin.deletedCount > 0
+    };
+    fun verifyAdmin(username: String, password: String): Boolean {
+        val filter = Document("username", username)
+        val admin = connection.find(filter).firstOrNull()
+        if (admin != null) {
+            val hashedPassword = admin.getString("password")
+            return PasswordHasher.verifyPassword(password, hashedPassword)
+        }
+        return false;
+    };
+}
+
+
