@@ -205,3 +205,22 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: Resource with given _id is not found
+  
+  /api/add_new_admin:
+    post:
+      summary: Add new admin 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: New admin added
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
