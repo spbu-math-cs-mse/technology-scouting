@@ -65,13 +65,18 @@ export default function EntryPageVisual() {
 
   return (
     <Box
+    
       sx={{
+        width: "100vw",
+        height: "100vh",
+        backgroundImage: "url('/login_backimage.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#f5f5f5",
-        padding: "16px",
+        margin: 0,
+        padding: 0,
       }}
     >
       <Box

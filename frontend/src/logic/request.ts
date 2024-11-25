@@ -107,8 +107,28 @@ export function postDeleteResource(id: string) {
     });
 }
 
-
-
+export function postEditRequest(id: string, new_status: string) {
+  fetch("/api/edit_request", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ id, new_status }),
+  })
+    .then(async (response) => {
+      await response.json();
+      if (response.ok)
+        console.log(`Request with ID ${id} editted successfully.`);
+      else
+        return console.error("Failed to edit request", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
 
 export function getRequestDataTableMock(): Promise<RequestMessage[]> {
   return new Promise((resolve, _reject) =>
