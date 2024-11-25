@@ -47,13 +47,12 @@ export default function EntryPageVisual() {
   /*const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const success = await login(inputUsernameString, inputPasswordString);
+    const success = await login(inputUsername, inputPassword);
 
     if (success) {
         navigate("/admin-panel"); // Переход на следующую страницу
     } else {
-      setErrorAlertOpened(true);
-      console.error("Login failed");
+      setErrorMessage("Invalid username or password.");
     }
 };*/
   const handleLogin = () => {
