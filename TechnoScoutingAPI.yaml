@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Technoscouting API - OpenAPI 3.0
+  version: "0.1"
+
+
+components:
+  schemas:
+    id:
+      type: object
+      properties:
+        _id: 
+          type: string
+    application:
+      type: object
+      properties:
+        date:
+          type: string
+        organization:
+          type: string
+        contanctName:
+          type: string
+        telegramId:
+          type: string
+        requestText:
+          type: string
+        status:
+          type: string
+          enum: ["incoming", "resources search", "resources attached", "in work", "ended", "declined by scout", "declined by client"]
+
+    applicationWithId:
+      allOf:
+        - $ref: "#/components/schemas/application"
+        - $ref: "#/components/schemas/id"
+
+    resource:
+      type: object
+      properties:
+        _id:
+          type: integer
+        date:
+          type: string
+        organization:
+          type: string
+        contactName:
+          type: string
+        telegramId:
+          type: string
+        competenceField:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: ["in work", "available"] #TODO: тут ещё скорее всего какие-то есть, не придумалось с ходу
+    
+    resourceWithId:
+      allOf:
+        - $ref: "#/components/schemas/resource"
+        - $ref: "#/components/schemas/id"
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - bearerAuth: [] 
+
+paths:
+  /api/applications:
+    get:
+      summary: Returns all applicatons from database
+      responses:
+        "200":
+          description: Successfully returned all applicatons from database
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/applicationWithId"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/resources:
+    get:
+      summary: Returns all resources from database
+      responses:
+        "200":
+          description: Successfully returned all resources from database
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/resourceWithId"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/delete_application:
+    post:
+      summary: Deletes application from DataBase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Application successfully deleted
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Application with given id is not found
+
+  /api/delete_resource:
+    post:
+      summary: Deletes resuource from DataBase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/id"
+      responses:
+        "200":
+          description: Resource successfully deleted
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Resource with given id is not found
+
+  /api/create_application:
+    post:
+      summary: Create new application and add it to the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/application"
+      responses:
+        "200":
+          description: New application added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/id"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/create_resource:
+    post:
+      summary: Create new resource and add it to the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/resource"
+      responses:
+        "200":
+          description: New resource added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/id"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/update_application:
+    post:
+      summary: Update existing application by its _id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/applicationWithId"
+      responses:
+        "200":
+          description: Application successfully updated
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Application with given _id is not found
+  
+  /api/update_resource:
+    post:
+      summary: Update existing resource by its _id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/resourceWithId"
+      responses:
+        "200":
+          description: Resource successfully updated
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Resource with given _id is not found
