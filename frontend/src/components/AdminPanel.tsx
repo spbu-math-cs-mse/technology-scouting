@@ -1,50 +1,66 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { useState } from "react";
-import ErrorAlert from "./ErrorAlert";
-import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
+import RequestTable from "./RequestTable";
+import ResourceTable from "./ResourceTable";
 
 export default function AdminPanel() {
-  const navigate = useNavigate();
-
-  const handleRequestTable = () => {
-    navigate("/request-table");
-  };
-  const handleResourceTable = () => {
-    navigate("/resource-table");
-  };
-  const [errorText, setErrorText] = useState("");
-
-  const [errorAlertOpened, setErrorAlertOpened] = useState(false);
+  const [activeSection, setActiveSection] = useState<"section1" | "section2">(
+    "section1"
+  );
 
   return (
-    <Box sx={{ width: "90%" }}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
-        <Grid size={6}>
-          <Button
-            onClick={handleRequestTable}
-            variant="contained"
-            sx={{ marginTop: "15%", marginLeft: "20%" }}
-          >
-            Watch requests
-          </Button>
-        </Grid>
-        <Grid size={6}>
-          <Button
-            onClick={handleResourceTable}
-            variant="contained"
-            sx={{ marginTop: "15%", marginLeft: "10%" }}
-          >
-            Watch resources
-          </Button>
-        </Grid>
+    <Box sx={{ height: "100vh", display: "flex" }}>
+      <Grid
+        item
+        xs={2}
+        sx={{
+          backgroundColor: "#f0f0f0",
+          padding: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        <Button
+          onClick={() => setActiveSection("section1")}
+          variant="contained"
+          sx={{
+            fontSize: "11px",
+            width: "100%",
+            minWidth: "150px",
+            maxWidth: "200px",
+          }}
+        >
+          Watch requests
+        </Button>
+
+        <Button
+          onClick={() => setActiveSection("section2")}
+          variant="contained"
+          sx={{
+            fontSize: "11px",
+            width: "100%",
+            minWidth: "150px",
+            maxWidth: "200px",
+          }}
+        >
+          Watch resources
+        </Button>
       </Grid>
-      <ErrorAlert
-        opened={errorAlertOpened}
-        setOpened={(open: boolean) => setErrorAlertOpened(open)}
-        errorText={errorText}
-      />
+
+      <Grid
+        item
+        xs={10}
+        sx={{
+          padding: 2,
+          overflow: "auto",
+        }}
+      >
+        {activeSection === "section1" && <RequestTable />}
+        {activeSection === "section2" && <ResourceTable />}
+      </Grid>
     </Box>
   );
 }
