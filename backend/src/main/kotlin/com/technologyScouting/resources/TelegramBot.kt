@@ -118,11 +118,12 @@ private fun Dispatcher.setUpCommands() {
             "resource_tags" -> {
                 newResource =
                     newResource.copy(
-                        tags = message
+                        tags =
+                        message
                             .text!!
                             .split(",")
                             .map { it.trim() }
-                            .filter { it.isNotEmpty() }
+                            .filter { it.isNotEmpty() },
                     )
                 newResource = newResource.copy(status = ResourceStatus.IN_WORK)
                 try {
