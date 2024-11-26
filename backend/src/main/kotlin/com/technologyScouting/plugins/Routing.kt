@@ -1,9 +1,9 @@
-package com.technology_scouting.plugins
+package com.technologyScouting.plugins
 
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.*
-import com.technology_scouting.*
-import com.technology_scouting.resources.*
+import com.technologyScouting.*
+import com.technologyScouting.resources.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -39,7 +39,7 @@ fun Application.configureRouting() {
 
         get("/api/applications") {
             try {
-                var applications: List<com.technology_scouting.ApplicationWithId> = requestsService.getAllApplications()
+                var applications: List<com.technologyScouting.ApplicationWithId> = requestsService.getAllApplications()
 
                 call.respond(Applications(applications))
             } catch (e: Exception) {

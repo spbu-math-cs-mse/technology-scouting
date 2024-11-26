@@ -1,4 +1,4 @@
-package com.technology_scouting.resources
+package com.technologyScouting.resources
 
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
@@ -10,32 +10,30 @@ import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
-import com.technology_scouting.Application
-import com.technology_scouting.Resource
-import com.technology_scouting.ResourceStatus
-import com.technology_scouting.Status
-import com.technology_scouting.plugins.logger
-import com.technology_scouting.plugins.requestsService
-import com.technology_scouting.plugins.resourcesService
+import com.technologyScouting.Application
+import com.technologyScouting.Resource
+import com.technologyScouting.ResourceStatus
+import com.technologyScouting.Status
+import com.technologyScouting.plugins.logger
+import com.technologyScouting.plugins.requestsService
+import com.technologyScouting.plugins.resourcesService
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 
-fun CreateBot(): Bot {
-    return bot {
-        if (BOT_TOKEN == null)
-            {
-                throw IllegalArgumentException()
-            }
+fun createBot(): Bot =
+    bot {
+        if (BOT_TOKEN == null) {
+            throw IllegalArgumentException()
+        }
         token = BOT_TOKEN
         dispatch {
-            SetUpCommands()
+            setUpCommands()
         }
     }
-}
 
 private var currentStep: String? = null
 
-private fun Dispatcher.SetUpCommands() {
+private fun Dispatcher.setUpCommands() {
     var newResource = Resource("", "", "", "", "", "", "", emptyList(), ResourceStatus.AVAILABLE)
     var newApplication = Application("", "", "", "", "", Status.INCOMING)
     command("start") {
@@ -43,7 +41,10 @@ private fun Dispatcher.SetUpCommands() {
             InlineKeyboardMarkup.create(
                 listOf(
                     InlineKeyboardButton.CallbackData(text = "Подать ресурс", callbackData = "submit_resource"),
-                    InlineKeyboardButton.CallbackData(text = "Подать запрос на ресурс", callbackData = "submit_request"),
+                    InlineKeyboardButton.CallbackData(
+                        text = "Подать запрос на ресурс",
+                        callbackData = "submit_request",
+                    ),
                 ),
             )
 
@@ -86,21 +87,25 @@ private fun Dispatcher.SetUpCommands() {
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
                 currentStep = "resource_contact"
             }
+
             "resource_contact" -> {
                 newResource = newResource.copy(contactName = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
                 currentStep = "resource_tg"
             }
+
             "resource_tg" -> {
                 newResource = newResource.copy(telegramId = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите тему ресурса:")
                 currentStep = "resource_competenceField"
             }
+
             "resource_competenceField" -> {
                 newResource = newResource.copy(competenceField = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите описание ресурса:")
                 currentStep = "resource_description"
             }
+
             "resource_description" -> {
                 newResource = newResource.copy(description = message.text.toString())
                 bot.sendMessage(
@@ -109,8 +114,18 @@ private fun Dispatcher.SetUpCommands() {
                 )
                 currentStep = "resource_tags"
             }
+
             "resource_tags" -> {
-                newResource = newResource.copy(tags = message.text!!.split(",").map { it.trim() }.filter { it.isNotEmpty() })
+                newResource =
+                    newResource.copy(
+                        tags =
+                            message
+                                .text!!
+                                .split(",")
+                                .map { it.trim() }
+                                .filter { it.isNotEmpty() },
+                    )
+
                 newResource = newResource.copy(status = ResourceStatus.IN_WORK)
                 try {
                     resourcesService.addResource(
@@ -135,16 +150,19 @@ private fun Dispatcher.SetUpCommands() {
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
                 currentStep = "request_contact"
             }
+
             "request_contact" -> {
                 newApplication = newApplication.copy(contactName = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
                 currentStep = "request_tg"
             }
+
             "request_tg" -> {
                 newApplication = newApplication.copy(telegramId = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите свой запрос:")
                 currentStep = "request_text"
             }
+
             "request_text" -> {
                 newApplication = newApplication.copy(requestText = message.text.toString())
                 newApplication = newApplication.copy(status = Status.INCOMING)

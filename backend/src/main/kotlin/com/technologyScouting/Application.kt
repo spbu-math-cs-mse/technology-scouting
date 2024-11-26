@@ -1,8 +1,7 @@
-package com.technology_scouting
+package com.technologyScouting
 
-import com.technology_scouting.plugins.*
-import com.technology_scouting.resources.CreateBot
-import io.ktor.server.application.*
+import com.technologyScouting.plugins.*
+import com.technologyScouting.resources.createBot
 import io.ktor.server.application.Application
 import kotlinx.serialization.Serializable
 
@@ -74,10 +73,14 @@ data class ResourceWithId(
 )
 
 @Serializable
-data class Resources(val resources: List<ResourceWithId>)
+data class Resources(
+    val resources: List<ResourceWithId>,
+)
 
 @Serializable
-data class Applications(val applications: List<ApplicationWithId>)
+data class Applications(
+    val applications: List<ApplicationWithId>,
+)
 // @Serializable
 // data class Requests(val requests: List<Request>)
 
@@ -87,22 +90,27 @@ data class UnauthorizedError(
 )
 
 @Serializable
-data class logIn(
+data class LogIn(
     val login: String,
     val password: String,
 )
 
 @Serializable
-data class token(
+data class Token(
     val token: String,
 )
 
 fun main(args: Array<String>) {
-    io.ktor.server.netty.EngineMain.main(args)
+    io
+        .ktor
+        .server
+        .netty
+        .EngineMain
+        .main(args)
 }
 
 fun Application.module() {
-    val bot = CreateBot()
+    val bot = createBot()
     bot.startPolling()
 
     configureRouting()
