@@ -12,8 +12,11 @@ import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import com.technology_scouting.plugins.requestsService
 import com.technology_scouting.plugins.resourcesService
-import java.time.LocalDateTime
 import com.technology_scouting.plugins.logger
+import com.technology_scouting.Resource
+import com.technology_scouting.Application
+import com.technology_scouting.Status
+import com.technology_scouting.ResourceStatus
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 
@@ -30,14 +33,10 @@ fun CreateBot(): Bot {
 }
 
 private var currentStep: String? = null
-private var resourceName: String? = null
-private var resourceDescription: String? = null
-private var resourceType: String? = null
-private var resourceQuantity: String? = null
-private var requestType: String? = null
-private var requestDescription: String? = null
 
 private fun Dispatcher.SetUpCommands() {
+    var newResource = Resource("", "", "", "", "", "", "", emptyList(), ResourceStatus.AVAILABLE)
+    var newApplication = Application("", "", "", "", "", Status.INCOMING)
     command("start") {
         val inlineKeyboardMarkup = InlineKeyboardMarkup.create(
             listOf(
@@ -62,19 +61,19 @@ private fun Dispatcher.SetUpCommands() {
 
     // Обработка inline-кнопок
     callbackQuery("submit_resource") {
-        currentStep = "resource_name"
+        currentStep = "resource_organization"
         bot.sendMessage(
             chatId = ChatId.fromId(callbackQuery.message!!.chat.id),
-            text = "Введите название ресурса:"
+            text = "Введите название организации:"
         )
         bot.answerCallbackQuery(callbackQuery.id)
     }
 
     callbackQuery("submit_request") {
-        currentStep = "request_type"
+        currentStep = "request_organization"
         bot.sendMessage(
             chatId = ChatId.fromId(callbackQuery.message!!.chat.id),
-            text = "Введите тип запроса:"
+            text = "Введите название организации:"
         )
         bot.answerCallbackQuery(callbackQuery.id)
     }
@@ -82,48 +81,68 @@ private fun Dispatcher.SetUpCommands() {
     // Обработка текстовых сообщений для поэтапного ввода информации о ресурсе
     text {
         when (currentStep) {
-            "resource_name" -> {
-                resourceName = message.text
+            "resource_organization" -> {
+                newResource = newResource.copy(organization = message.text.toString())
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
+                currentStep = "resource_contact"
+            }
+            "resource_contact" -> {
+                newResource = newResource.copy(contactName = message.text.toString())
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
+                currentStep = "resource_tg"
+            }
+            "resource_tg" -> {
+                newResource = newResource.copy(telegramId = message.text.toString())
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите тему ресурса:")
+                currentStep = "resource_competenceField"
+            }
+            "resource_competenceField" -> {
+                newResource = newResource.copy(competenceField = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите описание ресурса:")
                 currentStep = "resource_description"
             }
             "resource_description" -> {
-                resourceDescription = message.text
-                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите тип ресурса:")
-                currentStep = "resource_type"
+                newResource = newResource.copy(description = message.text.toString())
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ключевые слова для вашего ресурса (пишите тэги через запятую):")
+                currentStep = "resource_tags"
             }
-            "resource_type" -> {
-                resourceType = message.text
-                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите количество ресурса:")
-                currentStep = "resource_quantity"
-            }
-            "resource_quantity" -> {
-                resourceQuantity = message.text
-                val userId = message.chat.username.toString()
-
+            "resource_tags" -> {
+                newResource = newResource.copy(tags = message.text!!.split(",").map { it.trim() }.filter { it.isNotEmpty() })
+                newResource = newResource.copy(status = ResourceStatus.IN_WORK)
                 try {
-                    resourcesService.addResource(userId, resourceName, resourceDescription, resourceType, resourceQuantity!!.toInt())
+                    resourcesService.addResource(newResource.organization, newResource.contactName, newResource.telegramId, newResource.competenceField,
+                        newResource.description, newResource.tags, newResource.status)
                 } catch (e: Exception) {
-                    logger.info("wrong message")
+                    logger.info("wrong resource")
                 }
 
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Записал ваше сообщение")
                 currentStep = "end"
             }
-            "request_type" -> {
-                requestType = message.text
-                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите описание запроса:")
-                currentStep = "request_description"
-            }
-            "request_description" -> {
-                requestDescription = message.text
-                val userId = message.chat.username.toString()
-                val currentDateTime = LocalDateTime.now()
 
+            "request_organization" -> {
+                newApplication = newApplication.copy(organization = message.text.toString())
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
+                currentStep = "request_contact"
+            }
+            "request_contact" -> {
+                newApplication = newApplication.copy(contactName = message.text.toString())
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
+                currentStep = "request_tg"
+            }
+            "request_tg" -> {
+                newApplication = newApplication.copy(telegramId = message.text.toString())
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите свой запрос:")
+                currentStep = "request_text"
+            }
+            "request_text" -> {
+                newApplication = newApplication.copy(requestText = message.text.toString())
+                newApplication = newApplication.copy(status = Status.INCOMING)
                 try {
-                    requestsService.addRequest(userId, currentDateTime, requestType, requestDescription)
+                    requestsService.addApplication(newApplication.organization, newApplication.contactName, newApplication.telegramId,
+                        newApplication.requestText, newApplication.status)
                 } catch (e: Exception) {
-                    logger.info("wrong message")
+                    logger.info("wrong application")
                 }
 
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Записал ваше сообщение")
