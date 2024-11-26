@@ -59,7 +59,6 @@ private fun Dispatcher.SetUpCommands() {
         )
     }
 
-    // Обработка inline-кнопок
     callbackQuery("submit_resource") {
         currentStep = "resource_organization"
         bot.sendMessage(
@@ -78,7 +77,6 @@ private fun Dispatcher.SetUpCommands() {
         bot.answerCallbackQuery(callbackQuery.id)
     }
 
-    // Обработка текстовых сообщений для поэтапного ввода информации о ресурсе
     text {
         when (currentStep) {
             "resource_organization" -> {
