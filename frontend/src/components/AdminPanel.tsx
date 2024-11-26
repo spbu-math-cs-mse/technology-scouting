@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 import Button, { ButtonProps } from "@mui/material/Button";
-import RequestTable from "./RequestTable";
+import ApplicationTable from "./ApplicationTable";
 import ResourceTable from "./ResourceTable";
 import { styled } from "@mui/material/styles";
 import AdminRegistrationDialog from "./AddAdminDialog";
@@ -58,7 +58,9 @@ export default function AdminPanel() {
 
         <Grid container size={{ xs: 2 }} width="fit-content">
           <StyledBorderButton
-            onClick={() => {setRegistrationDialogOpen(true)}}
+            onClick={() => {
+              setRegistrationDialogOpen(true);
+            }}
             variant="contained"
             color="inherit"
             sx={{ alignSelf: "center" }}
@@ -75,7 +77,7 @@ export default function AdminPanel() {
           overflow: "auto",
         }}
       >
-        {activeSection === "section1" ? <RequestTable /> : <ResourceTable />}
+        {activeSection === "section1" ? <ApplicationTable /> : <ResourceTable />}
       </Grid>
 
       <AdminRegistrationDialog

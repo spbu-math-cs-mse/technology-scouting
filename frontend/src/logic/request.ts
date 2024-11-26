@@ -1,8 +1,8 @@
 import { getToken, storeToken } from "./authToken";
 import {
   ApplicationDataTableResponse,
-  ApplicationMessage,
-  ApplicationMessageWithId,
+  Application,
+  ApplicationWithId,
 } from "./types";
 import {
   ResourceDataTableResponse,
@@ -31,7 +31,7 @@ async function login(username: string, password: string): Promise<boolean> {
   }
 }
 
-export function getApplicationDataTable(): Promise<ApplicationMessageWithId[]> {
+export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
   return fetch("/api/applications", {
     method: "GET",
     headers: {
@@ -140,26 +140,30 @@ export function postEditApplication(id: string, new_status: string) {
     });
 }
 //лень переисывать
-/*export function getRequestDataTableMock(): Promise<ApplicationMessageWithId[]> {
+export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
       {
         _id: "1",
-        tg_id: "1",
-        request_type: "get sth",
-        request_desciption: "a lot of",
-        status_id: "in process",
+        date: "20.12.2020",
+        organization: "a",
+        contactName: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        telegramId: "@abs",
+        requestText: "qweadsfgseh",
+        status: "123",
       },
       {
         _id: "2",
-        tg_id: "2",
-        request_type: "get sth",
-        request_desciption: "a lot of",
-        status_id: "in process",
+        date: "08.04.2024",
+        organization: "13e41",
+        contactName: "wkjhlkb",
+        telegramId: "@gui",
+        requestText: "asbw",
+        status: "98706123",
       },
     ])
   );
-}*/
+}
 
 export function getResourcesDataTableMock(): Promise<ResourceMessageWithId[]> {
   return new Promise((resolve, _reject) =>

@@ -1,7 +1,7 @@
 export type id = {
   _id: string;
 };
-export type ApplicationMessage = {
+export type Application = {
   date: string;
   organization: string;
   contactName: string;
@@ -10,7 +10,7 @@ export type ApplicationMessage = {
   status: string;
 };
 
-export type ApplicationMessageWithId = id & ApplicationMessage;
+export type ApplicationWithId = id & Application;
 
 export type ResourceMessage = {
   date: string;
@@ -26,7 +26,7 @@ export type ResourceMessage = {
 export type ResourceMessageWithId = id & ResourceMessage;
 
 export type ApplicationDataTableResponse = {
-  requests: ApplicationMessageWithId[];
+  requests: ApplicationWithId[];
 };
 
 export type ResourceDataTableResponse = {
