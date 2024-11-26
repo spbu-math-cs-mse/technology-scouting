@@ -260,7 +260,9 @@ class AdminAuthService(
     private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("admins")
-
+    init {
+        ensureDefaultAdminExists()
+    }
     fun addAdmin(
         username: String,
         password: String,
@@ -290,5 +292,16 @@ class AdminAuthService(
             val hashedPassword = it.getString(AdminFields.PASSWORD)
             PasswordHelper.verifyPassword(password, hashedPassword)
         } ?: false
+    }
+    private fun ensureDefaultAdminExists() {
+        val defaultUsername = "test"
+        val defaultPassword = "12345"
+
+        val filter = Document(AdminFields.USERNAME, defaultUsername)
+        val existingAdmin = connection.find(filter).firstOrNull()
+
+        if (existingAdmin == null) {
+            addAdmin(defaultUsername, defaultPassword)
+        }
     }
 }
