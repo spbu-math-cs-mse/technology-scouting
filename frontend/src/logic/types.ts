@@ -1,24 +1,34 @@
-export type RequestMessage = {
+export type id = {
   _id: string;
-  tg_id: string;
-  request_type: string;
-  request_desciption: string;
-  status_id: string;
 };
+export type ApplicationMessage = {
+  date: string;
+  organization: string;
+  contactName: string;
+  telegramId: string;
+  requestText: string;
+  status: string;
+};
+
+export type ApplicationMessageWithId = id & ApplicationMessage;
 
 export type ResourceMessage = {
-  _id: string;
-  tg_id: string;
-  resource_name: string;
-  resource_description: string;
-  resource_type: string;
-  available_quantity: string;
+  date: string;
+  organization: string;
+  contactName: string;
+  telegramId: string;
+  competenceField: string;
+  description: string;
+  tags: string[];
+  status: string;
 };
 
-export type RequestDataTableResponse = {
-  requests: RequestMessage[];
+export type ResourceMessageWithId = id & ResourceMessage;
+
+export type ApplicationDataTableResponse = {
+  requests: ApplicationMessageWithId[];
 };
 
 export type ResourceDataTableResponse = {
-  resources: ResourceMessage[];
+  resources: ResourceMessageWithId[];
 };

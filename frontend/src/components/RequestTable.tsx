@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { RequestMessage } from "../logic/types.ts";
 import {
-  getRequestDataTable,
-  getRequestDataTableMock,
-  postDeleteRequest,
-  postEditRequest,
+  ApplicationMessage,
+  ApplicationMessageWithId,
+} from "../logic/types.ts";
+import {
+  getApplicationDataTable,
+  postDeleteApplication,
+  postEditApplication,
 } from "../logic/request.ts";
 import {
   Table,
@@ -28,9 +30,13 @@ import IconButton from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function RequestTable() {
-  const [tableContent, setTableContent] = useState<RequestMessage[]>([]);
+  const [tableContent, setTableContent] = useState<ApplicationMessageWithId[]>(
+    []
+  );
 
-  const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<string | null>(null);
+  const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
+    string | null
+  >(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [activeRow, setActiveRow] = useState<string | null>(null);
 
@@ -43,16 +49,15 @@ export default function RequestTable() {
 
   const handleConfirmDelete = (id: string) => {
     setSelectedForDeleteRequestId(null);
-    postDeleteRequest(id);
-    getRequestDataTable().then((messages) => setTableContent(messages));
+    postDeleteApplication(id);
+    getApplicationDataTable().then((messages) => setTableContent(messages));
   };
 
   const handleEditStatus = (id: string, new_status: string) => {
-    postEditRequest(id, new_status);
-    getRequestDataTable().then((messages) => setTableContent(messages));
+    postEditApplication(id, new_status);
+    getApplicationDataTable().then((messages) => setTableContent(messages));
     handleClosePopover();
   };
-
 
   const handleOpenPopover = (
     event: React.MouseEvent<HTMLElement>,
@@ -72,9 +77,9 @@ export default function RequestTable() {
   const isPopoverOpen = Boolean(anchorEl);
 
   useEffect(() => {
-    getRequestDataTableMock().then((messages) => setTableContent(messages));
+    getApplicationDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getRequestDataTableMock().then((messages) => setTableContent(messages));
+      getApplicationDataTable().then((messages) => setTableContent(messages));
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -86,22 +91,29 @@ export default function RequestTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Telegram ID</TableCell>
-            <TableCell>Request Type</TableCell>
-            <TableCell>Request Description</TableCell>
+            <TableCell>ID</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Organization</TableCell>
+            <TableCell>ContactName</TableCell>
+            <TableCell>TelegramId</TableCell>
+            <TableCell>RequestText</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {tableContent.map((requestMessage, ind) => (
+          {tableContent.map((applicationMessage, ind) => (
             <TableRow key={ind}>
-              <TableCell>{requestMessage.tg_id}</TableCell>
-              <TableCell>{requestMessage.request_type}</TableCell>
-              <TableCell>{requestMessage.request_desciption}</TableCell>
+              <TableCell>{applicationMessage._id}</TableCell>
+              <TableCell>{applicationMessage.date}</TableCell>
+              <TableCell>{applicationMessage.organization}</TableCell>
+              <TableCell>{applicationMessage.contactName}</TableCell>
+              <TableCell>{applicationMessage.telegramId}</TableCell>
+              <TableCell>{applicationMessage.requestText}</TableCell>
               <TableCell>
-                {requestMessage.status_id}
-                <IconButton onClick={(e) => handleOpenPopover(e, requestMessage._id)}>
+                {applicationMessage.status}
+                <IconButton
+                  onClick={(e) => handleOpenPopover(e, applicationMessage._id)}
+                >
                   <ExpandMoreIcon />
                 </IconButton>
               </TableCell>
@@ -110,7 +122,9 @@ export default function RequestTable() {
                   aria-label="delete"
                   size="large"
                   color="error"
-                  onClick={()=>handleOpenDialogForDelete(requestMessage._id)}
+                  onClick={() =>
+                    handleOpenDialogForDelete(applicationMessage._id)
+                  }
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -120,8 +134,8 @@ export default function RequestTable() {
                 >
                   <DialogTitle>Are you sure?</DialogTitle>
                   <DialogContent>
-                    Do you really want to delete item with id {selectedForDeleteRequestId}. This action cannot
-                    be undone.
+                    Do you really want to delete item with id{" "}
+                    {selectedForDeleteRequestId}. This action cannot be undone.
                   </DialogContent>
                   <DialogActions>
                     <Button
@@ -131,7 +145,9 @@ export default function RequestTable() {
                       Cancel
                     </Button>
                     <Button
-                      onClick={() => handleConfirmDelete(requestMessage._id)}
+                      onClick={() =>
+                        handleConfirmDelete(applicationMessage._id)
+                      }
                       color="error"
                       variant="contained"
                     >

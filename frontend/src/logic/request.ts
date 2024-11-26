@@ -1,6 +1,14 @@
 import { getToken, storeToken } from "./authToken";
-import { RequestDataTableResponse, RequestMessage } from "./types";
-import { ResourceDataTableResponse, ResourceMessage } from "./types";
+import {
+  ApplicationDataTableResponse,
+  ApplicationMessage,
+  ApplicationMessageWithId,
+} from "./types";
+import {
+  ResourceDataTableResponse,
+  ResourceMessage,
+  ResourceMessageWithId,
+} from "./types";
 
 // Function to perform login and store token
 async function login(username: string, password: string): Promise<boolean> {
@@ -23,8 +31,8 @@ async function login(username: string, password: string): Promise<boolean> {
   }
 }
 
-export function getRequestDataTable(): Promise<RequestMessage[]> {
-  return fetch("/api/requests", {
+export function getApplicationDataTable(): Promise<ApplicationMessageWithId[]> {
+  return fetch("/api/applications", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
@@ -34,7 +42,7 @@ export function getRequestDataTable(): Promise<RequestMessage[]> {
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      return (response as RequestDataTableResponse).requests;
+      return (response as ApplicationDataTableResponse).requests;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);
@@ -42,7 +50,7 @@ export function getRequestDataTable(): Promise<RequestMessage[]> {
     });
 }
 
-export function getResourcesDataTable(): Promise<ResourceMessage[]> {
+export function getResourcesDataTable(): Promise<ResourceMessageWithId[]> {
   return fetch("/api/resources", {
     method: "GET",
     headers: {
@@ -61,8 +69,8 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
     });
 }
 
-export function postDeleteRequest(id: string) {
-  fetch("/api/delete_request", {
+export function postDeleteApplication(id: string) {
+  fetch("/api/delete_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -72,9 +80,12 @@ export function postDeleteRequest(id: string) {
     .then(async (response) => {
       await response.json();
       if (response.ok)
-        console.log(`Request with ID ${id} deleted successfully.`);
+        console.log(`Application with ID ${id} deleted successfully.`);
       else
-        return console.error("Failed to delete request", response.statusText);
+        return console.error(
+          "Failed to delete application",
+          response.statusText
+        );
     })
     .catch((error) => {
       console.error(error);
@@ -107,8 +118,8 @@ export function postDeleteResource(id: string) {
     });
 }
 
-export function postEditRequest(id: string, new_status: string) {
-  fetch("/api/edit_request", {
+export function postEditApplication(id: string, new_status: string) {
+  fetch("/api/update_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -119,8 +130,7 @@ export function postEditRequest(id: string, new_status: string) {
       await response.json();
       if (response.ok)
         console.log(`Request with ID ${id} editted successfully.`);
-      else
-        return console.error("Failed to edit request", response.statusText);
+      else return console.error("Failed to edit request", response.statusText);
     })
     .catch((error) => {
       console.error(error);
@@ -129,8 +139,8 @@ export function postEditRequest(id: string, new_status: string) {
       };
     });
 }
-
-export function getRequestDataTableMock(): Promise<RequestMessage[]> {
+//лень переисывать
+/*export function getRequestDataTableMock(): Promise<ApplicationMessageWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
       {
@@ -172,4 +182,4 @@ export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
       },
     ])
   );
-}
+}*/

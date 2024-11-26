@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ResourceMessage } from "../logic/types.ts";
+import { ResourceMessage, ResourceMessageWithId } from "../logic/types.ts";
 import { getResourcesDataTable, postDeleteResource } from "../logic/request.ts";
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 export default function ResourceTable() {
-  const [tableContent, setTableContent] = useState<ResourceMessage[]>([]);
+  const [tableContent, setTableContent] = useState<ResourceMessageWithId[]>([]);
   const handleInputDelete = (id: string) => {
     postDeleteResource(id);
     getResourcesDataTable().then((messages) => setTableContent(messages));
@@ -36,22 +36,29 @@ export default function ResourceTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Telegram ID</TableCell>
-            <TableCell>Resource Name</TableCell>
-            <TableCell>Resource Description</TableCell>
-            <TableCell>Resource Type</TableCell>
-            <TableCell>Available Quantity</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell>ID</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Organization</TableCell>
+            <TableCell>ContactName</TableCell>
+            <TableCell>TelegramId</TableCell>
+            <TableCell>CompetenceField</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Tags</TableCell>
+            <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {tableContent.map((resourceMessage, ind) => (
             <TableRow key={ind}>
-              <TableCell>{resourceMessage.tg_id}</TableCell>
-              <TableCell>{resourceMessage.resource_name}</TableCell>
-              <TableCell>{resourceMessage.resource_description}</TableCell>
-              <TableCell>{resourceMessage.resource_type}</TableCell>
-              <TableCell>{resourceMessage.available_quantity}</TableCell>
+              <TableCell>{resourceMessage._id}</TableCell>
+              <TableCell>{resourceMessage.date}</TableCell>
+              <TableCell>{resourceMessage.organization}</TableCell>
+              <TableCell>{resourceMessage.contactName}</TableCell>
+              <TableCell>{resourceMessage.telegramId}</TableCell>
+              <TableCell>{resourceMessage.competenceField}</TableCell>
+              <TableCell>{resourceMessage.description}</TableCell>
+              <TableCell>{resourceMessage.tags}</TableCell>
+              <TableCell>{resourceMessage.status}</TableCell>
               <TableCell>
                 <IconButton
                   aria-label="delete"
