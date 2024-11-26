@@ -32,6 +32,7 @@ export default function AdminPanel() {
         width="fit-content"
         sx={{
           backgroundColor: "#f0f0f0",
+          flexShrink: 0,
         }}
       >
         <Grid

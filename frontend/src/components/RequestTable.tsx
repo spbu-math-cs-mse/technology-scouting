@@ -14,23 +14,35 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Select,
   MenuItem,
   MenuList,
-  Box,
-  Typography,
   Popover,
+  DialogActions,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function RequestTable() {
   const [tableContent, setTableContent] = useState<RequestMessage[]>([]);
-  const statuses = ["Active", "Pending", "Completed"];
 
-  const handleInputDelete = (id: string) => {
+  const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<string | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [activeRow, setActiveRow] = useState<string | null>(null);
+
+  const handleOpenDialogForDelete = (id: string) => {
+    setSelectedForDeleteRequestId(id);
+  };
+  const handleCloseDialogForDelete = () => {
+    setSelectedForDeleteRequestId(null);
+  };
+
+  const handleConfirmDelete = (id: string) => {
+    setSelectedForDeleteRequestId(null);
     postDeleteRequest(id);
     getRequestDataTable().then((messages) => setTableContent(messages));
   };
@@ -41,12 +53,10 @@ export default function RequestTable() {
     handleClosePopover();
   };
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = useState<number | null>(null);
 
   const handleOpenPopover = (
     event: React.MouseEvent<HTMLElement>,
-    rowIndex: number
+    rowIndex: string
   ) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(rowIndex);
@@ -57,19 +67,14 @@ export default function RequestTable() {
     setActiveRow(null);
   };
 
-  const handleStatusChange = (newStatus: string) => {
-    console.log(`Row ${activeRow}: Status changed to ${newStatus}`);
-    handleClosePopover();
-  };
-
   const statusOptions = ["Pending", "Approved", "Rejected", "In Progress"];
 
   const isPopoverOpen = Boolean(anchorEl);
 
   useEffect(() => {
-    getRequestDataTable().then((messages) => setTableContent(messages));
+    getRequestDataTableMock().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getRequestDataTable().then((messages) => setTableContent(messages));
+      getRequestDataTableMock().then((messages) => setTableContent(messages));
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -96,7 +101,7 @@ export default function RequestTable() {
               <TableCell>{requestMessage.request_desciption}</TableCell>
               <TableCell>
                 {requestMessage.status_id}
-                <IconButton onClick={(e) => handleOpenPopover(e, ind)}>
+                <IconButton onClick={(e) => handleOpenPopover(e, requestMessage._id)}>
                   <ExpandMoreIcon />
                 </IconButton>
               </TableCell>
@@ -104,10 +109,36 @@ export default function RequestTable() {
                 <IconButton
                   aria-label="delete"
                   size="large"
-                  onClick={() => handleInputDelete(requestMessage._id)}
+                  color="error"
+                  onClick={()=>handleOpenDialogForDelete(requestMessage._id)}
                 >
                   <DeleteIcon />
                 </IconButton>
+                <Dialog
+                  open={selectedForDeleteRequestId != null}
+                  onClose={handleCloseDialogForDelete}
+                >
+                  <DialogTitle>Are you sure?</DialogTitle>
+                  <DialogContent>
+                    Do you really want to delete item with id {selectedForDeleteRequestId}. This action cannot
+                    be undone.
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={handleCloseDialogForDelete}
+                      color="primary"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => handleConfirmDelete(requestMessage._id)}
+                      color="error"
+                      variant="contained"
+                    >
+                      Delete
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </TableCell>
             </TableRow>
           ))}
@@ -128,18 +159,23 @@ export default function RequestTable() {
       >
         <MenuList>
           {statusOptions.map((status) => (
-            <MenuItem key={status}  
-            onClick={() => activeRow !== null && handleEditStatus(String(activeRow), status)}
-            sx={{
-              fontSize: "11px",
-              backgroundColor: 'white',
-              '&:hover': {
-                backgroundColor: '#ADD8E6',
-              },
-              borderRadius: '8px',
-              padding: '12px',
-              color: '#333',
-            }}>
+            <MenuItem
+              key={status}
+              onClick={() =>
+                activeRow !== null &&
+                handleEditStatus(String(activeRow), status)
+              }
+              sx={{
+                fontSize: "11px",
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: "#ADD8E6",
+                },
+                borderRadius: "8px",
+                padding: "12px",
+                color: "#333",
+              }}
+            >
               {status}
             </MenuItem>
           ))}
