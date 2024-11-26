@@ -20,7 +20,9 @@ data class Application(
     val status: Status,
 )
 
-enum class Status(s: String) {
+enum class Status(
+    s: String
+) {
     INCOMING("incoming"),
     RESOURCES_SEARCH("resources_search"),
     RESOURCES_ATTACHED("resources_attached"),
@@ -54,7 +56,9 @@ data class Resource(
     val status: ResourceStatus,
 )
 
-enum class ResourceStatus(s: String) {
+enum class ResourceStatus(
+    s: String
+) {
     IN_WORK("in_work"),
     AVAILABLE("available"),
 }

@@ -58,8 +58,8 @@ fun Application.configureRouting() {
             }
         }
 
-        post("/api/log-in"){
-            try{
+        post("/api/log-in") {
+            try {
                 val credentials = call.receive<LogIn>()
 
                 val isValidUser = adminAuthService.verifyAdmin(credentials.login, credentials.password)
@@ -73,24 +73,20 @@ fun Application.configureRouting() {
                         Document()
                             .append("token", token)
                             .append("login", credentials.login)
-                            .append("expiry", expiryTime)
+                            .append("expiry", expiryTime),
                     )
 
                     call.respond(Token(token))
-                }
-                else {
+                } else {
                     throw Exception()
                 }
-            }
-
-            catch(e:Exception){
+            } catch (e: Exception) {
                 call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
             }
         }
 
         authenticate("auth-bearer") {
             get("/api/applications") {
-
                 try {
                     val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
@@ -100,7 +96,6 @@ fun Application.configureRouting() {
                 }
             }
             get("/api/resources") {
-
                 try {
                     val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
@@ -147,10 +142,17 @@ fun Application.configureRouting() {
                 val resource = call.receive<Resource>()
 
                 try {
-                    val newId = resourcesService.addResource(
-                        resource.organization, resource.contactName, resource.telegramId,
-                        resource.competenceField, resource.description, resource.tags, resource.status
-                    )
+                    val newId =
+                        resourcesService
+                            .addResource(
+                                resource.organization,
+                                resource.contactName,
+                                resource.telegramId,
+                                resource.competenceField,
+                                resource.description,
+                                resource.tags,
+                                resource.status,
+                            )
 
                     if (newId == null) {
                         throw Exception()
@@ -165,10 +167,15 @@ fun Application.configureRouting() {
                 val application = call.receive<com.technologyScouting.Application>()
 
                 try {
-                    val newId = applicationsService.addApplication(
-                        application.organization, application.contactName,
-                        application.telegramId, application.requestText, application.status
-                    )
+                    val newId =
+                        applicationsService
+                            .addApplication(
+                                application.organization,
+                                application.contactName,
+                                application.telegramId,
+                                application.requestText,
+                                application.status,
+                            )
 
                     if (newId == null) {
                         throw Exception()
