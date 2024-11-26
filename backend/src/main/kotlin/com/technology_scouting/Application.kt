@@ -4,14 +4,13 @@ import com.technology_scouting.plugins.*
 import com.technology_scouting.resources.CreateBot
 import io.ktor.server.application.*
 import io.ktor.server.application.Application
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
 
 @Serializable
 data class Id(
-    val _id: String
+    val _id: String,
 )
+
 @Serializable
 data class Application(
     val date: String,
@@ -19,8 +18,9 @@ data class Application(
     val contactName: String,
     val telegramId: String,
     val requestText: String,
-    val status: Status
+    val status: Status,
 )
+
 enum class Status {
     INCOMING,
     RESOURCES_SEARCH,
@@ -28,8 +28,9 @@ enum class Status {
     IN_WORK,
     ENDED,
     DECLINED_BY_SCOUT,
-    DECLINED_BY_CLIENT
+    DECLINED_BY_CLIENT,
 }
+
 @Serializable
 data class ApplicationWithId(
     val _id: String,
@@ -38,8 +39,9 @@ data class ApplicationWithId(
     val contactName: String,
     val telegramId: String,
     val requestText: String,
-    val status: Status
+    val status: Status,
 )
+
 @Serializable
 data class Resource(
     val _id: String,
@@ -50,13 +52,14 @@ data class Resource(
     val competenceField: String,
     val description: String,
     val tags: List<String>,
-    val status: ResourceStatus
+    val status: ResourceStatus,
 )
 
 enum class ResourceStatus {
     IN_WORK,
-    AVAILABLE
+    AVAILABLE,
 }
+
 @Serializable
 data class ResourceWithId(
     val _id: String, // from Id
@@ -67,27 +70,31 @@ data class ResourceWithId(
     val competenceField: String,
     val description: String,
     val tags: List<String>,
-    val status: ResourceStatus
+    val status: ResourceStatus,
 )
+
 @Serializable
 data class Resources(val resources: List<ResourceWithId>)
+
 @Serializable
 data class Applications(val applications: List<ApplicationWithId>)
-//@Serializable
-//data class Requests(val requests: List<Request>)
+// @Serializable
+// data class Requests(val requests: List<Request>)
 
 @Serializable
 data class UnauthorizedError(
-    val description: String = "Access token is missing or invalid"
+    val description: String = "Access token is missing or invalid",
 )
+
 @Serializable
 data class logIn(
     val login: String,
-    val password: String
+    val password: String,
 )
+
 @Serializable
 data class token(
-    val token: String
+    val token: String,
 )
 
 fun main(args: Array<String>) {

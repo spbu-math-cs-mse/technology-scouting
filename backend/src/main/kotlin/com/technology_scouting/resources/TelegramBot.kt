@@ -4,27 +4,28 @@ import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.Dispatcher
-import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.callbackQuery
+import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
+import com.technology_scouting.Application
+import com.technology_scouting.Resource
+import com.technology_scouting.ResourceStatus
+import com.technology_scouting.Status
+import com.technology_scouting.plugins.logger
 import com.technology_scouting.plugins.requestsService
 import com.technology_scouting.plugins.resourcesService
-import com.technology_scouting.plugins.logger
-import com.technology_scouting.Resource
-import com.technology_scouting.Application
-import com.technology_scouting.Status
-import com.technology_scouting.ResourceStatus
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 
 fun CreateBot(): Bot {
     return bot {
-        if (BOT_TOKEN == null){
-            throw IllegalArgumentException()
-        }
+        if (BOT_TOKEN == null)
+            {
+                throw IllegalArgumentException()
+            }
         token = BOT_TOKEN
         dispatch {
             SetUpCommands()
@@ -38,24 +39,25 @@ private fun Dispatcher.SetUpCommands() {
     var newResource = Resource("", "", "", "", "", "", "", emptyList(), ResourceStatus.AVAILABLE)
     var newApplication = Application("", "", "", "", "", Status.INCOMING)
     command("start") {
-        val inlineKeyboardMarkup = InlineKeyboardMarkup.create(
-            listOf(
-                InlineKeyboardButton.CallbackData(text = "Подать ресурс", callbackData = "submit_resource"),
-                InlineKeyboardButton.CallbackData(text = "Подать запрос на ресурс", callbackData = "submit_request")
+        val inlineKeyboardMarkup =
+            InlineKeyboardMarkup.create(
+                listOf(
+                    InlineKeyboardButton.CallbackData(text = "Подать ресурс", callbackData = "submit_resource"),
+                    InlineKeyboardButton.CallbackData(text = "Подать запрос на ресурс", callbackData = "submit_request"),
+                ),
             )
-        )
 
         bot.sendMessage(
             chatId = ChatId.fromId(message.chat.id),
             text = "Привет, ${message.chat.username}! Выберите действие:",
-            replyMarkup = inlineKeyboardMarkup
+            replyMarkup = inlineKeyboardMarkup,
         )
     }
 
     command("help") {
         bot.sendMessage(
             chatId = ChatId.fromId(message.chat.id),
-            text = "Используйте команду /start для начала работы."
+            text = "Используйте команду /start для начала работы.",
         )
     }
 
@@ -63,7 +65,7 @@ private fun Dispatcher.SetUpCommands() {
         currentStep = "resource_organization"
         bot.sendMessage(
             chatId = ChatId.fromId(callbackQuery.message!!.chat.id),
-            text = "Введите название организации:"
+            text = "Введите название организации:",
         )
         bot.answerCallbackQuery(callbackQuery.id)
     }
@@ -72,7 +74,7 @@ private fun Dispatcher.SetUpCommands() {
         currentStep = "request_organization"
         bot.sendMessage(
             chatId = ChatId.fromId(callbackQuery.message!!.chat.id),
-            text = "Введите название организации:"
+            text = "Введите название организации:",
         )
         bot.answerCallbackQuery(callbackQuery.id)
     }
@@ -101,15 +103,25 @@ private fun Dispatcher.SetUpCommands() {
             }
             "resource_description" -> {
                 newResource = newResource.copy(description = message.text.toString())
-                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ключевые слова для вашего ресурса (пишите тэги через запятую):")
+                bot.sendMessage(
+                    chatId = ChatId.fromId(message.chat.id),
+                    text = "Введите ключевые слова для вашего ресурса (пишите тэги через запятую):",
+                )
                 currentStep = "resource_tags"
             }
             "resource_tags" -> {
                 newResource = newResource.copy(tags = message.text!!.split(",").map { it.trim() }.filter { it.isNotEmpty() })
                 newResource = newResource.copy(status = ResourceStatus.IN_WORK)
                 try {
-                    resourcesService.addResource(newResource.organization, newResource.contactName, newResource.telegramId, newResource.competenceField,
-                        newResource.description, newResource.tags, newResource.status)
+                    resourcesService.addResource(
+                        newResource.organization,
+                        newResource.contactName,
+                        newResource.telegramId,
+                        newResource.competenceField,
+                        newResource.description,
+                        newResource.tags,
+                        newResource.status,
+                    )
                 } catch (e: Exception) {
                     logger.info("wrong resource")
                 }
@@ -137,8 +149,13 @@ private fun Dispatcher.SetUpCommands() {
                 newApplication = newApplication.copy(requestText = message.text.toString())
                 newApplication = newApplication.copy(status = Status.INCOMING)
                 try {
-                    requestsService.addApplication(newApplication.organization, newApplication.contactName, newApplication.telegramId,
-                        newApplication.requestText, newApplication.status)
+                    requestsService.addApplication(
+                        newApplication.organization,
+                        newApplication.contactName,
+                        newApplication.telegramId,
+                        newApplication.requestText,
+                        newApplication.status,
+                    )
                 } catch (e: Exception) {
                     logger.info("wrong application")
                 }

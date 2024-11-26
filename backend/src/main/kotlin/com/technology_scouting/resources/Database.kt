@@ -1,7 +1,5 @@
 package com.technology_scouting.resources
 
-import org.mindrot.jbcrypt.*
-
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClient
@@ -9,12 +7,13 @@ import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.technology_scouting.ApplicationWithId
+import com.technology_scouting.ResourceStatus
 import com.technology_scouting.ResourceWithId
+import com.technology_scouting.Status
 import org.bson.Document
 import org.bson.types.ObjectId
+import org.mindrot.jbcrypt.*
 import java.time.LocalDateTime
-import com.technology_scouting.ResourceStatus
-import com.technology_scouting.Status
 
 class DatabaseService {
     private val mongoClient: MongoClient
@@ -24,12 +23,11 @@ class DatabaseService {
         val dbHost = System.getenv("MONGODB_HOST")
         val dbPort = System.getenv("MONGODB_PORT")
         val dbDatabase = System.getenv("MONGODB_DBNAME")
-
         val connectionString = ConnectionString("mongodb://$dbHost:$dbPort")
-
-        val settings = MongoClientSettings.builder()
-            .applyConnectionString(connectionString)
-            .build()
+        val settings =
+            MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build()
         mongoClient = MongoClients.create(settings)
         database = mongoClient.getDatabase(dbDatabase)
     }
@@ -49,9 +47,11 @@ object ApplicationFields {
     const val STATUS = "status"
 }
 
-
 object FieldValidator {
-    fun validateFields(updates: Map<String, Any?>, allowedFields: List<String>): Document {
+    fun validateFields(
+        updates: Map<String, Any?>,
+        allowedFields: List<String>,
+    ): Document {
         val validUpdates = Document()
         for ((key, value) in updates) {
             if (key in allowedFields) {
@@ -65,33 +65,38 @@ object FieldValidator {
 class ApplicationsService(private val database: MongoDatabase) {
     private val connection: MongoCollection<Document> = database.getCollection("applications")
 
-    private val allowedFields = listOf(
-        ApplicationFields.ORGANIZATION,
-        ApplicationFields.CONTACT_NAME,
-        ApplicationFields.TELEGRAM_ID,
-        ApplicationFields.REQUEST_TEXT,
-        ApplicationFields.STATUS
-    )
+    private val allowedFields =
+        listOf(
+            ApplicationFields.ORGANIZATION,
+            ApplicationFields.CONTACT_NAME,
+            ApplicationFields.TELEGRAM_ID,
+            ApplicationFields.REQUEST_TEXT,
+            ApplicationFields.STATUS,
+        )
 
     fun addApplication(
         organization: String,
         contactName: String,
         telegramId: String,
         requestText: String,
-        status: Status = Status.INCOMING
+        status: Status = Status.INCOMING,
     ) {
-        val document = Document()
-            .append(ApplicationFields.DATE, LocalDateTime.now().toString())
-            .append(ApplicationFields.ORGANIZATION, organization)
-            .append(ApplicationFields.CONTACT_NAME, contactName)
-            .append(ApplicationFields.TELEGRAM_ID, telegramId)
-            .append(ApplicationFields.REQUEST_TEXT, requestText)
-            .append(ApplicationFields.STATUS, status.name)
+        val document =
+            Document()
+                .append(ApplicationFields.DATE, LocalDateTime.now().toString())
+                .append(ApplicationFields.ORGANIZATION, organization)
+                .append(ApplicationFields.CONTACT_NAME, contactName)
+                .append(ApplicationFields.TELEGRAM_ID, telegramId)
+                .append(ApplicationFields.REQUEST_TEXT, requestText)
+                .append(ApplicationFields.STATUS, status.name)
 
         connection.insertOne(document)
     }
 
-    fun updateApplication(applicationId: String, updates: Map<String, Any?>): Boolean {
+    fun updateApplication(
+        applicationId: String,
+        updates: Map<String, Any?>,
+    ): Boolean {
         val objectId = ObjectId(applicationId)
         val filter = Document(ApplicationFields.ID, objectId)
 
@@ -131,11 +136,10 @@ class ApplicationsService(private val database: MongoDatabase) {
             contactName = this.getString(ApplicationFields.CONTACT_NAME),
             telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
             requestText = this.getString(ApplicationFields.REQUEST_TEXT),
-            status = Status.valueOf(this.getString(ApplicationFields.STATUS))
+            status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
         )
     }
 }
-
 
 object ResourceFields {
     const val ID = "_id"
@@ -149,19 +153,19 @@ object ResourceFields {
     const val STATUS = "status"
 }
 
-
 class ResourcesService(private val database: MongoDatabase) {
     private val connection: MongoCollection<Document> = database.getCollection("resources")
 
-    private val allowedFields = listOf(
-        ResourceFields.ORGANIZATION,
-        ResourceFields.CONTACT_NAME,
-        ResourceFields.TELEGRAM_ID,
-        ResourceFields.COMPETENCE_FIELD,
-        ResourceFields.DESCRIPTION,
-        ResourceFields.TAGS,
-        ResourceFields.STATUS
-    )
+    private val allowedFields =
+        listOf(
+            ResourceFields.ORGANIZATION,
+            ResourceFields.CONTACT_NAME,
+            ResourceFields.TELEGRAM_ID,
+            ResourceFields.COMPETENCE_FIELD,
+            ResourceFields.DESCRIPTION,
+            ResourceFields.TAGS,
+            ResourceFields.STATUS,
+        )
 
     fun addResource(
         organization: String,
@@ -170,22 +174,26 @@ class ResourcesService(private val database: MongoDatabase) {
         competenceField: String,
         description: String,
         tags: List<String>,
-        status: ResourceStatus
+        status: ResourceStatus,
     ) {
-        val document = Document()
-            .append(ResourceFields.DATE, LocalDateTime.now().toString())
-            .append(ResourceFields.ORGANIZATION, organization)
-            .append(ResourceFields.CONTACT_NAME, contactName)
-            .append(ResourceFields.TELEGRAM_ID, telegramId)
-            .append(ResourceFields.COMPETENCE_FIELD, competenceField)
-            .append(ResourceFields.DESCRIPTION, description)
-            .append(ResourceFields.TAGS, tags)
-            .append(ResourceFields.STATUS, status.name)
+        val document =
+            Document()
+                .append(ResourceFields.DATE, LocalDateTime.now().toString())
+                .append(ResourceFields.ORGANIZATION, organization)
+                .append(ResourceFields.CONTACT_NAME, contactName)
+                .append(ResourceFields.TELEGRAM_ID, telegramId)
+                .append(ResourceFields.COMPETENCE_FIELD, competenceField)
+                .append(ResourceFields.DESCRIPTION, description)
+                .append(ResourceFields.TAGS, tags)
+                .append(ResourceFields.STATUS, status.name)
 
         connection.insertOne(document)
     }
 
-    fun updateResource(resourceId: String, updates: Map<String, Any?>): Boolean {
+    fun updateResource(
+        resourceId: String,
+        updates: Map<String, Any?>,
+    ): Boolean {
         val objectId = ObjectId(resourceId)
         val filter = Document(ResourceFields.ID, objectId)
 
@@ -227,18 +235,20 @@ class ResourcesService(private val database: MongoDatabase) {
             competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
             description = this.getString(ResourceFields.DESCRIPTION),
             tags = this.getList(ResourceFields.TAGS, String::class.java),
-            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS))
+            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
         )
     }
 }
-
 
 object PasswordHelper {
     fun hashPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 
-    fun verifyPassword(password: String, hashedPassword: String): Boolean {
+    fun verifyPassword(
+        password: String,
+        hashedPassword: String,
+    ): Boolean {
         return BCrypt.checkpw(password, hashedPassword)
     }
 }
@@ -252,10 +262,14 @@ object AdminFields {
 class AdminAuthService(private val database: MongoDatabase) {
     private val connection: MongoCollection<Document> = database.getCollection("admins")
 
-    fun addAdmin(username: String, password: String) {
-        val document = Document()
-            .append(AdminFields.USERNAME, username)
-            .append(AdminFields.PASSWORD, PasswordHelper.hashPassword(password))
+    fun addAdmin(
+        username: String,
+        password: String,
+    ) {
+        val document =
+            Document()
+                .append(AdminFields.USERNAME, username)
+                .append(AdminFields.PASSWORD, PasswordHelper.hashPassword(password))
         connection.insertOne(document)
     }
 
@@ -266,7 +280,10 @@ class AdminAuthService(private val database: MongoDatabase) {
         return deleteResult.deletedCount > 0
     }
 
-    fun verifyAdmin(username: String, password: String): Boolean {
+    fun verifyAdmin(
+        username: String,
+        password: String,
+    ): Boolean {
         val filter = Document(AdminFields.USERNAME, username)
         val admin = connection.find(filter).firstOrNull()
 
@@ -276,4 +293,3 @@ class AdminAuthService(private val database: MongoDatabase) {
         } ?: false
     }
 }
-
