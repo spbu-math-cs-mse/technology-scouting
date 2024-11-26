@@ -1,6 +1,7 @@
 package com.technology_scouting
 
 import com.technology_scouting.plugins.*
+import com.technology_scouting.resources.CreateBot
 import io.ktor.server.application.*
 import io.ktor.server.application.Application
 import kotlinx.serialization.Contextual
@@ -55,7 +56,6 @@ data class Resource(
 enum class ResourceStatus {
     IN_WORK,
     AVAILABLE
-    // You can add more statuses as needed
 }
 @Serializable
 data class ResourceWithId(
@@ -95,5 +95,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    val bot = CreateBot()
+    bot.startPolling()
+
     configureRouting()
 }

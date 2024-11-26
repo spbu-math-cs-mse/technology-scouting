@@ -33,10 +33,6 @@ fun Application.configureRouting() {
 
         staticResources("static", "static")
 
-        val bot = CreateBot()
-        bot.startPolling()
-        //dbService.closeConnection()
-
         install(CORS) {
             anyHost()
             allowHeader(HttpHeaders.ContentType)
@@ -45,11 +41,11 @@ fun Application.configureRouting() {
             json()
         }
 
-        get("/api/requests") {
+        get("/api/applications") {
             try{
-                var requests: List<com.technology_scouting.ApplicationWithId> =  requestsService.getAllApplications()
+                var applications: List<com.technology_scouting.ApplicationWithId> =  requestsService.getAllApplications()
 
-                call.respond(Applications(requests))
+                call.respond(Applications(applications))
             }
             catch (e: Exception){
                 call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
@@ -65,7 +61,7 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
             }
         }
-        post("/api/delete_request") {
+        post("/api/delete_application") {
             val id = call.receive<Id>()
             try{
                 requestsService.deleteApplication(id._id)
