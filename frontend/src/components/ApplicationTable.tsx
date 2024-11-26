@@ -159,7 +159,7 @@ export default function ApplicationTable() {
                   </Dialog>
                 </TableCell>
                 <TableCell>
-                  <IconButton
+                  <Button
                     aria-label="edit"
                     size="large"
                     color="warning"
@@ -168,8 +168,8 @@ export default function ApplicationTable() {
                       setApplicationEditDialogOpen(true);
                     }}
                   >
-                    <DeleteIcon />
-                  </IconButton>
+                    Edit
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

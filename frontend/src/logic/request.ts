@@ -6,8 +6,8 @@ import {
 } from "./types";
 import {
   ResourceDataTableResponse,
-  ResourceMessage,
-  ResourceMessageWithId,
+  Resource,
+  ResourceWithId,
 } from "./types";
 
 // Function to perform login and store token
@@ -50,7 +50,7 @@ export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
     });
 }
 
-export function getResourcesDataTable(): Promise<ResourceMessageWithId[]> {
+export function getResourcesDataTable(): Promise<ResourceWithId[]> {
   return fetch("/api/resources", {
     method: "GET",
     headers: {
@@ -165,7 +165,7 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
   );
 }
 
-export function getResourcesDataTableMock(): Promise<ResourceMessageWithId[]> {
+export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
       {
