@@ -50,11 +50,11 @@ export default function ResourceTable() {
     getResourcesDataTable().then((messages) => setTableContent(messages));
   };
 
-  const handleEditStatus = (id: string, new_status: string) => {
-    postEditApplication(id, new_status);
-    getResourcesDataTable().then((messages) => setTableContent(messages));
-    handleClosePopover();
-  };
+  // const handleEditStatus = (id: string, new_status: string) => {
+  //   postEditApplication(id, new_status);
+  //   getResourcesDataTable().then((messages) => setTableContent(messages));
+  //   handleClosePopover();
+  // };
 
   const handleOpenPopover = (
     event: React.MouseEvent<HTMLElement>,
@@ -83,41 +83,40 @@ export default function ResourceTable() {
     };
   }, []);
 
-  const [resourceEditDialogOpen, setResourceEditDialogOpen] =
-    useState(false);
+  const [resourceEditDialogOpen, setResourceEditDialogOpen] = useState(false);
   const [editingResource, setEditingResource] = useState<
-    Resource | undefined
+    ResourceWithId | undefined
   >(undefined);
 
   return (
     <>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Organization</TableCell>
-            <TableCell>ContactName</TableCell>
-            <TableCell>TelegramId</TableCell>
-            <TableCell>CompetenceField</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Tags</TableCell>
-            <TableCell>Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tableContent.map((resourceMessage, ind) => (
-            <TableRow key={ind}>
-              <TableCell>{resourceMessage._id}</TableCell>
-              <TableCell>{resourceMessage.date}</TableCell>
-              <TableCell>{resourceMessage.organization}</TableCell>
-              <TableCell>{resourceMessage.contactName}</TableCell>
-              <TableCell>{resourceMessage.telegramId}</TableCell>
-              <TableCell>{resourceMessage.competenceField}</TableCell>
-              <TableCell>{resourceMessage.description}</TableCell>
-              <TableCell>{resourceMessage.tags.join(", ")}</TableCell>
-              <TableCell>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Organization</TableCell>
+              <TableCell>ContactName</TableCell>
+              <TableCell>TelegramId</TableCell>
+              <TableCell>CompetenceField</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Tags</TableCell>
+              <TableCell>Status</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tableContent.map((resourceMessage, ind) => (
+              <TableRow key={ind}>
+                <TableCell>{resourceMessage._id}</TableCell>
+                <TableCell>{resourceMessage.date}</TableCell>
+                <TableCell>{resourceMessage.organization}</TableCell>
+                <TableCell>{resourceMessage.contactName}</TableCell>
+                <TableCell>{resourceMessage.telegramId}</TableCell>
+                <TableCell>{resourceMessage.competenceField}</TableCell>
+                <TableCell>{resourceMessage.description}</TableCell>
+                <TableCell>{resourceMessage.tags.join(", ")}</TableCell>
+                <TableCell>
                   {resourceMessage.status}
                   <IconButton
                     onClick={(e) => handleOpenPopover(e, resourceMessage._id)}
@@ -130,7 +129,9 @@ export default function ResourceTable() {
                     aria-label="delete"
                     size="large"
                     color="error"
-                    onClick={() => handleOpenDialogForDelete(resourceMessage._id)}
+                    onClick={() =>
+                      handleOpenDialogForDelete(resourceMessage._id)
+                    }
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -191,7 +192,7 @@ export default function ResourceTable() {
             horizontal: "center",
           }}
         >
-          <MenuList>
+          {/* <MenuList>
             {statusOptions.map((status) => (
               <MenuItem
                 key={status}
@@ -213,7 +214,7 @@ export default function ResourceTable() {
                 {status}
               </MenuItem>
             ))}
-          </MenuList>
+          </MenuList> */}
         </Popover>
       </TableContainer>
       {editingResource ? (
@@ -229,4 +230,3 @@ export default function ResourceTable() {
     </>
   );
 }
-

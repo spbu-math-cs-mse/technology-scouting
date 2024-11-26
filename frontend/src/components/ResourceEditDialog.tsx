@@ -8,13 +8,13 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Resource } from "../logic/types";
+import { Resource, ResourceWithId } from "../logic/types";
 
 type ResourceEditDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  initialState: Resource;
-  editResource: (editedState: Resource) => void;
+  initialState: ResourceWithId;
+  editResource: (editedState: ResourceWithId) => void;
 };
 
 export default function ResourceEditDialog({
@@ -23,7 +23,7 @@ export default function ResourceEditDialog({
   initialState,
   editResource,
 }: ResourceEditDialogProps) {
-  const [editedState, setEditedState] = useState(initialState);
+  const [editedState, setEditedState] = useState<Resource>(initialState);
 
   const handleChange = (
     key: string,
@@ -33,7 +33,7 @@ export default function ResourceEditDialog({
   };
 
   const handleEdit = () => {
-    editResource(editedState);
+    editResource({ ...editedState, ["_id"]: initialState._id });
     setOpen(false);
   };
 
@@ -42,20 +42,18 @@ export default function ResourceEditDialog({
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(initialState) as Array<keyof Resource>).map(
-            (key) => (
-              <Grid size={{ xs: 6 }} key={key}>
-                <TextField
-                  name={key}
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  value={editedState[key]}
-                  onChange={(event) => handleChange(key, event)}
-                  fullWidth
-                  margin="normal"
-                />
-              </Grid>
-            )
-          )}
+          {(Object.keys(initialState) as Array<keyof Resource>).map((key) => (
+            <Grid size={{ xs: 6 }} key={key}>
+              <TextField
+                name={key}
+                label={key.charAt(0).toUpperCase() + key.slice(1)}
+                value={editedState[key]}
+                onChange={(event) => handleChange(key, event)}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>
