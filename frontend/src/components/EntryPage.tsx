@@ -1,19 +1,18 @@
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
-import TextField from '@mui/material/TextField';
-import { useState } from 'react';
-import ErrorAlert from './ErrorAlert';
-import * as React from 'react';
-import FilledInput from '@mui/material/FilledInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid2";
+import TextField from "@mui/material/TextField";
+import { useState } from "react";
+import ErrorAlert from "./ErrorAlert";
+import * as React from "react";
+import FilledInput from "@mui/material/FilledInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,12 +32,11 @@ export default function EntryPageVisual() {
     event.preventDefault();
   };
 
-  const [inputUsernameString, setInputUsernameString] = useState('');
-  const [inputPasswordString, setInputPasswordString] = useState('');
+  const [inputUsernameString, setInputUsernameString] = useState("");
+  const [inputPasswordString, setInputPasswordString] = useState("");
 
-  const [targetUsernameValue, setTargetUsernameValue] = useState('test');
-  const [targetPasswordValue, setTargetPasswordValue] = useState('12345');
-  const [eqMessage, setEqMessage] = useState('');
+  const [targetUsernameValue, setTargetUsernameValue] = useState("test");
+  const [targetPasswordValue, setTargetPasswordValue] = useState("12345");
   const isMatch =
     inputUsernameString === targetUsernameValue &&
     inputPasswordString === targetPasswordValue;
@@ -57,17 +55,28 @@ export default function EntryPageVisual() {
     setErrorAlertOpened(false);
   };
 
+  /*const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const success = await login(inputUsernameString, inputPasswordString);
+
+    if (success) {
+        navigate("/admin-panel"); // Переход на следующую страницу
+    } else {
+      setErrorAlertOpened(true);
+      console.error("Login failed");
+    }
+};*/
   const handleLogin = () => {
     if (isMatch) {
-      navigate('/admin-panel');
-    } else setEqMessage('Пользователя с таким ником и паролем не существует!');
+      navigate("/admin-panel");
+    }
   };
 
   const [errorAlertOpened, setErrorAlertOpened] = useState(false);
-  const [errorText, setErrorText] = useState('');
 
   return (
-    <Box sx={{ width: '90%' }}>
+    <Box sx={{ width: "90%" }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
         <Grid size={10}>
           <TextField
@@ -76,12 +85,12 @@ export default function EntryPageVisual() {
             variant="outlined"
             value={inputUsernameString}
             onChange={handleInputUsernameChange}
-            sx={{ m: '5%', width: '100%' }}
+            sx={{ m: "5%", width: "100%" }}
           />
         </Grid>
 
         <Grid size={6}>
-          <FormControl sx={{ m: '10%', width: '120%' }} variant="filled">
+          <FormControl sx={{ m: "10%", width: "120%" }} variant="filled">
             <InputLabel htmlFor="filled-adornment-password">
               Password
             </InputLabel>
@@ -89,14 +98,14 @@ export default function EntryPageVisual() {
               id="filled-adornment-password"
               value={inputPasswordString}
               onChange={handleInputPasswordChange}
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label={
                       showPassword
-                        ? 'hide the password'
-                        : 'display the password'
+                        ? "hide the password"
+                        : "display the password"
                     }
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
@@ -114,29 +123,16 @@ export default function EntryPageVisual() {
           <Button
             onClick={handleLogin}
             variant="contained"
-            sx={{ marginTop: '15%', marginLeft: '50%' }}
+            sx={{ marginTop: "15%", marginLeft: "50%" }}
           >
             Enter
           </Button>
-        </Grid>
-        <Grid size={12}>
-          <Typography
-            variant="body1"
-            color={isMatch ? 'green' : 'red'}
-            sx={{ marginBottom: '1rem', marginLeft: '20px' }}
-          >
-            {isMatch ? (
-              'Пользователь с таким ником существует!'
-            ) : (
-              <p style={{ fontSize: '12px' }}>{eqMessage}</p>
-            )}
-          </Typography>
         </Grid>
       </Grid>
       <ErrorAlert
         opened={errorAlertOpened}
         setOpened={(open: boolean) => setErrorAlertOpened(open)}
-        errorText={errorText}
+        errorText={"Wrong username or password"}
       />
     </Box>
   );

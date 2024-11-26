@@ -1,4 +1,4 @@
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert } from "@mui/material";
 
 type ErrorAlertProps = {
   opened: boolean;
@@ -11,7 +11,7 @@ export default function ErrorAlert(props: ErrorAlertProps) {
     _event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     props.setOpened(false);
@@ -19,7 +19,7 @@ export default function ErrorAlert(props: ErrorAlertProps) {
 
   return (
     <Snackbar open={props.opened} onClose={handleClose}>
-      <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+      <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
         {props.errorText}
       </Alert>
     </Snackbar>
