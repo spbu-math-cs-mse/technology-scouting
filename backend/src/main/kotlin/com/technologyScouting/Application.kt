@@ -74,12 +74,12 @@ data class ResourceWithId(
 
 @Serializable
 data class Resources(
-    val resources: List<ResourceWithId>
+    val resources: List<ResourceWithId>,
 )
 
 @Serializable
 data class Applications(
-    val applications: List<ApplicationWithId>
+    val applications: List<ApplicationWithId>,
 )
 // @Serializable
 // data class Requests(val requests: List<Request>)

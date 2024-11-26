@@ -64,7 +64,7 @@ object FieldValidator {
 }
 
 class ApplicationsService(
-    private val database: MongoDatabase
+    private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("applications")
 
@@ -129,15 +129,16 @@ class ApplicationsService(
 
     fun getAllApplications(): List<ApplicationWithId> = connection.find().map { it.toApplicationWithId() }.toList()
 
-    private fun Document.toApplicationWithId(): ApplicationWithId = ApplicationWithId(
-        _id = this.getObjectId(ApplicationFields.ID).toHexString(),
-        date = this.getString(ApplicationFields.DATE),
-        organization = this.getString(ApplicationFields.ORGANIZATION),
-        contactName = this.getString(ApplicationFields.CONTACT_NAME),
-        telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
-        requestText = this.getString(ApplicationFields.REQUEST_TEXT),
-        status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
-    )
+    private fun Document.toApplicationWithId(): ApplicationWithId =
+        ApplicationWithId(
+            _id = this.getObjectId(ApplicationFields.ID).toHexString(),
+            date = this.getString(ApplicationFields.DATE),
+            organization = this.getString(ApplicationFields.ORGANIZATION),
+            contactName = this.getString(ApplicationFields.CONTACT_NAME),
+            telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
+            requestText = this.getString(ApplicationFields.REQUEST_TEXT),
+            status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
+        )
 }
 
 object ResourceFields {
@@ -153,7 +154,7 @@ object ResourceFields {
 }
 
 class ResourcesService(
-    private val database: MongoDatabase
+    private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("resources")
 
@@ -224,17 +225,18 @@ class ResourcesService(
 
     fun getAllResources(): List<ResourceWithId> = connection.find().map { it.toResourceWithId() }.toList()
 
-    private fun Document.toResourceWithId(): ResourceWithId = ResourceWithId(
-        _id = this.getObjectId(ResourceFields.ID).toHexString(),
-        date = this.getString(ResourceFields.DATE),
-        organization = this.getString(ResourceFields.ORGANIZATION),
-        contactName = this.getString(ResourceFields.CONTACT_NAME),
-        telegramId = this.getString(ResourceFields.TELEGRAM_ID),
-        competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
-        description = this.getString(ResourceFields.DESCRIPTION),
-        tags = this.getList(ResourceFields.TAGS, String::class.java),
-        status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
-    )
+    private fun Document.toResourceWithId(): ResourceWithId =
+        ResourceWithId(
+            _id = this.getObjectId(ResourceFields.ID).toHexString(),
+            date = this.getString(ResourceFields.DATE),
+            organization = this.getString(ResourceFields.ORGANIZATION),
+            contactName = this.getString(ResourceFields.CONTACT_NAME),
+            telegramId = this.getString(ResourceFields.TELEGRAM_ID),
+            competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
+            description = this.getString(ResourceFields.DESCRIPTION),
+            tags = this.getList(ResourceFields.TAGS, String::class.java),
+            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
+        )
 }
 
 object PasswordHelper {
@@ -253,7 +255,7 @@ object AdminFields {
 }
 
 class AdminAuthService(
-    private val database: MongoDatabase
+    private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("admins")
 

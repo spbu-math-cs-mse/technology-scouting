@@ -20,15 +20,16 @@ import com.technologyScouting.plugins.resourcesService
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 
-fun createBot(): Bot = bot {
-    if (BOT_TOKEN == null) {
-        throw IllegalArgumentException()
+fun createBot(): Bot =
+    bot {
+        if (BOT_TOKEN == null) {
+            throw IllegalArgumentException()
+        }
+        token = BOT_TOKEN
+        dispatch {
+            setUpCommands()
+        }
     }
-    token = BOT_TOKEN
-    dispatch {
-        setUpCommands()
-    }
-}
 
 private var currentStep: String? = null
 
@@ -42,7 +43,7 @@ private fun Dispatcher.setUpCommands() {
                     InlineKeyboardButton.CallbackData(text = "Подать ресурс", callbackData = "submit_resource"),
                     InlineKeyboardButton.CallbackData(
                         text = "Подать запрос на ресурс",
-                        callbackData = "submit_request"
+                        callbackData = "submit_request",
                     ),
                 ),
             )
@@ -116,10 +117,13 @@ private fun Dispatcher.setUpCommands() {
 
             "resource_tags" -> {
                 newResource =
-                    newResource.copy(tags = message.text!!
-                        .split(",")
-                        .map { it.trim() }
-                        .filter { it.isNotEmpty() })
+                    newResource.copy(
+                        tags = message
+                            .text!!
+                            .split(",")
+                            .map { it.trim() }
+                            .filter { it.isNotEmpty() }
+                    )
                 newResource = newResource.copy(status = ResourceStatus.IN_WORK)
                 try {
                     resourcesService.addResource(
