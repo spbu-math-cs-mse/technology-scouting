@@ -226,7 +226,7 @@ paths:
         content:
           application/json:
             schema:
-              new_admin:
+              newAdmin:
                 type: object
                 properties:
                   login:

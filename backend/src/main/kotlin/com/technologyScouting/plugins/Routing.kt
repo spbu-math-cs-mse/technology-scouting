@@ -79,7 +79,7 @@ fun Application.configureRouting() {
                     call.respond(Token(token))
                 }
                 else {
-                    throw Exception("hui")
+                    throw Exception()
                 }
             }
 
@@ -194,6 +194,8 @@ fun Application.configureRouting() {
                     )
 
                     applicationsService.updateApplication(newApplication._id, updatedValues)
+
+                    call.respond((HttpStatusCode.OK))
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }
@@ -215,6 +217,8 @@ fun Application.configureRouting() {
                     )
 
                     resourcesService.updateResource(newResource._id, updatedValues)
+
+                    call.respond((HttpStatusCode.OK))
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }
@@ -224,6 +228,8 @@ fun Application.configureRouting() {
 
                 try {
                     adminAuthService.addAdmin(newAdmin.login, newAdmin.password)
+
+                    call.respond((HttpStatusCode.OK))
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }

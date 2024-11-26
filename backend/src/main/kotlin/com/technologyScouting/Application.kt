@@ -20,14 +20,14 @@ data class Application(
     val status: Status,
 )
 
-enum class Status {
-    INCOMING,
-    RESOURCES_SEARCH,
-    RESOURCES_ATTACHED,
-    IN_WORK,
-    ENDED,
-    DECLINED_BY_SCOUT,
-    DECLINED_BY_CLIENT,
+enum class Status(s: String) {
+    INCOMING("incoming"),
+    RESOURCES_SEARCH("resources_search"),
+    RESOURCES_ATTACHED("resources_attached"),
+    IN_WORK("in_work"),
+    ENDED("ended"),
+    DECLINED_BY_SCOUT("declined_by_scout"),
+    DECLINED_BY_CLIENT("declined_by_client"),
 }
 
 @Serializable
@@ -54,9 +54,9 @@ data class Resource(
     val status: ResourceStatus,
 )
 
-enum class ResourceStatus {
-    IN_WORK,
-    AVAILABLE,
+enum class ResourceStatus(s: String) {
+    IN_WORK("in_work"),
+    AVAILABLE("available"),
 }
 
 @Serializable
