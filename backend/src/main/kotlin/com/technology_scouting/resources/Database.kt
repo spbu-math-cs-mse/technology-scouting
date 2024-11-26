@@ -80,7 +80,7 @@ class ApplicationsService(private val database: MongoDatabase) {
         telegramId: String,
         requestText: String,
         status: Status = Status.INCOMING,
-    ) {
+    ): String? {
         val document =
             Document()
                 .append(ApplicationFields.DATE, LocalDateTime.now().toString())
@@ -90,7 +90,8 @@ class ApplicationsService(private val database: MongoDatabase) {
                 .append(ApplicationFields.REQUEST_TEXT, requestText)
                 .append(ApplicationFields.STATUS, status.name)
 
-        connection.insertOne(document)
+        val result = connection.insertOne(document)
+        return result.insertedId?.asObjectId()?.value?.toHexString()
     }
 
     fun updateApplication(
@@ -175,7 +176,7 @@ class ResourcesService(private val database: MongoDatabase) {
         description: String,
         tags: List<String>,
         status: ResourceStatus,
-    ) {
+    ): String? {
         val document =
             Document()
                 .append(ResourceFields.DATE, LocalDateTime.now().toString())
@@ -187,7 +188,8 @@ class ResourcesService(private val database: MongoDatabase) {
                 .append(ResourceFields.TAGS, tags)
                 .append(ResourceFields.STATUS, status.name)
 
-        connection.insertOne(document)
+        val result = connection.insertOne(document)
+        return result.insertedId?.asObjectId()?.value?.toHexString()
     }
 
     fun updateResource(
