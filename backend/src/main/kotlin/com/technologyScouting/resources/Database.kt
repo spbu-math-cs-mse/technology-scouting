@@ -1,4 +1,4 @@
-package com.technology_scouting.resources
+package com.technologyScouting.resources
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
@@ -6,10 +6,10 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import com.technology_scouting.ApplicationWithId
-import com.technology_scouting.ResourceStatus
-import com.technology_scouting.ResourceWithId
-import com.technology_scouting.Status
+import com.technologyScouting.ApplicationWithId
+import com.technologyScouting.ResourceStatus
+import com.technologyScouting.ResourceWithId
+import com.technologyScouting.Status
 import org.bson.Document
 import org.bson.types.ObjectId
 import org.mindrot.jbcrypt.*
@@ -25,7 +25,8 @@ class DatabaseService {
         val dbDatabase = System.getenv("MONGODB_DBNAME")
         val connectionString = ConnectionString("mongodb://$dbHost:$dbPort")
         val settings =
-            MongoClientSettings.builder()
+            MongoClientSettings
+                .builder()
                 .applyConnectionString(connectionString)
                 .build()
         mongoClient = MongoClients.create(settings)
@@ -62,7 +63,9 @@ object FieldValidator {
     }
 }
 
-class ApplicationsService(private val database: MongoDatabase) {
+class ApplicationsService(
+    private val database: MongoDatabase
+) {
     private val connection: MongoCollection<Document> = database.getCollection("applications")
 
     private val allowedFields =
@@ -124,21 +127,17 @@ class ApplicationsService(private val database: MongoDatabase) {
         return document?.toApplicationWithId()
     }
 
-    fun getAllApplications(): List<ApplicationWithId> {
-        return connection.find().map { it.toApplicationWithId() }.toList()
-    }
+    fun getAllApplications(): List<ApplicationWithId> = connection.find().map { it.toApplicationWithId() }.toList()
 
-    private fun Document.toApplicationWithId(): ApplicationWithId {
-        return ApplicationWithId(
-            _id = this.getObjectId(ApplicationFields.ID).toHexString(),
-            date = this.getString(ApplicationFields.DATE),
-            organization = this.getString(ApplicationFields.ORGANIZATION),
-            contactName = this.getString(ApplicationFields.CONTACT_NAME),
-            telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
-            requestText = this.getString(ApplicationFields.REQUEST_TEXT),
-            status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
-        )
-    }
+    private fun Document.toApplicationWithId(): ApplicationWithId = ApplicationWithId(
+        _id = this.getObjectId(ApplicationFields.ID).toHexString(),
+        date = this.getString(ApplicationFields.DATE),
+        organization = this.getString(ApplicationFields.ORGANIZATION),
+        contactName = this.getString(ApplicationFields.CONTACT_NAME),
+        telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
+        requestText = this.getString(ApplicationFields.REQUEST_TEXT),
+        status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
+    )
 }
 
 object ResourceFields {
@@ -153,7 +152,9 @@ object ResourceFields {
     const val STATUS = "status"
 }
 
-class ResourcesService(private val database: MongoDatabase) {
+class ResourcesService(
+    private val database: MongoDatabase
+) {
     private val connection: MongoCollection<Document> = database.getCollection("resources")
 
     private val allowedFields =
@@ -221,36 +222,28 @@ class ResourcesService(private val database: MongoDatabase) {
         return document?.toResourceWithId()
     }
 
-    fun getAllResources(): List<ResourceWithId> {
-        return connection.find().map { it.toResourceWithId() }.toList()
-    }
+    fun getAllResources(): List<ResourceWithId> = connection.find().map { it.toResourceWithId() }.toList()
 
-    private fun Document.toResourceWithId(): ResourceWithId {
-        return ResourceWithId(
-            _id = this.getObjectId(ResourceFields.ID).toHexString(),
-            date = this.getString(ResourceFields.DATE),
-            organization = this.getString(ResourceFields.ORGANIZATION),
-            contactName = this.getString(ResourceFields.CONTACT_NAME),
-            telegramId = this.getString(ResourceFields.TELEGRAM_ID),
-            competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
-            description = this.getString(ResourceFields.DESCRIPTION),
-            tags = this.getList(ResourceFields.TAGS, String::class.java),
-            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
-        )
-    }
+    private fun Document.toResourceWithId(): ResourceWithId = ResourceWithId(
+        _id = this.getObjectId(ResourceFields.ID).toHexString(),
+        date = this.getString(ResourceFields.DATE),
+        organization = this.getString(ResourceFields.ORGANIZATION),
+        contactName = this.getString(ResourceFields.CONTACT_NAME),
+        telegramId = this.getString(ResourceFields.TELEGRAM_ID),
+        competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
+        description = this.getString(ResourceFields.DESCRIPTION),
+        tags = this.getList(ResourceFields.TAGS, String::class.java),
+        status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
+    )
 }
 
 object PasswordHelper {
-    fun hashPassword(password: String): String {
-        return BCrypt.hashpw(password, BCrypt.gensalt())
-    }
+    fun hashPassword(password: String): String = BCrypt.hashpw(password, BCrypt.gensalt())
 
     fun verifyPassword(
         password: String,
         hashedPassword: String,
-    ): Boolean {
-        return BCrypt.checkpw(password, hashedPassword)
-    }
+    ): Boolean = BCrypt.checkpw(password, hashedPassword)
 }
 
 object AdminFields {
@@ -259,7 +252,9 @@ object AdminFields {
     const val PASSWORD = "password"
 }
 
-class AdminAuthService(private val database: MongoDatabase) {
+class AdminAuthService(
+    private val database: MongoDatabase
+) {
     private val connection: MongoCollection<Document> = database.getCollection("admins")
 
     fun addAdmin(
