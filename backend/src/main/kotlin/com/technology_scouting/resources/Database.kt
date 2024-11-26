@@ -8,11 +8,13 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import com.technology_scouting.Request
-import com.technology_scouting.Resource
+import com.technology_scouting.ApplicationWithId
+import com.technology_scouting.ResourceWithId
 import org.bson.Document
 import org.bson.types.ObjectId
 import java.time.LocalDateTime
+import com.technology_scouting.ResourceStatus
+import com.technology_scouting.Status
 
 class DatabaseService {
     private val mongoClient: MongoClient
@@ -37,16 +39,16 @@ class DatabaseService {
     }
 }
 
-object RequestFields {
+object ApplicationFields {
     const val ID = "_id"
     const val DATE = "date"
     const val ORGANIZATION = "organization"
-    const val CONTACT = "contact"
-    const val CONTACT_LINK = "contact_link"
-    const val REQUEST = "request"
-    const val THEME = "theme"
+    const val CONTACT_NAME = "contactName"
+    const val TELEGRAM_ID = "telegramId"
+    const val REQUEST_TEXT = "requestText"
     const val STATUS = "status"
 }
+
 
 object FieldValidator {
     fun validateFields(updates: Map<String, Any?>, allowedFields: List<String>): Document {
@@ -60,42 +62,38 @@ object FieldValidator {
     }
 }
 
-
-class RequestsService(private val database: MongoDatabase) {
-    private val connection: MongoCollection<Document> = database.getCollection("requests")
+class ApplicationsService(private val database: MongoDatabase) {
+    private val connection: MongoCollection<Document> = database.getCollection("applications")
 
     private val allowedFields = listOf(
-        RequestFields.ORGANIZATION,
-        RequestFields.CONTACT,
-        RequestFields.CONTACT_LINK,
-        RequestFields.REQUEST,
-        RequestFields.THEME,
-        RequestFields.STATUS
+        ApplicationFields.ORGANIZATION,
+        ApplicationFields.CONTACT_NAME,
+        ApplicationFields.TELEGRAM_ID,
+        ApplicationFields.REQUEST_TEXT,
+        ApplicationFields.STATUS
     )
 
-    fun addRequest(
+    fun addApplication(
         organization: String,
-        contact: String,
-        contactLink: String,
-        description: String,
-        theme: String,
-        status: String = "In review"
+        contactName: String,
+        telegramId: String,
+        requestText: String,
+        status: Status = Status.INCOMING
     ) {
         val document = Document()
-            .append(RequestFields.DATE, LocalDateTime.now().toString())
-            .append(RequestFields.ORGANIZATION, organization)
-            .append(RequestFields.CONTACT, contact)
-            .append(RequestFields.CONTACT_LINK, contactLink)
-            .append(RequestFields.REQUEST, description)
-            .append(RequestFields.THEME, theme)
-            .append(RequestFields.STATUS, status)
+            .append(ApplicationFields.DATE, LocalDateTime.now().toString())
+            .append(ApplicationFields.ORGANIZATION, organization)
+            .append(ApplicationFields.CONTACT_NAME, contactName)
+            .append(ApplicationFields.TELEGRAM_ID, telegramId)
+            .append(ApplicationFields.REQUEST_TEXT, requestText)
+            .append(ApplicationFields.STATUS, status.name)
 
         connection.insertOne(document)
     }
 
-    fun updateRequest(requestId: String, updates: Map<String, Any?>): Boolean {
-        val objectId = ObjectId(requestId)
-        val filter = Document(RequestFields.ID, objectId)
+    fun updateApplication(applicationId: String, updates: Map<String, Any?>): Boolean {
+        val objectId = ObjectId(applicationId)
+        val filter = Document(ApplicationFields.ID, objectId)
 
         val updateDocument = FieldValidator.validateFields(updates, allowedFields)
         if (updateDocument.isEmpty()) {
@@ -107,48 +105,47 @@ class RequestsService(private val database: MongoDatabase) {
         return updateResult.matchedCount > 0
     }
 
-    fun deleteRequest(requestId: String): Boolean {
-        val objectId = ObjectId(requestId)
-        val filter = Document(RequestFields.ID, objectId)
+    fun deleteApplication(applicationId: String): Boolean {
+        val objectId = ObjectId(applicationId)
+        val filter = Document(ApplicationFields.ID, objectId)
         val deleteResult = connection.deleteOne(filter)
         return deleteResult.deletedCount > 0
     }
 
-    fun getRequest(requestId: String): Request? {
-        val objectId = ObjectId(requestId)
-        val filter = Document(RequestFields.ID, objectId)
+    fun getApplication(applicationId: String): ApplicationWithId? {
+        val objectId = ObjectId(applicationId)
+        val filter = Document(ApplicationFields.ID, objectId)
         val document = connection.find(filter).firstOrNull()
-        return document?.toRequest()
+        return document?.toApplicationWithId()
     }
 
-    fun getAllRequests(): List<Request> {
-        return connection.find().map { it.toRequest() }.toList()
+    fun getAllApplications(): List<ApplicationWithId> {
+        return connection.find().map { it.toApplicationWithId() }.toList()
     }
 
-    private fun Document.toRequest(): Request {
-        return Request(
-            id = this.getObjectId(RequestFields.ID).toHexString(),
-            date = this.getString(RequestFields.DATE),
-            organization = this.getString(RequestFields.ORGANIZATION),
-            contact = this.getString(RequestFields.CONTACT),
-            contactLink = this.getString(RequestFields.CONTACT_LINK),
-            description = this.getString(RequestFields.REQUEST),
-            theme = this.getString(RequestFields.THEME),
-            status = this.getString(RequestFields.STATUS)
+    private fun Document.toApplicationWithId(): ApplicationWithId {
+        return ApplicationWithId(
+            _id = this.getObjectId(ApplicationFields.ID).toHexString(),
+            date = this.getString(ApplicationFields.DATE),
+            organization = this.getString(ApplicationFields.ORGANIZATION),
+            contactName = this.getString(ApplicationFields.CONTACT_NAME),
+            telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
+            requestText = this.getString(ApplicationFields.REQUEST_TEXT),
+            status = Status.valueOf(this.getString(ApplicationFields.STATUS))
         )
     }
 }
+
 
 object ResourceFields {
     const val ID = "_id"
     const val DATE = "date"
     const val ORGANIZATION = "organization"
-    const val CONTACT = "contact"
-    const val CONTACT_LINK = "contact_link"
-    const val AREA = "area"
+    const val CONTACT_NAME = "contactName"
+    const val TELEGRAM_ID = "telegramId"
+    const val COMPETENCE_FIELD = "competenceField"
     const val DESCRIPTION = "description"
     const val TAGS = "tags"
-    const val RESOURCE_TYPES = "resource_types"
     const val STATUS = "status"
 }
 
@@ -158,36 +155,32 @@ class ResourcesService(private val database: MongoDatabase) {
 
     private val allowedFields = listOf(
         ResourceFields.ORGANIZATION,
-        ResourceFields.CONTACT,
-        ResourceFields.CONTACT_LINK,
-        ResourceFields.AREA,
+        ResourceFields.CONTACT_NAME,
+        ResourceFields.TELEGRAM_ID,
+        ResourceFields.COMPETENCE_FIELD,
         ResourceFields.DESCRIPTION,
         ResourceFields.TAGS,
-        ResourceFields.RESOURCE_TYPES,
         ResourceFields.STATUS
     )
 
     fun addResource(
-        date: String,
         organization: String,
-        contact: String,
-        contactLink: String,
-        area: String,
+        contactName: String,
+        telegramId: String,
+        competenceField: String,
         description: String,
         tags: List<String>,
-        resourceTypes: List<String>,
-        status: String
+        status: ResourceStatus
     ) {
         val document = Document()
-            .append(ResourceFields.DATE, date)
+            .append(ResourceFields.DATE, LocalDateTime.now().toString())
             .append(ResourceFields.ORGANIZATION, organization)
-            .append(ResourceFields.CONTACT, contact)
-            .append(ResourceFields.CONTACT_LINK, contactLink)
-            .append(ResourceFields.AREA, area)
+            .append(ResourceFields.CONTACT_NAME, contactName)
+            .append(ResourceFields.TELEGRAM_ID, telegramId)
+            .append(ResourceFields.COMPETENCE_FIELD, competenceField)
             .append(ResourceFields.DESCRIPTION, description)
             .append(ResourceFields.TAGS, tags)
-            .append(ResourceFields.RESOURCE_TYPES, resourceTypes)
-            .append(ResourceFields.STATUS, status)
+            .append(ResourceFields.STATUS, status.name)
 
         connection.insertOne(document)
     }
@@ -195,6 +188,7 @@ class ResourcesService(private val database: MongoDatabase) {
     fun updateResource(resourceId: String, updates: Map<String, Any?>): Boolean {
         val objectId = ObjectId(resourceId)
         val filter = Document(ResourceFields.ID, objectId)
+
         val updateDocument = FieldValidator.validateFields(updates, allowedFields)
         if (updateDocument.isEmpty()) {
             throw IllegalArgumentException("No valid fields provided for update.")
@@ -212,33 +206,32 @@ class ResourcesService(private val database: MongoDatabase) {
         return deleteResult.deletedCount > 0
     }
 
-    fun getResource(resourceId: String): Resource? {
+    fun getResource(resourceId: String): ResourceWithId? {
         val objectId = ObjectId(resourceId)
         val filter = Document(ResourceFields.ID, objectId)
         val document = connection.find(filter).firstOrNull()
-        return document?.toResource()
+        return document?.toResourceWithId()
     }
 
-
-    fun getAllResources(): List<Resource> {
-        return connection.find().map { it.toResource() }.toList()
+    fun getAllResources(): List<ResourceWithId> {
+        return connection.find().map { it.toResourceWithId() }.toList()
     }
 
-    private fun Document.toResource(): Resource {
-        return Resource(
-            id = this.getObjectId(ResourceFields.ID).toHexString(),
+    private fun Document.toResourceWithId(): ResourceWithId {
+        return ResourceWithId(
+            _id = this.getObjectId(ResourceFields.ID).toHexString(),
             date = this.getString(ResourceFields.DATE),
             organization = this.getString(ResourceFields.ORGANIZATION),
-            contact = this.getString(ResourceFields.CONTACT),
-            contactLink = this.getString(ResourceFields.CONTACT_LINK),
-            area = this.getString(ResourceFields.AREA),
+            contactName = this.getString(ResourceFields.CONTACT_NAME),
+            telegramId = this.getString(ResourceFields.TELEGRAM_ID),
+            competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
             description = this.getString(ResourceFields.DESCRIPTION),
             tags = this.getList(ResourceFields.TAGS, String::class.java),
-            resourceTypes = this.getList(ResourceFields.RESOURCE_TYPES, String::class.java),
-            status = this.getString(ResourceFields.STATUS)
+            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS))
         )
     }
 }
+
 
 object PasswordHelper {
     fun hashPassword(password: String): String {
