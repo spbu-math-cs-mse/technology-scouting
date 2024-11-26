@@ -18,6 +18,7 @@ import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.*
 import com.technology_scouting.resources.*
+import io.ktor.server.application.Application
 import io.ktor.server.request.*
 import mu.KotlinLogging
 
@@ -46,9 +47,9 @@ fun Application.configureRouting() {
 
         get("/api/requests") {
             try{
-                var requests: List<Request> =  requestsService.getAllRequests()
+                var requests: List<com.technology_scouting.Application> =  requestsService.getAllRequests()
 
-                call.respond(Requests(requests))
+                call.respond(Applications(requests))
             }
             catch (e: Exception){
                 call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
@@ -67,7 +68,7 @@ fun Application.configureRouting() {
         post("/api/delete_request") {
             val id = call.receive<Id>()
             try{
-                requestsService.deleteRequest(id.id)
+                requestsService.deleteRequest(id._id)
 
                 call.respond((HttpStatusCode.OK))
             }
@@ -78,7 +79,7 @@ fun Application.configureRouting() {
         post("/api/delete_resource") {
             val id = call.receive<Id>()
             try{
-                resourcesService.deleteResource(id.id)
+                resourcesService.deleteResource(id._id)
 
                 call.respond((HttpStatusCode.OK))
             }
