@@ -25,7 +25,7 @@ import mu.KotlinLogging
 val logger = KotlinLogging.logger {}
 
 val dbService = DatabaseService()
-val requestsService = RequestsService(dbService.database)
+val requestsService = ApplicationsService(dbService.database)
 val resourcesService = ResourcesService(dbService.database)
 
 fun Application.configureRouting() {
@@ -47,7 +47,7 @@ fun Application.configureRouting() {
 
         get("/api/requests") {
             try{
-                var requests: List<com.technology_scouting.Application> =  requestsService.getAllRequests()
+                var requests: List<com.technology_scouting.ApplicationWithId> =  requestsService.getAllApplications()
 
                 call.respond(Applications(requests))
             }
@@ -57,7 +57,7 @@ fun Application.configureRouting() {
         }
         get("/api/resources") {
             try{
-                var resources: List<Resource> = resourcesService.getAllResources()
+                var resources: List<ResourceWithId> = resourcesService.getAllResources()
 
                 call.respond(Resources(resources))
             }
@@ -68,7 +68,7 @@ fun Application.configureRouting() {
         post("/api/delete_request") {
             val id = call.receive<Id>()
             try{
-                requestsService.deleteRequest(id._id)
+                requestsService.deleteApplication(id._id)
 
                 call.respond((HttpStatusCode.OK))
             }

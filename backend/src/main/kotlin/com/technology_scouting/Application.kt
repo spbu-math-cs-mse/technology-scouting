@@ -80,6 +80,15 @@ data class Applications(val applications: List<ApplicationWithId>)
 data class UnauthorizedError(
     val description: String = "Access token is missing or invalid"
 )
+@Serializable
+data class logIn(
+    val login: String,
+    val password: String
+)
+@Serializable
+data class token(
+    val token: String
+)
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
