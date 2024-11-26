@@ -226,12 +226,13 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                login:
-                  type: string
-                password:
-                  type: string
+              new_admin:
+                type: object
+                properties:
+                  login:
+                    type: string
+                  password:
+                    type: string
       responses:
         "200":
           description: New admin added
@@ -251,6 +252,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/resourceWithId"
+                $ref: "#/components/schemas/token"
         '401':
           $ref: "#/components/responses/UnauthorizedError"

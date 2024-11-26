@@ -61,7 +61,7 @@ enum class ResourceStatus {
 
 @Serializable
 data class ResourceWithId(
-    val _id: String, // from Id
+    val _id: String,
     val date: String,
     val organization: String,
     val contactName: String,
@@ -81,14 +81,17 @@ data class Resources(
 data class Applications(
     val applications: List<ApplicationWithId>,
 )
-// @Serializable
-// data class Requests(val requests: List<Request>)
 
 @Serializable
 data class UnauthorizedError(
     val description: String = "Access token is missing or invalid",
 )
 
+@Serializable
+data class NewAdmin(
+    val login: String,
+    val password: String,
+)
 @Serializable
 data class LogIn(
     val login: String,

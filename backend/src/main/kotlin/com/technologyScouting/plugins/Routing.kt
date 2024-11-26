@@ -1,14 +1,12 @@
 package com.technologyScouting.plugins
 
-import com.github.kotlintelegrambot.dispatcher.*
-import com.github.kotlintelegrambot.entities.*
 import com.technologyScouting.*
 import com.technologyScouting.resources.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
 import io.ktor.server.application.Application
 import io.ktor.server.http.content.*
+import io.ktor.server.plugins.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.openapi.*
@@ -22,8 +20,9 @@ import mu.KotlinLogging
 val logger = KotlinLogging.logger {}
 
 val dbService = DatabaseService()
-val requestsService = ApplicationsService(dbService.database)
+val applicationsService = ApplicationsService(dbService.database)
 val resourcesService = ResourcesService(dbService.database)
+val adminAuthService = AdminAuthService(dbService.database)
 
 fun Application.configureRouting() {
     routing {
@@ -38,41 +37,172 @@ fun Application.configureRouting() {
         }
 
         get("/api/applications") {
+
             try {
-                var applications: List<com.technologyScouting.ApplicationWithId> = requestsService.getAllApplications()
+                val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
                 call.respond(Applications(applications))
-            } catch (e: Exception) {
+            }
+
+            catch (e: Exception) {
                 call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
             }
         }
         get("/api/resources") {
+
             try {
-                var resources: List<ResourceWithId> = resourcesService.getAllResources()
+                val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
                 call.respond(Resources(resources))
-            } catch (e: Exception) {
+            }
+
+            catch (e: Exception) {
                 call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
             }
         }
         post("/api/delete_application") {
             val id = call.receive<Id>()
-            try {
-                requestsService.deleteApplication(id._id)
+
+            try{
+                val deleted = applicationsService.deleteApplication(id._id)
+
+                if (!deleted){
+                    throw NotFoundException()
+                }
 
                 call.respond((HttpStatusCode.OK))
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
+            }
+
+            catch (notFound: NotFoundException){
+                call.respond(HttpStatusCode.NotFound)
+            }
+
+            catch (e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
             }
         }
         post("/api/delete_resource") {
             val id = call.receive<Id>()
-            try {
-                resourcesService.deleteResource(id._id)
+
+            try{
+                val deleted = resourcesService.deleteResource(id._id)
+
+                if (!deleted){
+                    throw NotFoundException()
+                }
 
                 call.respond((HttpStatusCode.OK))
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
+            }
+            catch (notFound: NotFoundException) {
+                call.respond(HttpStatusCode.NotFound)
+            }
+
+            catch (e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+            }
+        }
+        post("/api/create_resource"){
+            val resource = call.receive<Resource>()
+
+            try{
+                val newId = resourcesService.addResource(resource.organization, resource.contactName, resource.telegramId,
+                    resource.competenceField, resource.description, resource.tags, resource.status)
+
+                if(newId == null)
+                {
+                    throw Exception()
+                }
+
+                call.respond(HttpStatusCode.OK, Id(newId))
+            }
+
+            catch (e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+            }
+        }
+        post("/api/create_application"){
+            val application = call.receive<com.technologyScouting.Application>()
+
+            try{
+                val newId = applicationsService.addApplication(application.organization, application.contactName,
+                    application.telegramId, application.requestText, application.status)
+
+                if(newId == null)
+                {
+                    throw Exception()
+                }
+
+                call.respond(HttpStatusCode.OK, Id(newId))
+            }
+
+            catch (e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+            }
+        }
+        post("/api/update_application"){
+            val newApplication = call.receive<ApplicationWithId>()
+
+            try{
+                val updatedValues = mapOf(
+                    ApplicationFields.ID to newApplication._id,
+                    ApplicationFields.STATUS to newApplication.status,
+                    ApplicationFields.DATE to newApplication.date,
+                    ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
+                    ApplicationFields.CONTACT_NAME to newApplication.contactName,
+                    ApplicationFields.ORGANIZATION to newApplication.organization,
+                    ApplicationFields.REQUEST_TEXT to newApplication.requestText
+                )
+
+                applicationsService.updateApplication(newApplication._id, updatedValues)
+            }
+
+            catch(e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+            }
+        }
+        post("/api/update_resource"){
+            val newResource = call.receive<ResourceWithId>()
+
+            try{
+                val updatedValues = mapOf(
+                    ResourceFields.ID to newResource._id,
+                    ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
+                    ResourceFields.TAGS to newResource.tags,
+                    ResourceFields.STATUS to newResource.status,
+                    ResourceFields.DATE to newResource.date,
+                    ResourceFields.CONTACT_NAME to newResource.contactName,
+                    ResourceFields.DESCRIPTION to newResource.description,
+                    ResourceFields.ORGANIZATION to newResource.organization,
+                    ResourceFields.TELEGRAM_ID to newResource.telegramId
+                )
+
+                resourcesService.updateResource(newResource._id, updatedValues)
+            }
+
+            catch(e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+            }
+        }
+        post("/api/add_new_admin"){
+            val newAdmin = call.receive<NewAdmin>()
+
+            try{
+                adminAuthService.addAdmin(newAdmin.login, newAdmin.password)
+            }
+
+            catch(e: Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+            }
+        }
+        post("/api/log-in"){
+            val userData = call.receive<LogIn>()
+
+            try{
+                adminAuthService.verifyAdmin(userData.login, userData.password)
+            }
+
+            catch(e:Exception){
+                call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
             }
         }
 
