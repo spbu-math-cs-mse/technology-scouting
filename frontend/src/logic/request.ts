@@ -159,27 +159,33 @@ export function postEditApplication(id: string, new_status: string) {
       },
     ])
   );
-}
+}*/
 
-export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
+export function getResourcesDataTableMock(): Promise<ResourceMessageWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
       {
         _id: "1",
-        tg_id: "1",
-        resource_name: "kids",
-        resource_description: "get sth",
-        resource_type: "a lot of",
-        available_quantity: "4",
+        date: "1",
+        organization: "1",
+        contactName: "1",
+        telegramId: "1",
+        competenceField: "1",
+        description: "1",
+        tags: ["1", "2"],
+        status: "in progress",
       },
       {
-        _id: "2",
-        tg_id: "1",
-        resource_name: "parents",
-        resource_description: "teach",
-        resource_type: "a lot of",
-        available_quantity: "3",
+        _id: "1",
+        date: "1",
+        organization: "1",
+        contactName: "1",
+        telegramId: "1",
+        competenceField: "1",
+        description: "1",
+        tags: ["1", "2"],
+        status: "in progress",
       },
     ])
   );
-}*/
+}
