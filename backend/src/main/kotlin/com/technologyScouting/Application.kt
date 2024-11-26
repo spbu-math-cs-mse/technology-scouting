@@ -17,9 +17,18 @@ data class Application(
     val contactName: String,
     val telegramId: String,
     val requestText: String,
-    val status: String,
+    val status: Status,
 )
 
+enum class Status {
+    INCOMING,
+    RESOURCES_SEARCH,
+    RESOURCES_ATTACHED,
+    IN_WORK,
+    ENDED,
+    DECLINED_BY_SCOUT,
+    DECLINED_BY_CLIENT,
+}
 
 @Serializable
 data class ApplicationWithId(
@@ -29,7 +38,7 @@ data class ApplicationWithId(
     val contactName: String,
     val telegramId: String,
     val requestText: String,
-    val status: String,
+    val status: Status,
 )
 
 @Serializable
@@ -42,8 +51,13 @@ data class Resource(
     val competenceField: String,
     val description: String,
     val tags: List<String>,
-    val status: String,
+    val status: ResourceStatus,
 )
+
+enum class ResourceStatus {
+    IN_WORK,
+    AVAILABLE,
+}
 
 @Serializable
 data class ResourceWithId(
@@ -55,7 +69,7 @@ data class ResourceWithId(
     val competenceField: String,
     val description: String,
     val tags: List<String>,
-    val status: String,
+    val status: ResourceStatus,
 )
 
 @Serializable

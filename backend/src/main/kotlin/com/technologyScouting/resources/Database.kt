@@ -7,7 +7,9 @@ import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.technologyScouting.ApplicationWithId
+import com.technologyScouting.ResourceStatus
 import com.technologyScouting.ResourceWithId
+import com.technologyScouting.Status
 import org.bson.Document
 import org.bson.types.ObjectId
 import org.mindrot.jbcrypt.*
@@ -80,7 +82,7 @@ class ApplicationsService(
         contactName: String,
         telegramId: String,
         requestText: String,
-        status: String,
+        status: Status = Status.INCOMING,
     ): String? {
         val document =
             Document()
@@ -89,7 +91,7 @@ class ApplicationsService(
                 .append(ApplicationFields.CONTACT_NAME, contactName)
                 .append(ApplicationFields.TELEGRAM_ID, telegramId)
                 .append(ApplicationFields.REQUEST_TEXT, requestText)
-                .append(ApplicationFields.STATUS, status)
+                .append(ApplicationFields.STATUS, status.name)
 
         val result = connection.insertOne(document)
         return result.insertedId?.asObjectId()?.value?.toHexString()
@@ -136,7 +138,7 @@ class ApplicationsService(
             contactName = this.getString(ApplicationFields.CONTACT_NAME),
             telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
             requestText = this.getString(ApplicationFields.REQUEST_TEXT),
-            status = this.getString(ApplicationFields.STATUS),
+            status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
         )
 }
 
@@ -175,7 +177,7 @@ class ResourcesService(
         competenceField: String,
         description: String,
         tags: List<String>,
-        status: String,
+        status: ResourceStatus,
     ): String? {
         val document =
             Document()
@@ -186,7 +188,7 @@ class ResourcesService(
                 .append(ResourceFields.COMPETENCE_FIELD, competenceField)
                 .append(ResourceFields.DESCRIPTION, description)
                 .append(ResourceFields.TAGS, tags)
-                .append(ResourceFields.STATUS, status)
+                .append(ResourceFields.STATUS, status.name)
 
         val result = connection.insertOne(document)
         return result.insertedId?.asObjectId()?.value?.toHexString()
@@ -235,7 +237,7 @@ class ResourcesService(
             competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
             description = this.getString(ResourceFields.DESCRIPTION),
             tags = this.getList(ResourceFields.TAGS, String::class.java),
-            status = this.getString(ResourceFields.STATUS),
+            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
         )
 }
 
