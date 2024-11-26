@@ -8,13 +8,13 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Application } from "../logic/types";
+import { Application, ApplicationWithId } from "../logic/types";
 
 type ApplicationEditDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  initialState: Application;
-  editApplication: (editedState: Application) => void;
+  initialState: ApplicationWithId;
+  editApplication: (editedState: ApplicationWithId) => void;
 };
 
 export default function ApplicatonEditDialog({
@@ -23,10 +23,11 @@ export default function ApplicatonEditDialog({
   initialState,
   editApplication,
 }: ApplicationEditDialogProps) {
-  const [editedState, setEditedState] = useState(initialState);
+  const [editedState, setEditedState] = useState<Application>(initialState);
   useEffect(() => {
     setEditedState(initialState);
   }, [initialState]);
+  console.log(editedState);
 
   const handleChange = (
     key: string,
@@ -36,7 +37,7 @@ export default function ApplicatonEditDialog({
   };
 
   const handleEdit = () => {
-    editApplication(editedState);
+    editApplication({ ...editedState, ["_id"]: initialState._id });
     setOpen(false);
   };
 

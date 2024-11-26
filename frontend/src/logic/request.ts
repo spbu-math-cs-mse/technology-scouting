@@ -74,6 +74,7 @@ export function postDeleteApplication(id: string) {
     method: "POST",
     headers: {
       "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
     body: JSON.stringify({ id }),
   })
@@ -100,6 +101,7 @@ export function postDeleteResource(id: string) {
     method: "POST",
     headers: {
       "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
     body: JSON.stringify({ id }),
   })
@@ -118,18 +120,19 @@ export function postDeleteResource(id: string) {
     });
 }
 
-export function postEditApplication(id: string, new_status: string) {
+export function postEditApplication(editedAplication: ApplicationWithId) {
   fetch("/api/update_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ id, new_status }),
+    body: JSON.stringify(editedAplication),
   })
     .then(async (response) => {
       await response.json();
       if (response.ok)
-        console.log(`Request with ID ${id} editted successfully.`);
+        console.log(`Applictaion with ID ${editedAplication._id} editted successfully.`);
       else return console.error("Failed to edit request", response.statusText);
     })
     .catch((error) => {
@@ -139,7 +142,7 @@ export function postEditApplication(id: string, new_status: string) {
       };
     });
 }
-//лень переисывать
+
 export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([

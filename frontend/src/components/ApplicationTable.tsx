@@ -51,11 +51,11 @@ export default function ApplicationTable() {
     getApplicationDataTable().then((messages) => setTableContent(messages));
   };
 
-  const handleEditStatus = (id: string, new_status: string) => {
-    postEditApplication(id, new_status);
-    getApplicationDataTable().then((messages) => setTableContent(messages));
-    handleClosePopover();
-  };
+  // const handleEditStatus = (id: string, new_status: string) => {
+  //   postEditApplication(id, new_status);
+  //   getApplicationDataTable().then((messages) => setTableContent(messages));
+  //   handleClosePopover();
+  // };
 
   const handleOpenPopover = (
     event: React.MouseEvent<HTMLElement>,
@@ -87,7 +87,7 @@ export default function ApplicationTable() {
   const [applicationEditDialogOpen, setApplicationEditDialogOpen] =
     useState(false);
   const [editingApplication, setEditingApplication] = useState<
-    Application | undefined
+    ApplicationWithId | undefined
   >(undefined);
 
   return (
@@ -188,7 +188,7 @@ export default function ApplicationTable() {
             horizontal: "center",
           }}
         >
-          <MenuList>
+          {/* <MenuList>
             {statusOptions.map((status) => (
               <MenuItem
                 key={status}
@@ -210,14 +210,17 @@ export default function ApplicationTable() {
                 {status}
               </MenuItem>
             ))}
-          </MenuList>
+          </MenuList> */}
         </Popover>
       </TableContainer>
       {editingApplication ? (
         <ApplicationEditDialog
           open={applicationEditDialogOpen}
           setOpen={setApplicationEditDialogOpen}
-          editApplication={() => {}}
+          editApplication={(editedState: ApplicationWithId) => {
+            postEditApplication(editedState);
+            getApplicationDataTableMock().then((messages) => setTableContent(messages));
+          }}
           initialState={editingApplication}
         />
       ) : (
