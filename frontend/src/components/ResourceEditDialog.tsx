@@ -50,7 +50,7 @@ export default function ResourceEditDialog({
   const handleStatusChange = (newStatus: string) => {
     setStatus(newStatus);
     setEditedState({ ...editedState, status: newStatus });
-    setStatusPopoverAnchor(null); // Закрыть поповер после изменения статуса
+    setStatusPopoverAnchor(null);
   };
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
