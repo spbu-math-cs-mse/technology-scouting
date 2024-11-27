@@ -6,11 +6,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.application.Application
-
 import io.ktor.server.auth.*
-import org.bson.Document
-import java.time.Instant
-
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -22,8 +18,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.swagger.codegen.v3.generators.html.*
 import mu.KotlinLogging
+import org.bson.Document
+import java.time.Instant
 import java.util.*
-
 
 val logger = KotlinLogging.logger {}
 
@@ -192,14 +189,14 @@ fun Application.configureRouting() {
                 try {
                     val updatedValues =
                         mapOf(
-                        ApplicationFields.ID to newApplication._id,
-                        ApplicationFields.STATUS to newApplication.status,
-                        ApplicationFields.DATE to newApplication.date,
-                        ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
-                        ApplicationFields.CONTACT_NAME to newApplication.contactName,
-                        ApplicationFields.ORGANIZATION to newApplication.organization,
-                        ApplicationFields.REQUEST_TEXT to newApplication.requestText,
-                    )
+                            ApplicationFields.ID to newApplication._id,
+                            ApplicationFields.STATUS to newApplication.status,
+                            ApplicationFields.DATE to newApplication.date,
+                            ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
+                            ApplicationFields.CONTACT_NAME to newApplication.contactName,
+                            ApplicationFields.ORGANIZATION to newApplication.organization,
+                            ApplicationFields.REQUEST_TEXT to newApplication.requestText,
+                        )
 
                     applicationsService.updateApplication(newApplication._id, updatedValues)
 
@@ -214,16 +211,16 @@ fun Application.configureRouting() {
                 try {
                     val updatedValues =
                         mapOf(
-                        ResourceFields.ID to newResource._id,
-                        ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
-                        ResourceFields.TAGS to newResource.tags,
-                        ResourceFields.STATUS to newResource.status,
-                        ResourceFields.DATE to newResource.date,
-                        ResourceFields.CONTACT_NAME to newResource.contactName,
-                        ResourceFields.DESCRIPTION to newResource.description,
-                        ResourceFields.ORGANIZATION to newResource.organization,
-                        ResourceFields.TELEGRAM_ID to newResource.telegramId,
-                    )
+                            ResourceFields.ID to newResource._id,
+                            ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
+                            ResourceFields.TAGS to newResource.tags,
+                            ResourceFields.STATUS to newResource.status,
+                            ResourceFields.DATE to newResource.date,
+                            ResourceFields.CONTACT_NAME to newResource.contactName,
+                            ResourceFields.DESCRIPTION to newResource.description,
+                            ResourceFields.ORGANIZATION to newResource.organization,
+                            ResourceFields.TELEGRAM_ID to newResource.telegramId,
+                        )
 
                     resourcesService.updateResource(newResource._id, updatedValues)
 
@@ -244,7 +241,6 @@ fun Application.configureRouting() {
                 }
             }
         }
-
 
         swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml") {
             version = "4.15.5"

@@ -14,8 +14,8 @@ import com.technologyScouting.Application
 import com.technologyScouting.Resource
 import com.technologyScouting.ResourceStatus
 import com.technologyScouting.Status
-import com.technologyScouting.plugins.logger
 import com.technologyScouting.plugins.applicationsService
+import com.technologyScouting.plugins.logger
 import com.technologyScouting.plugins.resourcesService
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")

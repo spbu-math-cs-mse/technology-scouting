@@ -96,6 +96,7 @@ data class NewAdmin(
     val login: String,
     val password: String,
 )
+
 @Serializable
 data class LogIn(
     val login: String,

@@ -267,6 +267,7 @@ class AdminAuthService(
     init {
         ensureDefaultAdminExists()
     }
+
     fun addAdmin(
         username: String,
         password: String,
@@ -297,7 +298,7 @@ class AdminAuthService(
             PasswordHelper.verifyPassword(password, hashedPassword)
         } ?: false
     }
-    
+
     private fun ensureDefaultAdminExists() {
         val defaultUsername = "test"
         val defaultPassword = "12345"
