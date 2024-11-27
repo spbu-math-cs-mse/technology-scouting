@@ -27,16 +27,19 @@ export default function ResourceEditDialog({
   initialState,
   editResource,
 }: ResourceEditDialogProps) {
-  const [editedState, setEditedState] = useState<Resource>(initialState);
+  const [editedState, setEditedState] = useState<Resource>({ ...initialState });
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
   const [status, setStatus] = useState(initialState.status);
 
   const handleChange = (
-    key: string,
+    key: keyof Resource,
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setEditedState({ ...editedState, [key]: e.target.value });
+    setEditedState({
+      ...editedState,
+      [key]: key === "tags" ? e.target.value.split(", ") : e.target.value,
+    });
   };
 
   const handleEdit = () => {
