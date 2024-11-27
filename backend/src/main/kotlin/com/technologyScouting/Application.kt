@@ -21,7 +21,7 @@ data class Application(
 )
 
 enum class Status(
-    s: String
+    s: String,
 ) {
     INCOMING("incoming"),
     RESOURCES_SEARCH("resources_search"),
@@ -57,7 +57,7 @@ data class Resource(
 )
 
 enum class ResourceStatus(
-    s: String
+    s: String,
 ) {
     IN_WORK("in_work"),
     AVAILABLE("available"),

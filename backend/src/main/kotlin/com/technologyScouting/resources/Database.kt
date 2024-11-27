@@ -191,7 +191,10 @@ class ResourcesService(
                 .append(ResourceFields.STATUS, status.name)
 
         val result = connection.insertOne(document)
-        return result.insertedId?.asObjectId()?.value?.toHexString()
+        return result.insertedId
+            ?.asObjectId()
+            ?.value
+            ?.toHexString()
     }
 
     fun updateResource(
@@ -260,6 +263,7 @@ class AdminAuthService(
     private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("admins")
+
     init {
         ensureDefaultAdminExists()
     }
@@ -293,6 +297,7 @@ class AdminAuthService(
             PasswordHelper.verifyPassword(password, hashedPassword)
         } ?: false
     }
+    
     private fun ensureDefaultAdminExists() {
         val defaultUsername = "test"
         val defaultPassword = "12345"

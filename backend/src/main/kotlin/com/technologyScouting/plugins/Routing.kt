@@ -190,14 +190,15 @@ fun Application.configureRouting() {
                 val newApplication = call.receive<ApplicationWithId>()
 
                 try {
-                    val updatedValues = mapOf(
+                    val updatedValues =
+                        mapOf(
                         ApplicationFields.ID to newApplication._id,
                         ApplicationFields.STATUS to newApplication.status,
                         ApplicationFields.DATE to newApplication.date,
                         ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
                         ApplicationFields.CONTACT_NAME to newApplication.contactName,
                         ApplicationFields.ORGANIZATION to newApplication.organization,
-                        ApplicationFields.REQUEST_TEXT to newApplication.requestText
+                        ApplicationFields.REQUEST_TEXT to newApplication.requestText,
                     )
 
                     applicationsService.updateApplication(newApplication._id, updatedValues)
@@ -211,7 +212,8 @@ fun Application.configureRouting() {
                 val newResource = call.receive<ResourceWithId>()
 
                 try {
-                    val updatedValues = mapOf(
+                    val updatedValues =
+                        mapOf(
                         ResourceFields.ID to newResource._id,
                         ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
                         ResourceFields.TAGS to newResource.tags,
@@ -220,7 +222,7 @@ fun Application.configureRouting() {
                         ResourceFields.CONTACT_NAME to newResource.contactName,
                         ResourceFields.DESCRIPTION to newResource.description,
                         ResourceFields.ORGANIZATION to newResource.organization,
-                        ResourceFields.TELEGRAM_ID to newResource.telegramId
+                        ResourceFields.TELEGRAM_ID to newResource.telegramId,
                     )
 
                     resourcesService.updateResource(newResource._id, updatedValues)
