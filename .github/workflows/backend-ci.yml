@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '21'
-        distribution: 'adopt'
+        distribution: 'temurin'
 
     - name: Run KtLint with Reviewdog
       uses: ScaCap/action-ktlint@v1.9.0

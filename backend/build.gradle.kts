@@ -41,10 +41,13 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("at.favre.lib:bcrypt:0.9.0")
+    implementation("org.mindrot:jbcrypt:0.4")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("io.github.microutils:kotlin-logging:2.1.21")
+    implementation("io.ktor:ktor-server-auth:$2.3.13")
 }
 
 dependencies {

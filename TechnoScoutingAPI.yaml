@@ -9,7 +9,7 @@ components:
     id:
       type: object
       properties:
-        _id:
+        _id: 
           type: string
     application:
       type: object
@@ -18,7 +18,7 @@ components:
           type: string
         organization:
           type: string
-        contactName:
+        contanctName:
           type: string
         telegramId:
           type: string
@@ -36,6 +36,8 @@ components:
     resource:
       type: object
       properties:
+        _id:
+          type: integer
         date:
           type: string
         organization:
@@ -61,21 +63,6 @@ components:
         - $ref: "#/components/schemas/resource"
         - $ref: "#/components/schemas/id"
 
-    logIn:
-      type:
-        object
-      properties:
-        login:
-          type: string
-        password:
-          type: string
-
-    token:
-      type:
-        object
-      properties:
-        token: string
-
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -86,7 +73,7 @@ components:
       scheme: bearer
 
 security:
-  - bearerAuth: []
+  - bearerAuth: [] 
 
 paths:
   /api/applications:
@@ -221,37 +208,19 @@ paths:
   
   /api/add_new_admin:
     post:
-      summary: Add new admin
+      summary: Add new admin 
       requestBody:
         content:
           application/json:
             schema:
-              newAdmin:
-                type: object
-                properties:
-                  login:
-                    type: string
-                  password:
-                    type: string
+              type: object
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
       responses:
         "200":
           description: New admin added
-        '401':
-          $ref: "#/components/responses/UnauthorizedError"
-
-  /api/log-in:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/logIn"
-      responses:
-        "200":
-          description: Successfully logged-in
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/token"
         '401':
           $ref: "#/components/responses/UnauthorizedError"
