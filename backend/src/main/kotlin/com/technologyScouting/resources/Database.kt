@@ -83,7 +83,7 @@ class ApplicationsService(
         telegramId: String,
         requestText: String,
         status: Status = Status.INCOMING,
-    ) {
+    ): String? {
         val document =
             Document()
                 .append(ApplicationFields.DATE, LocalDateTime.now().toString())
@@ -93,7 +93,11 @@ class ApplicationsService(
                 .append(ApplicationFields.REQUEST_TEXT, requestText)
                 .append(ApplicationFields.STATUS, status.name)
 
-        connection.insertOne(document)
+        val result = connection.insertOne(document)
+        return result.insertedId
+            ?.asObjectId()
+            ?.value
+            ?.toHexString()
     }
 
     fun updateApplication(
@@ -177,7 +181,7 @@ class ResourcesService(
         description: String,
         tags: List<String>,
         status: ResourceStatus,
-    ) {
+    ): String? {
         val document =
             Document()
                 .append(ResourceFields.DATE, LocalDateTime.now().toString())
@@ -189,7 +193,11 @@ class ResourcesService(
                 .append(ResourceFields.TAGS, tags)
                 .append(ResourceFields.STATUS, status.name)
 
-        connection.insertOne(document)
+        val result = connection.insertOne(document)
+        return result.insertedId
+            ?.asObjectId()
+            ?.value
+            ?.toHexString()
     }
 
     fun updateResource(
@@ -259,6 +267,10 @@ class AdminAuthService(
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("admins")
 
+    init {
+        ensureDefaultAdminExists()
+    }
+
     fun addAdmin(
         username: String,
         password: String,
@@ -288,5 +300,17 @@ class AdminAuthService(
             val hashedPassword = it.getString(AdminFields.PASSWORD)
             PasswordHelper.verifyPassword(password, hashedPassword)
         } ?: false
+    }
+
+    private fun ensureDefaultAdminExists() {
+        val defaultUsername = "test"
+        val defaultPassword = "12345"
+
+        val filter = Document(AdminFields.USERNAME, defaultUsername)
+        val existingAdmin = connection.find(filter).firstOrNull()
+
+        if (existingAdmin == null) {
+            addAdmin(defaultUsername, defaultPassword)
+        }
     }
 }

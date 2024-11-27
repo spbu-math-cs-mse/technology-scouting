@@ -47,6 +47,7 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("io.github.microutils:kotlin-logging:2.1.21")
+    implementation("io.ktor:ktor-server-auth:$2.3.13")
 }
 
 dependencies {

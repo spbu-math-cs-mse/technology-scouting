@@ -20,14 +20,16 @@ data class Application(
     val status: Status,
 )
 
-enum class Status {
-    INCOMING,
-    RESOURCES_SEARCH,
-    RESOURCES_ATTACHED,
-    IN_WORK,
-    ENDED,
-    DECLINED_BY_SCOUT,
-    DECLINED_BY_CLIENT,
+enum class Status(
+    s: String,
+) {
+    INCOMING("incoming"),
+    RESOURCES_SEARCH("resources_search"),
+    RESOURCES_ATTACHED("resources_attached"),
+    IN_WORK("in_work"),
+    ENDED("ended"),
+    DECLINED_BY_SCOUT("declined_by_scout"),
+    DECLINED_BY_CLIENT("declined_by_client"),
 }
 
 @Serializable
@@ -54,14 +56,16 @@ data class Resource(
     val status: ResourceStatus,
 )
 
-enum class ResourceStatus {
-    IN_WORK,
-    AVAILABLE,
+enum class ResourceStatus(
+    s: String,
+) {
+    IN_WORK("in_work"),
+    AVAILABLE("available"),
 }
 
 @Serializable
 data class ResourceWithId(
-    val _id: String, // from Id
+    val _id: String,
     val date: String,
     val organization: String,
     val contactName: String,
@@ -81,12 +85,16 @@ data class Resources(
 data class Applications(
     val applications: List<ApplicationWithId>,
 )
-// @Serializable
-// data class Requests(val requests: List<Request>)
 
 @Serializable
 data class UnauthorizedError(
     val description: String = "Access token is missing or invalid",
+)
+
+@Serializable
+data class NewAdmin(
+    val login: String,
+    val password: String,
 )
 
 @Serializable

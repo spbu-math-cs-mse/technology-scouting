@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Swagger Petstore - OpenAPI 3.0</title>
+  <title>Technoscouting API - OpenAPI 3.0</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
@@ -689,13 +689,99 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
-            defs["items"] = {
+            defs["application"] = {
   "type" : "object",
   "properties" : {
+    "date" : {
+      "type" : "string"
+    },
+    "organization" : {
+      "type" : "string"
+    },
+    "contactName" : {
+      "type" : "string"
+    },
     "telegramId" : {
+      "type" : "string"
+    },
+    "requestText" : {
+      "type" : "string"
+    },
+    "status" : {
+      "type" : "string",
+      "enum" : [ "incoming", "resources search", "resources attached", "in work", "ended", "declined by scout", "declined by client" ]
+    }
+  }
+};
+            defs["applicationWithId"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/application"
+  }, {
+    "$ref" : "#/components/schemas/id"
+  } ]
+};
+            defs["id"] = {
+  "type" : "object",
+  "properties" : {
+    "_id" : {
       "type" : "string"
     }
   }
+};
+            defs["logIn"] = {
+  "type" : "object",
+  "properties" : {
+    "login" : {
+      "type" : "string"
+    },
+    "password" : {
+      "type" : "string"
+    }
+  }
+};
+            defs["resource"] = {
+  "type" : "object",
+  "properties" : {
+    "date" : {
+      "type" : "string"
+    },
+    "organization" : {
+      "type" : "string"
+    },
+    "contactName" : {
+      "type" : "string"
+    },
+    "telegramId" : {
+      "type" : "string"
+    },
+    "competenceField" : {
+      "type" : "string"
+    },
+    "description" : {
+      "type" : "string"
+    },
+    "tags" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "status" : {
+      "type" : "string",
+      "enum" : [ "in work", "available" ]
+    }
+  }
+};
+            defs["resourceWithId"] = {
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/resource"
+  }, {
+    "$ref" : "#/components/schemas/id"
+  } ]
+};
+            defs["token"] = {
+  "type" : "object",
+  "properties" : { }
 };
   </script>
 
@@ -714,8 +800,35 @@
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Default"><a href="#api-Default">API Methods - Default</a></li>
-                    <li data-group="Default" data-name="apiUserListGet" class="">
-                      <a href="#api-Default-apiUserListGet">apiUserListGet</a>
+                    <li data-group="Default" data-name="apiAddNewAdminPost" class="">
+                      <a href="#api-Default-apiAddNewAdminPost">apiAddNewAdminPost</a>
+                    </li>
+                    <li data-group="Default" data-name="apiApplicationsGet" class="">
+                      <a href="#api-Default-apiApplicationsGet">apiApplicationsGet</a>
+                    </li>
+                    <li data-group="Default" data-name="apiCreateApplicationPost" class="">
+                      <a href="#api-Default-apiCreateApplicationPost">apiCreateApplicationPost</a>
+                    </li>
+                    <li data-group="Default" data-name="apiCreateResourcePost" class="">
+                      <a href="#api-Default-apiCreateResourcePost">apiCreateResourcePost</a>
+                    </li>
+                    <li data-group="Default" data-name="apiDeleteApplicationPost" class="">
+                      <a href="#api-Default-apiDeleteApplicationPost">apiDeleteApplicationPost</a>
+                    </li>
+                    <li data-group="Default" data-name="apiDeleteResourcePost" class="">
+                      <a href="#api-Default-apiDeleteResourcePost">apiDeleteResourcePost</a>
+                    </li>
+                    <li data-group="Default" data-name="apiLogInPost" class="">
+                      <a href="#api-Default-apiLogInPost">apiLogInPost</a>
+                    </li>
+                    <li data-group="Default" data-name="apiResourcesGet" class="">
+                      <a href="#api-Default-apiResourcesGet">apiResourcesGet</a>
+                    </li>
+                    <li data-group="Default" data-name="apiUpdateApplicationPost" class="">
+                      <a href="#api-Default-apiUpdateApplicationPost">apiUpdateApplicationPost</a>
+                    </li>
+                    <li data-group="Default" data-name="apiUpdateResourcePost" class="">
+                      <a href="#api-Default-apiUpdateResourcePost">apiUpdateResourcePost</a>
                     </li>
           </ul>
         </nav>
@@ -723,14 +836,14 @@
       <div id="content">
         <div id="project">
           <div class="pull-left">
-            <h1>Swagger Petstore - OpenAPI 3.0</h1>
+            <h1>Technoscouting API - OpenAPI 3.0</h1>
           </div>
           <div class="clearfix"></div>
         </div>
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 1.0</div>
+              <div class="app-desc">Version: 0.1</div>
             <hr>
             <div>No description provided (generated by Swagger Codegen https://github.com/swagger-api/swagger-codegen)</div>
           </div>
@@ -738,11 +851,11 @@
         <div id="sections">
                 <section id="api-Default">
                   <h1>Default</h1>
-                    <div id="api-Default-apiUserListGet">
-                      <article id="api-Default-apiUserListGet-0" data-group="User" data-name="apiUserListGet" data-version="0">
+                    <div id="api-Default-apiAddNewAdminPost">
+                      <article id="api-Default-apiAddNewAdminPost-0" data-group="User" data-name="apiAddNewAdminPost" data-version="0">
                         <div class="pull-left">
-                          <h1>apiUserListGet</h1>
-                          <p>Returns all user data from DB</p>
+                          <h1>apiAddNewAdminPost</h1>
+                          <p>Add new admin</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
@@ -750,31 +863,32 @@
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/user-list</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/add_new_admin</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-apiUserListGet-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-apiUserListGet-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-apiUserListGet-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-apiUserListGet-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Default-apiAddNewAdminPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiAddNewAdminPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiAddNewAdminPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiAddNewAdminPost-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-apiUserListGet-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"//api/user-list"</code></pre>
+                          <div class="tab-pane active" id="examples-Default-apiAddNewAdminPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Content-Type: application/json"\
+"//api/add_new_admin"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Default-apiUserListGet-0-java">
+                          <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -786,20 +900,299 @@ import java.util.*;
 public class DefaultApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
         DefaultApi apiInstance = new DefaultApi();
+         body = ; //  | 
         try {
-            Object result = apiInstance.apiUserListGet();
-            System.out.println(result);
+            apiInstance.apiAddNewAdminPost(body);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#apiUserListGet");
+            System.err.println("Exception when calling DefaultApi#apiAddNewAdminPost");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Default-apiUserListGet-0-android">
+                          <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+         body = ; //  | 
+        try {
+            apiInstance.apiAddNewAdminPost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiAddNewAdminPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+ *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Add new admin
+[apiInstance apiAddNewAdminPostWith:body
+              completionHandler: ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.apiAddNewAdminPost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiAddNewAdminPostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new (); //  |  (optional) 
+
+            try
+            {
+                // Add new admin
+                apiInstance.apiAddNewAdminPost(body);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiAddNewAdminPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; //  | 
+
+try {
+    $api_instance->apiAddNewAdminPost($body);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiAddNewAdminPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::->new(); #  | 
+
+eval { 
+    $api_instance->apiAddNewAdminPost(body => $body);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiAddNewAdminPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiAddNewAdminPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  #  |  (optional)
+
+try: 
+    # Add new admin
+    api_instance.api_add_new_admin_post(body=body)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiAddNewAdminPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : { }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiAddNewAdminPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiAddNewAdminPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - New admin added </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiApplicationsGet">
+                      <article id="api-Default-apiApplicationsGet-0" data-group="User" data-name="apiApplicationsGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiApplicationsGet</h1>
+                          <p>Returns all applicatons from database</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/applications</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiApplicationsGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiApplicationsGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiApplicationsGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiApplicationsGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiApplicationsGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Accept: application/json"\
+"//api/applications"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        try {
+            array[applicationWithId] result = apiInstance.apiApplicationsGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiApplicationsGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
 
 public class DefaultApiExample {
@@ -807,26 +1200,27 @@ public class DefaultApiExample {
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
         try {
-            Object result = apiInstance.apiUserListGet();
+            array[applicationWithId] result = apiInstance.apiApplicationsGet();
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#apiUserListGet");
+            System.err.println("Exception when calling DefaultApi#apiApplicationsGet");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Default-apiUserListGet-0-groovy">
+  <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Default-apiUserListGet-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">
+                            <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 
-// Returns all user data from DB
-[apiInstance apiUserListGetWithCompletionHandler: 
-              ^(Object output, NSError* error) {
+// Returns all applicatons from database
+[apiInstance apiApplicationsGetWithCompletionHandler: 
+              ^(array[applicationWithId] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -837,10 +1231,12 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-apiUserListGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var SwaggerPetstoreOpenApi30 = require('swagger_petstore___open_api_30');
+                            <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
 
-var api = new SwaggerPetstoreOpenApi30.DefaultApi()
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -848,14 +1244,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.apiUserListGet(callback);
+api.apiApplicationsGet(callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Default-apiUserListGet-0-angular">
+                            <!--<div class="tab-pane" id="examples-Default-apiApplicationsGet-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Default-apiUserListGet-0-csharp">
+                            <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -864,22 +1260,23 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class apiUserListGetExample
+    public class apiApplicationsGetExample
     {
         public void main()
         {
+
 
             var apiInstance = new DefaultApi();
 
             try
             {
-                // Returns all user data from DB
-                Object result = apiInstance.apiUserListGet();
+                // Returns all applicatons from database
+                array[applicationWithId] result = apiInstance.apiApplicationsGet();
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling DefaultApi.apiUserListGet: " + e.Message );
+                Debug.Print("Exception when calling DefaultApi.apiApplicationsGet: " + e.Message );
             }
         }
     }
@@ -887,53 +1284,56 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-apiUserListGet-0-php">
+                            <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
+
 
 $api_instance = new Swagger\Client\ApiDefaultApi();
 
 try {
-    $result = $api_instance->apiUserListGet();
+    $result = $api_instance->apiApplicationsGet();
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->apiUserListGet: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling DefaultApi->apiApplicationsGet: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-apiUserListGet-0-perl">
+                            <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::DefaultApi;
 
+
 my $api_instance = WWW::SwaggerClient::DefaultApi->new();
 
 eval { 
-    my $result = $api_instance->apiUserListGet();
+    my $result = $api_instance->apiApplicationsGet();
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling DefaultApi->apiUserListGet: $@\n";
+    warn "Exception when calling DefaultApi->apiApplicationsGet: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Default-apiUserListGet-0-python">
+                            <div class="tab-pane" id="examples-Default-apiApplicationsGet-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
 
+
 # create an instance of the API class
 api_instance = swagger_client.DefaultApi()
 
 try: 
-    # Returns all user data from DB
-    api_response = api_instance.api_user_list_get()
+    # Returns all applicatons from database
+    api_response = api_instance.api_applications_get()
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling DefaultApi->apiUserListGet: %s\n" % e)</code></pre>
+    print("Exception when calling DefaultApi->apiApplicationsGet: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -945,41 +1345,28 @@ except ApiException as e:
 
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - All user data retrieved </h3>
+                            <h3> Status: 200 - Successfully returned all applicatons from database </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-apiUserListGet-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-apiApplicationsGet-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-apiUserListGet-200-schema">
-                                  <div id='responses-apiUserListGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-apiApplicationsGet-200-schema">
+                                  <div id='responses-apiApplicationsGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "All user data retrieved",
+  "description" : "Successfully returned all applicatons from database",
   "content" : {
     "application/json" : {
       "schema" : {
-        "type" : "object",
-        "properties" : {
-          "messages" : {
-            "type" : "array",
-            "items" : {
-              "type" : "object",
-              "properties" : {
-                "telegramId" : {
-                  "type" : "string"
-                },
-                "message" : {
-                  "type" : "string"
-                }
-              }
-            }
-          }
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/applicationWithId"
         },
         "x-content-type" : "application/json"
       }
@@ -999,15 +1386,2435 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-apiUserListGet-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-apiUserListGet-200-schema-200');
+                                        $('#responses-apiApplicationsGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-apiApplicationsGet-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-apiUserListGet-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-apiApplicationsGet-200-schema-data' type='hidden' value=''></input>
                                 </div>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiCreateApplicationPost">
+                      <article id="api-Default-apiCreateApplicationPost-0" data-group="User" data-name="apiCreateApplicationPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiCreateApplicationPost</h1>
+                          <p>Create new application and add it to the database</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/create_application</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiCreateApplicationPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiCreateApplicationPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiCreateApplicationPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateApplicationPost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiCreateApplicationPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"//api/create_application"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        Application body = ; // Application | 
+        try {
+            id result = apiInstance.apiCreateApplicationPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiCreateApplicationPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        Application body = ; // Application | 
+        try {
+            id result = apiInstance.apiCreateApplicationPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiCreateApplicationPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+Application *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Create new application and add it to the database
+[apiInstance apiCreateApplicationPostWith:body
+              completionHandler: ^(id output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{Application}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.apiCreateApplicationPost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiCreateApplicationPostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new Application(); // Application |  (optional) 
+
+            try
+            {
+                // Create new application and add it to the database
+                id result = apiInstance.apiCreateApplicationPost(body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiCreateApplicationPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // Application | 
+
+try {
+    $result = $api_instance->apiCreateApplicationPost($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiCreateApplicationPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::Application->new(); # Application | 
+
+eval { 
+    my $result = $api_instance->apiCreateApplicationPost(body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiCreateApplicationPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateApplicationPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # Application |  (optional)
+
+try: 
+    # Create new application and add it to the database
+    api_response = api_instance.api_create_application_post(body=body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiCreateApplicationPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/application"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiCreateApplicationPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiCreateApplicationPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - New application added </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-apiCreateApplicationPost-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-apiCreateApplicationPost-200-schema">
+                                  <div id='responses-apiCreateApplicationPost-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "New application added",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/id"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-apiCreateApplicationPost-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-apiCreateApplicationPost-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-apiCreateApplicationPost-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiCreateResourcePost">
+                      <article id="api-Default-apiCreateResourcePost-0" data-group="User" data-name="apiCreateResourcePost" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiCreateResourcePost</h1>
+                          <p>Create new resource and add it to the database</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/create_resource</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiCreateResourcePost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiCreateResourcePost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiCreateResourcePost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiCreateResourcePost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiCreateResourcePost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"//api/create_resource"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        Resource body = ; // Resource | 
+        try {
+            id result = apiInstance.apiCreateResourcePost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiCreateResourcePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        Resource body = ; // Resource | 
+        try {
+            id result = apiInstance.apiCreateResourcePost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiCreateResourcePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+Resource *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Create new resource and add it to the database
+[apiInstance apiCreateResourcePostWith:body
+              completionHandler: ^(id output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{Resource}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.apiCreateResourcePost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiCreateResourcePostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new Resource(); // Resource |  (optional) 
+
+            try
+            {
+                // Create new resource and add it to the database
+                id result = apiInstance.apiCreateResourcePost(body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiCreateResourcePost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // Resource | 
+
+try {
+    $result = $api_instance->apiCreateResourcePost($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiCreateResourcePost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::Resource->new(); # Resource | 
+
+eval { 
+    my $result = $api_instance->apiCreateResourcePost(body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiCreateResourcePost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiCreateResourcePost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # Resource |  (optional)
+
+try: 
+    # Create new resource and add it to the database
+    api_response = api_instance.api_create_resource_post(body=body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiCreateResourcePost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/resource"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiCreateResourcePost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiCreateResourcePost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - New resource added </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-apiCreateResourcePost-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-apiCreateResourcePost-200-schema">
+                                  <div id='responses-apiCreateResourcePost-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "New resource added",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/id"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-apiCreateResourcePost-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-apiCreateResourcePost-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-apiCreateResourcePost-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiDeleteApplicationPost">
+                      <article id="api-Default-apiDeleteApplicationPost-0" data-group="User" data-name="apiDeleteApplicationPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiDeleteApplicationPost</h1>
+                          <p>Deletes application from DataBase</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/delete_application</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiDeleteApplicationPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteApplicationPost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiDeleteApplicationPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Content-Type: application/json"\
+"//api/delete_application"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        Id body = ; // Id | 
+        try {
+            apiInstance.apiDeleteApplicationPost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiDeleteApplicationPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        Id body = ; // Id | 
+        try {
+            apiInstance.apiDeleteApplicationPost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiDeleteApplicationPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+Id *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Deletes application from DataBase
+[apiInstance apiDeleteApplicationPostWith:body
+              completionHandler: ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{Id}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.apiDeleteApplicationPost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiDeleteApplicationPostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new Id(); // Id |  (optional) 
+
+            try
+            {
+                // Deletes application from DataBase
+                apiInstance.apiDeleteApplicationPost(body);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiDeleteApplicationPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // Id | 
+
+try {
+    $api_instance->apiDeleteApplicationPost($body);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiDeleteApplicationPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::Id->new(); # Id | 
+
+eval { 
+    $api_instance->apiDeleteApplicationPost(body => $body);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiDeleteApplicationPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteApplicationPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # Id |  (optional)
+
+try: 
+    # Deletes application from DataBase
+    api_instance.api_delete_application_post(body=body)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiDeleteApplicationPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/id"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiDeleteApplicationPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiDeleteApplicationPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Application successfully deleted </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 404 - Application with given id is not found </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiDeleteResourcePost">
+                      <article id="api-Default-apiDeleteResourcePost-0" data-group="User" data-name="apiDeleteResourcePost" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiDeleteResourcePost</h1>
+                          <p>Deletes resuource from DataBase</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/delete_resource</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiDeleteResourcePost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiDeleteResourcePost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiDeleteResourcePost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiDeleteResourcePost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiDeleteResourcePost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Content-Type: application/json"\
+"//api/delete_resource"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        Id body = ; // Id | 
+        try {
+            apiInstance.apiDeleteResourcePost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiDeleteResourcePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        Id body = ; // Id | 
+        try {
+            apiInstance.apiDeleteResourcePost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiDeleteResourcePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+Id *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Deletes resuource from DataBase
+[apiInstance apiDeleteResourcePostWith:body
+              completionHandler: ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{Id}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.apiDeleteResourcePost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiDeleteResourcePostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new Id(); // Id |  (optional) 
+
+            try
+            {
+                // Deletes resuource from DataBase
+                apiInstance.apiDeleteResourcePost(body);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiDeleteResourcePost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // Id | 
+
+try {
+    $api_instance->apiDeleteResourcePost($body);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiDeleteResourcePost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::Id->new(); # Id | 
+
+eval { 
+    $api_instance->apiDeleteResourcePost(body => $body);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiDeleteResourcePost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiDeleteResourcePost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # Id |  (optional)
+
+try: 
+    # Deletes resuource from DataBase
+    api_instance.api_delete_resource_post(body=body)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiDeleteResourcePost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/id"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiDeleteResourcePost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiDeleteResourcePost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Resource successfully deleted </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 404 - Resource with given id is not found </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiLogInPost">
+                      <article id="api-Default-apiLogInPost-0" data-group="User" data-name="apiLogInPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiLogInPost</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/log-in</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiLogInPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiLogInPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiLogInPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiLogInPost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiLogInPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Accept: application/json"\
+-H "Content-Type: application/json"\
+"//api/log-in"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiLogInPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        LogIn body = ; // LogIn | 
+        try {
+            token result = apiInstance.apiLogInPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiLogInPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiLogInPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        LogIn body = ; // LogIn | 
+        try {
+            token result = apiInstance.apiLogInPost(body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiLogInPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiLogInPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiLogInPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+LogIn *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+[apiInstance apiLogInPostWith:body
+              completionHandler: ^(token output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiLogInPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{LogIn}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.apiLogInPost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiLogInPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiLogInPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiLogInPostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new LogIn(); // LogIn |  (optional) 
+
+            try
+            {
+                token result = apiInstance.apiLogInPost(body);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiLogInPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiLogInPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // LogIn | 
+
+try {
+    $result = $api_instance->apiLogInPost($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiLogInPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiLogInPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::LogIn->new(); # LogIn | 
+
+eval { 
+    my $result = $api_instance->apiLogInPost(body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiLogInPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiLogInPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # LogIn |  (optional)
+
+try: 
+    api_response = api_instance.api_log_in_post(body=body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiLogInPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/logIn"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiLogInPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiLogInPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Successfully logged-in </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-apiLogInPost-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-apiLogInPost-200-schema">
+                                  <div id='responses-apiLogInPost-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Successfully logged-in",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/token"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-apiLogInPost-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-apiLogInPost-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-apiLogInPost-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiResourcesGet">
+                      <article id="api-Default-apiResourcesGet-0" data-group="User" data-name="apiResourcesGet" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiResourcesGet</h1>
+                          <p>Returns all resources from database</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/resources</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiResourcesGet-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiResourcesGet-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiResourcesGet-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiResourcesGet-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiResourcesGet-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Accept: application/json"\
+"//api/resources"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiResourcesGet-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        try {
+            array[resourceWithId] result = apiInstance.apiResourcesGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiResourcesGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiResourcesGet-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        try {
+            array[resourceWithId] result = apiInstance.apiResourcesGet();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiResourcesGet");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiResourcesGet-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiResourcesGet-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Returns all resources from database
+[apiInstance apiResourcesGetWithCompletionHandler: 
+              ^(array[resourceWithId] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiResourcesGet-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.apiResourcesGet(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiResourcesGet-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiResourcesGet-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiResourcesGetExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+
+            try
+            {
+                // Returns all resources from database
+                array[resourceWithId] result = apiInstance.apiResourcesGet();
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiResourcesGet: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiResourcesGet-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+
+try {
+    $result = $api_instance->apiResourcesGet();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiResourcesGet: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiResourcesGet-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+
+eval { 
+    my $result = $api_instance->apiResourcesGet();
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiResourcesGet: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiResourcesGet-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+
+try: 
+    # Returns all resources from database
+    api_response = api_instance.api_resources_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiResourcesGet: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Successfully returned all resources from database </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-apiResourcesGet-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-apiResourcesGet-200-schema">
+                                  <div id='responses-apiResourcesGet-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Successfully returned all resources from database",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/resourceWithId"
+        },
+        "x-content-type" : "application/json"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-apiResourcesGet-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-apiResourcesGet-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-apiResourcesGet-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiUpdateApplicationPost">
+                      <article id="api-Default-apiUpdateApplicationPost-0" data-group="User" data-name="apiUpdateApplicationPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiUpdateApplicationPost</h1>
+                          <p>Update existing application by its _id</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/update_application</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiUpdateApplicationPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateApplicationPost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiUpdateApplicationPost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Content-Type: application/json"\
+"//api/update_application"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        ApplicationWithId body = ; // ApplicationWithId | 
+        try {
+            apiInstance.apiUpdateApplicationPost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiUpdateApplicationPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        ApplicationWithId body = ; // ApplicationWithId | 
+        try {
+            apiInstance.apiUpdateApplicationPost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiUpdateApplicationPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+ApplicationWithId *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Update existing application by its _id
+[apiInstance apiUpdateApplicationPostWith:body
+              completionHandler: ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{ApplicationWithId}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.apiUpdateApplicationPost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiUpdateApplicationPostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new ApplicationWithId(); // ApplicationWithId |  (optional) 
+
+            try
+            {
+                // Update existing application by its _id
+                apiInstance.apiUpdateApplicationPost(body);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiUpdateApplicationPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // ApplicationWithId | 
+
+try {
+    $api_instance->apiUpdateApplicationPost($body);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiUpdateApplicationPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::ApplicationWithId->new(); # ApplicationWithId | 
+
+eval { 
+    $api_instance->apiUpdateApplicationPost(body => $body);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiUpdateApplicationPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateApplicationPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # ApplicationWithId |  (optional)
+
+try: 
+    # Update existing application by its _id
+    api_instance.api_update_application_post(body=body)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiUpdateApplicationPost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/applicationWithId"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiUpdateApplicationPost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiUpdateApplicationPost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Application successfully updated </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 404 - Application with given _id is not found </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-apiUpdateResourcePost">
+                      <article id="api-Default-apiUpdateResourcePost-0" data-group="User" data-name="apiUpdateResourcePost" data-version="0">
+                        <div class="pull-left">
+                          <h1>apiUpdateResourcePost</h1>
+                          <p>Update existing resource by its _id</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/update_resource</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-apiUpdateResourcePost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiUpdateResourcePost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-apiUpdateResourcePost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-apiUpdateResourcePost-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-apiUpdateResourcePost-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X POST\
+ -H "Authorization: Bearer [[accessToken]]"\
+-H "Content-Type: application/json"\
+"//api/update_resource"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+
+        DefaultApi apiInstance = new DefaultApi();
+        ResourceWithId body = ; // ResourceWithId | 
+        try {
+            apiInstance.apiUpdateResourcePost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiUpdateResourcePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.DefaultApi;
+
+public class DefaultApiExample {
+
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        ResourceWithId body = ; // ResourceWithId | 
+        try {
+            apiInstance.apiUpdateResourcePost(body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#apiUpdateResourcePost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+ResourceWithId *body = ; //  (optional)
+
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Update existing resource by its _id
+[apiInstance apiUpdateResourcePostWith:body
+              completionHandler: ^(NSError* error) {
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var TechnoscoutingApiOpenApi30 = require('technoscouting_api___open_api_30');
+var defaultClient = TechnoscoutingApiOpenApi30.ApiClient.instance;
+
+
+var api = new TechnoscoutingApiOpenApi30.DefaultApi()
+var opts = { 
+  'body':  // {{ResourceWithId}} 
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.apiUpdateResourcePost(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class apiUpdateResourcePostExample
+    {
+        public void main()
+        {
+
+
+            var apiInstance = new DefaultApi();
+            var body = new ResourceWithId(); // ResourceWithId |  (optional) 
+
+            try
+            {
+                // Update existing resource by its _id
+                apiInstance.apiUpdateResourcePost(body);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling DefaultApi.apiUpdateResourcePost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+$api_instance = new Swagger\Client\ApiDefaultApi();
+$body = ; // ResourceWithId | 
+
+try {
+    $api_instance->apiUpdateResourcePost($body);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->apiUpdateResourcePost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::DefaultApi;
+
+
+my $api_instance = WWW::SwaggerClient::DefaultApi->new();
+my $body = WWW::SwaggerClient::Object::ResourceWithId->new(); # ResourceWithId | 
+
+eval { 
+    $api_instance->apiUpdateResourcePost(body => $body);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->apiUpdateResourcePost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-apiUpdateResourcePost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+
+# create an instance of the API class
+api_instance = swagger_client.DefaultApi()
+body =  # ResourceWithId |  (optional)
+
+try: 
+    # Update existing resource by its _id
+    api_instance.api_update_resource_post(body=body)
+except ApiException as e:
+    print("Exception when calling DefaultApi->apiUpdateResourcePost: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body </td>
+                                <td>
+                                
+                                
+                                <script>
+                                $(document).ready(function() {
+                                  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/resourceWithId"
+      }
+    }
+  }
+};
+                                  var schema = schemaWrapper.content["application/json"].schema;
+                                  if (schema.$ref != null) {
+                                    schema = defsParser.$refs.get(schema.$ref);
+                                  } else {
+                                    schemaWrapper.components = {};
+                                    schemaWrapper.components.schemas = Object.assign({}, defs);
+                                    $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                      console.log(err);
+                                    });
+                                  }
+                                
+                                  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+                                  var result = $('#d2e199_apiUpdateResourcePost_body');
+                                  result.empty();
+                                  result.append(view.render());
+                                });
+                                </script>
+                                <div id="d2e199_apiUpdateResourcePost_body"></div>
+                                </td>
+                                </tr>
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Resource successfully updated </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 401 -  </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                            <h3> Status: 404 - Resource with given _id is not found </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
                             </div>
 
                         </article>

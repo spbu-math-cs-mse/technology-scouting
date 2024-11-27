@@ -14,8 +14,8 @@ import com.technologyScouting.Application
 import com.technologyScouting.Resource
 import com.technologyScouting.ResourceStatus
 import com.technologyScouting.Status
+import com.technologyScouting.plugins.applicationsService
 import com.technologyScouting.plugins.logger
-import com.technologyScouting.plugins.requestsService
 import com.technologyScouting.plugins.resourcesService
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
@@ -167,7 +167,7 @@ private fun Dispatcher.setUpCommands() {
                 newApplication = newApplication.copy(requestText = message.text.toString())
                 newApplication = newApplication.copy(status = Status.INCOMING)
                 try {
-                    requestsService.addApplication(
+                    applicationsService.addApplication(
                         newApplication.organization,
                         newApplication.contactName,
                         newApplication.telegramId,
