@@ -69,56 +69,54 @@ export default function ApplicatonEditDialog({
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(initialState) as Array<keyof Application>).map(
-            (key) => (
-              <Grid item xs = {6} key={key}>
-                <TextField
-                  name={key}
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  value={editedState[key]}
-                  onChange={(event) => handleChange(key, event)}
-                  fullWidth
-                  margin="normal"
-                />
-              </Grid>
-            )
-          )}
-          <Grid item xs={6}>
-            <Button
-              aria-label="status"
-              onClick={handleOpenPopover}
-              size="small"
-              color="primary"
-              startIcon={<ExpandMoreIcon />}
-            >
-              Change Status (Current: {status})
-            </Button>
+          {(Object.keys(initialState) as Array<keyof Application>).map((key) => (
+            <Grid size={{ xs: 6 }} key={key}>
+              <TextField
+                name={key}
+                label={key.charAt(0).toUpperCase() + key.slice(1)}
+                value={editedState[key]}
+                onChange={(event) => handleChange(key, event)}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <Button
+            aria-label="status"
+            onClick={handleOpenPopover}
+            size="small"
+            color="primary"
+            startIcon={<ExpandMoreIcon />}
+          >
+            Change Status (Current: {status})
+          </Button>
 
-            <Popover
-              open={Boolean(statusPopoverAnchor)}
-              anchorEl={statusPopoverAnchor}
-              onClose={handleClosePopover}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-            >
-              <MenuList>
-                {statusOptions.map((option) => (
-                  <MenuItem
-                    key={option}
-                    onClick={() => handleStatusChange(option)}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Popover>
-          </Grid>
+          <Popover
+            open={Boolean(statusPopoverAnchor)}
+            anchorEl={statusPopoverAnchor}
+            onClose={handleClosePopover}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            <MenuList>
+              {statusOptions.map((option) => (
+                <MenuItem
+                  key={option}
+                  onClick={() => handleStatusChange(option)}
+                >
+                  {option}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Popover>
         </Grid>
       </DialogContent>
       <DialogActions>
