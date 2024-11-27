@@ -59,9 +59,9 @@ export default function ResourceTable() {
   }, []);
 
   const [resourceEditDialogOpen, setResourceEditDialogOpen] = useState(false);
-  const [editingResource, setEditingResource] = useState<Resource | undefined>(
-    undefined
-  );
+  const [editingResource, setEditingResource] = useState<
+    ResourceWithId | undefined
+  >(undefined);
 
   return (
     <>
