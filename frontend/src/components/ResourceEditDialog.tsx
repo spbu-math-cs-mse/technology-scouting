@@ -7,8 +7,12 @@ import {
   DialogTitle,
   TextField,
   Button,
+  MenuItem,
+  MenuList,
+  Popover,
 } from "@mui/material";
 import { Resource, ResourceWithId } from "../logic/types";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 type ResourceEditDialogProps = {
   open: boolean;
@@ -24,6 +28,9 @@ export default function ResourceEditDialog({
   editResource,
 }: ResourceEditDialogProps) {
   const [editedState, setEditedState] = useState<Resource>(initialState);
+  const [statusPopoverAnchor, setStatusPopoverAnchor] =
+    useState<null | HTMLElement>(null);
+  const [status, setStatus] = useState(initialState.status);
 
   const handleChange = (
     key: string,
@@ -36,6 +43,22 @@ export default function ResourceEditDialog({
     editResource({ ...editedState, ["_id"]: initialState._id });
     setOpen(false);
   };
+
+  const handleStatusChange = (newStatus: string) => {
+    setStatus(newStatus);
+    setEditedState({ ...editedState, status: newStatus });
+    setStatusPopoverAnchor(null); // Закрыть поповер после изменения статуса
+  };
+
+  const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
+    setStatusPopoverAnchor(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setStatusPopoverAnchor(null);
+  };
+
+  const statusOptions = ["Pending", "Approved", "Rejected", "In Progress"];
 
   return (
     <Dialog open={open}>
@@ -54,6 +77,42 @@ export default function ResourceEditDialog({
               />
             </Grid>
           ))}
+        </Grid>
+        <Grid size={{ xs: 12 }}>
+          <Button
+            aria-label="status"
+            onClick={handleOpenPopover}
+            size="small"
+            color="primary"
+            startIcon={<ExpandMoreIcon />}
+          >
+            Change Status (Current: {status})
+          </Button>
+
+          <Popover
+            open={Boolean(statusPopoverAnchor)}
+            anchorEl={statusPopoverAnchor}
+            onClose={handleClosePopover}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            <MenuList>
+              {statusOptions.map((option) => (
+                <MenuItem
+                  key={option}
+                  onClick={() => handleStatusChange(option)}
+                >
+                  {option}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Popover>
         </Grid>
       </DialogContent>
       <DialogActions>
