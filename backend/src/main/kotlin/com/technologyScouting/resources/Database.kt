@@ -94,7 +94,10 @@ class ApplicationsService(
                 .append(ApplicationFields.STATUS, status.name)
 
         val result = connection.insertOne(document)
-        return result.insertedId?.asObjectId()?.value?.toHexString()
+        return result.insertedId
+            ?.asObjectId()
+            ?.value
+            ?.toHexString()
     }
 
     fun updateApplication(
