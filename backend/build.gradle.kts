@@ -7,7 +7,6 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("io.ktor.plugin") version "3.0.1"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
 group = "org.example"
@@ -67,6 +66,3 @@ kotlin {
     jvmToolchain(11)
 }
 
-subprojects {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-}

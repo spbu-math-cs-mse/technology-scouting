@@ -26,7 +26,7 @@ export type Resource = {
 export type ResourceWithId = id & Resource;
 
 export type ApplicationDataTableResponse = {
-  requests: ApplicationWithId[];
+  applications: ApplicationWithId[];
 };
 
 export type ResourceDataTableResponse = {

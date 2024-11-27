@@ -55,7 +55,7 @@ fun Application.configureRouting() {
             }
         }
 
-        post("/api/log-in") {
+        post("/api/login") {
             try {
                 val credentials = call.receive<LogIn>()
 
@@ -63,7 +63,7 @@ fun Application.configureRouting() {
 
                 if (isValidUser) {
                     val token = UUID.randomUUID().toString()
-                    println(token)
+                    println("valid user confirmed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + token)
                     val expiryTime = Instant.now().plusSeconds(3600).toEpochMilli() // Токен на 1 час
 
                     tokenStorage.insertOne(

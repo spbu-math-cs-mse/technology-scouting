@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import {
   Dialog,
@@ -27,7 +27,30 @@ export default function ResourceEditDialog({
   initialState,
   editResource,
 }: ResourceEditDialogProps) {
-  const [editedState, setEditedState] = useState<Resource>({ ...initialState });
+  const [editedState, setEditedState] = useState<Resource>({
+    date: initialState.date,
+    organization: initialState.organization,
+    contactName: initialState.contactName,
+    telegramId: initialState.telegramId,
+    competenceField: initialState.competenceField,
+    description: initialState.description,
+    tags: initialState.tags,
+    status: initialState.status,
+  });
+
+  useEffect(() => {
+    setEditedState({
+      date: initialState.date,
+      organization: initialState.organization,
+      contactName: initialState.contactName,
+      telegramId: initialState.telegramId,
+      competenceField: initialState.competenceField,
+      description: initialState.description,
+      tags: initialState.tags,
+      status: initialState.status,
+    });
+  }, [initialState]);
+
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
   const [status, setStatus] = useState(initialState.status);
@@ -61,23 +84,39 @@ export default function ResourceEditDialog({
     setStatusPopoverAnchor(null);
   };
 
-  const statusOptions = ["Pending", "Approved", "Rejected", "In Progress"];
+  const statusOptions = ["IN_WORK", "AVAILABLE"];
 
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(initialState) as Array<keyof Resource>).map((key) => (
+          {(Object.keys(editedState) as Array<keyof Resource>).map((key) => (
             <Grid size={{ xs: 6 }} key={key}>
-              <TextField
-                name={key}
-                label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={editedState[key]}
-                onChange={(event) => handleChange(key, event)}
-                fullWidth
-                margin="normal"
-              />
+              {key === "status" ? (
+                  <TextField
+                      name={key}
+                      label={key.charAt(0).toUpperCase() + key.slice(1)}
+                      value={editedState[key]}
+                      onChange={(event) => handleChange(key, event)}
+                      fullWidth
+                      slotProps={{
+                        input: {
+                          readOnly: true,
+                        },
+                      }}
+                      margin="normal"
+                  />
+              ) : (
+                  <TextField
+                      name={key}
+                      label={key.charAt(0).toUpperCase() + key.slice(1)}
+                      value={editedState[key]}
+                      onChange={(event) => handleChange(key, event)}
+                      fullWidth
+                      margin="normal"
+                  />
+              )}
             </Grid>
           ))}
         </Grid>
