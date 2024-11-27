@@ -77,7 +77,9 @@ export default function ApplicationTable() {
   useEffect(() => {
     getApplicationDataTableMock().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getApplicationDataTableMock().then((messages) => setTableContent(messages));
+      getApplicationDataTableMock().then((messages) =>
+        setTableContent(messages)
+      );
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -114,14 +116,7 @@ export default function ApplicationTable() {
                 <TableCell>{application.contactName}</TableCell>
                 <TableCell>{application.telegramId}</TableCell>
                 <TableCell>{application.requestText}</TableCell>
-                <TableCell>
-                  {application.status}
-                  <IconButton
-                    onClick={(e) => handleOpenPopover(e, application._id)}
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </TableCell>
+                <TableCell>{application.status}</TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="delete"
@@ -175,43 +170,6 @@ export default function ApplicationTable() {
             ))}
           </TableBody>
         </Table>
-        <Popover
-          open={isPopoverOpen}
-          anchorEl={anchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-        >
-          {/* <MenuList>
-            {statusOptions.map((status) => (
-              <MenuItem
-                key={status}
-                onClick={() =>
-                  activeRow !== null &&
-                  handleEditStatus(String(activeRow), status)
-                }
-                sx={{
-                  fontSize: "11px",
-                  backgroundColor: "white",
-                  "&:hover": {
-                    backgroundColor: "#ADD8E6",
-                  },
-                  borderRadius: "8px",
-                  padding: "12px",
-                  color: "#333",
-                }}
-              >
-                {status}
-              </MenuItem>
-            ))}
-          </MenuList> */}
-        </Popover>
       </TableContainer>
       {editingApplication ? (
         <ApplicationEditDialog
@@ -219,7 +177,9 @@ export default function ApplicationTable() {
           setOpen={setApplicationEditDialogOpen}
           editApplication={(editedState: ApplicationWithId) => {
             postEditApplication(editedState);
-            getApplicationDataTableMock().then((messages) => setTableContent(messages));
+            getApplicationDataTableMock().then((messages) =>
+              setTableContent(messages)
+            );
           }}
           initialState={editingApplication}
         />
