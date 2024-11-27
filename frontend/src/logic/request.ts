@@ -1,17 +1,15 @@
 import { getToken, storeToken } from "./authToken";
 import {
   ApplicationDataTableResponse,
-  Application,
   ApplicationWithId,
 } from "./types";
 import {
   ResourceDataTableResponse,
-  Resource,
   ResourceWithId,
 } from "./types";
 
 // Function to perform login and store token
-async function login(username: string, password: string): Promise<boolean> {
+export async function postLogin(username: string, password: string): Promise<boolean> {
   const response = await fetch("/login", {
     method: "POST",
     headers: {
@@ -133,6 +131,29 @@ export function postEditApplication(editedAplication: ApplicationWithId) {
       await response.json();
       if (response.ok)
         console.log(`Applictaion with ID ${editedAplication._id} editted successfully.`);
+      else return console.error("Failed to edit request", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
+export function postEditResource(editedResource: ResourceWithId) {
+  fetch("/api/update_application", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(editedResource),
+  })
+    .then(async (response) => {
+      await response.json();
+      if (response.ok)
+        console.log(`Resource with ID ${editedResource._id} editted successfully.`);
       else return console.error("Failed to edit request", response.statusText);
     })
     .catch((error) => {

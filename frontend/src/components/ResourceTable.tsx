@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Resource, ResourceWithId } from "../logic/types.ts";
+import { ResourceWithId } from "../logic/types.ts";
 import {
   getResourcesDataTable,
   getResourcesDataTableMock,
   postDeleteResource,
-  postEditApplication,
+  postEditResource,
 } from "../logic/request.ts";
 import {
   Table,
@@ -14,9 +14,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  MenuItem,
-  MenuList,
-  Popover,
   DialogActions,
   Dialog,
   DialogContent,
@@ -25,7 +22,6 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ResourceEditDialog from "./ResourceEditDialog.tsx";
 
 export default function ResourceTable() {
@@ -49,9 +45,9 @@ export default function ResourceTable() {
   };
 
   useEffect(() => {
-    getResourcesDataTableMock().then((messages) => setTableContent(messages));
+    getResourcesDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getResourcesDataTableMock().then((messages) => setTableContent(messages));
+      getResourcesDataTable().then((messages) => setTableContent(messages));
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -152,7 +148,12 @@ export default function ResourceTable() {
         <ResourceEditDialog
           open={resourceEditDialogOpen}
           setOpen={setResourceEditDialogOpen}
-          editResource={() => {}}
+          editResource={(resource) => {
+            postEditResource(resource);
+            getResourcesDataTable().then((messages) =>
+              setTableContent(messages)
+            );
+          }}
           initialState={editingResource}
         />
       ) : (

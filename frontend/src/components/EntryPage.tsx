@@ -15,6 +15,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { postLogin } from "../logic/request";
 
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,30 +39,30 @@ export default function EntryPageVisual() {
   const [inputPassword, setInputPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [targetUsernameValue] = useState("test");
-  const [targetPasswordValue] = useState("12345");
-  const isMatch =
-    inputUsername === targetUsernameValue &&
-    inputPassword === targetPasswordValue;
+  // const [targetUsernameValue] = useState("test");
+  // const [targetPasswordValue] = useState("12345");
+  // const isMatch =
+  //   inputUsername === targetUsernameValue &&
+  //   inputPassword === targetPasswordValue;
 
-  /*const handleLogin = async (event: React.FormEvent) => {
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const success = await login(inputUsername, inputPassword);
+    const success = await postLogin(inputUsername, inputPassword);
 
     if (success) {
         navigate("/admin-panel"); // Переход на следующую страницу
     } else {
       setErrorMessage("Invalid username or password.");
     }
-};*/
-  const handleLogin = () => {
-    if (isMatch) {
-      navigate("/admin-panel");
-    } else {
-      setErrorMessage("Invalid username or password.");
-    }
   };
+  // const handleLogin = () => {
+  //   if (isMatch) {
+  //     navigate("/admin-panel");
+  //   } else {
+  //     setErrorMessage("Invalid username or password.");
+  //   }
+  // };
 
   return (
     <Box

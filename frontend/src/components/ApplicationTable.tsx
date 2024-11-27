@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Application, ApplicationWithId } from "../logic/types.ts";
+import { ApplicationWithId } from "../logic/types.ts";
 import {
   getApplicationDataTable,
   getApplicationDataTableMock,
@@ -14,9 +14,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  MenuItem,
-  MenuList,
-  Popover,
   DialogActions,
   Dialog,
   DialogContent,
@@ -25,8 +22,6 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ApplicatonEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 
 export default function ApplicationTable() {
@@ -35,9 +30,7 @@ export default function ApplicationTable() {
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
   >(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [activeRow, setActiveRow] = useState<string | null>(null);
-
+  
   const handleOpenDialogForDelete = (id: string) => {
     setSelectedForDeleteRequestId(id);
   };
@@ -51,35 +44,10 @@ export default function ApplicationTable() {
     getApplicationDataTable().then((messages) => setTableContent(messages));
   };
 
-  // const handleEditStatus = (id: string, new_status: string) => {
-  //   postEditApplication(id, new_status);
-  //   getApplicationDataTable().then((messages) => setTableContent(messages));
-  //   handleClosePopover();
-  // };
-
-  const handleOpenPopover = (
-    event: React.MouseEvent<HTMLElement>,
-    rowIndex: string
-  ) => {
-    setAnchorEl(event.currentTarget);
-    setActiveRow(rowIndex);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-    setActiveRow(null);
-  };
-
-  const statusOptions = ["Pending", "Approved", "Rejected", "In Progress"];
-
-  const isPopoverOpen = Boolean(anchorEl);
-
   useEffect(() => {
-    getApplicationDataTableMock().then((messages) => setTableContent(messages));
+    getApplicationDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getApplicationDataTableMock().then((messages) =>
-        setTableContent(messages)
-      );
+      getApplicationDataTable().then((messages) => setTableContent(messages));
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -177,7 +145,7 @@ export default function ApplicationTable() {
           setOpen={setApplicationEditDialogOpen}
           editApplication={(editedState: ApplicationWithId) => {
             postEditApplication(editedState);
-            getApplicationDataTableMock().then((messages) =>
+            getApplicationDataTable().then((messages) =>
               setTableContent(messages)
             );
           }}
