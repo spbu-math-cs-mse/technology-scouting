@@ -11,7 +11,7 @@ import {
   MenuList,
   Popover,
 } from "@mui/material";
-import { Resource, ResourceWithId, toResource } from "../logic/types";
+import { Resource, RESOURCE_STATUSES, ResourceStatus, ResourceWithId, toResource } from "../logic/types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 type ResourceEditDialogProps = {
@@ -35,7 +35,6 @@ export default function ResourceEditDialog({
 
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
-  const [status, setStatus] = useState(initialState.status);
 
   const handleChange = (
     key: keyof Resource,
@@ -52,8 +51,7 @@ export default function ResourceEditDialog({
     setOpen(false);
   };
 
-  const handleStatusChange = (newStatus: string) => {
-    setStatus(newStatus);
+  const handleStatusChange = (newStatus: ResourceStatus) => {
     setEditedState({ ...editedState, status: newStatus });
     setStatusPopoverAnchor(null);
   };
@@ -65,8 +63,6 @@ export default function ResourceEditDialog({
   const handleClosePopover = () => {
     setStatusPopoverAnchor(null);
   };
-
-  const statusOptions = ["In work", "Available"];
 
   return (
     <Dialog open={open}>
@@ -99,7 +95,7 @@ export default function ResourceEditDialog({
             color="primary"
             startIcon={<ExpandMoreIcon />}
           >
-            Change Status (Current: {status})
+            Change Status (Current: {editedState.status})
           </Button>
 
           <Popover
@@ -116,7 +112,7 @@ export default function ResourceEditDialog({
             }}
           >
             <MenuList>
-              {statusOptions.map((option) => (
+              {RESOURCE_STATUSES.map((option) => (
                 <MenuItem
                   key={option}
                   onClick={() => handleStatusChange(option)}

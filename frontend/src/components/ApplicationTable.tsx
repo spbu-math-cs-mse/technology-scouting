@@ -43,9 +43,7 @@ export default function ApplicationTable() {
     postDeleteApplication(id);
     setTimeout(
       () =>
-        getApplicationDataTable().then((messages) =>
-          setTableContent(messages)
-        ),
+        getApplicationDataTable().then((messages) => setTableContent(messages)),
       500
     );
   };
@@ -53,9 +51,7 @@ export default function ApplicationTable() {
   useEffect(() => {
     getApplicationDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getApplicationDataTable().then((messages) =>
-        setTableContent(messages)
-      );
+      getApplicationDataTable().then((messages) => setTableContent(messages));
     }, 5000);
     return () => {
       clearInterval(interval);

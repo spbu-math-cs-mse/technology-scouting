@@ -12,7 +12,7 @@ import {
   Popover,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Application, ApplicationWithId, toApplication } from "../logic/types";
+import { Application, APPLICATION_STATUSES, ApplicationStatus, ApplicationWithId, toApplication } from "../logic/types";
 
 type ApplicationEditDialogProps = {
   open: boolean;
@@ -35,7 +35,6 @@ export default function ApplicatonEditDialog({
 
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
-  const [status, setStatus] = useState(initialState.status);
 
   const handleChange = (
     key: string,
@@ -49,8 +48,7 @@ export default function ApplicatonEditDialog({
     setOpen(false);
   };
 
-  const handleStatusChange = (newStatus: string) => {
-    setStatus(newStatus);
+  const handleStatusChange = (newStatus: ApplicationStatus) => {
     setEditedState({ ...editedState, status: newStatus });
     setStatusPopoverAnchor(null);
   };
@@ -62,16 +60,6 @@ export default function ApplicatonEditDialog({
   const handleClosePopover = () => {
     setStatusPopoverAnchor(null);
   };
-
-  const statusOptions = [
-    "Incoming",
-    "Resources search",
-    "Resources attached",
-    "In work",
-    "Ended",
-    "Declined by scout",
-    "Declined by client",
-  ];
 
   return (
     <Dialog open={open}>
@@ -104,7 +92,7 @@ export default function ApplicatonEditDialog({
             color="primary"
             startIcon={<ExpandMoreIcon />}
           >
-            Change Status (Current: {status})
+            Change Status (Current: {editedState.status})
           </Button>
 
           <Popover
@@ -121,7 +109,7 @@ export default function ApplicatonEditDialog({
             }}
           >
             <MenuList>
-              {statusOptions.map((option) => (
+              {APPLICATION_STATUSES.map((option) => (
                 <MenuItem
                   key={option}
                   onClick={() => handleStatusChange(option)}
