@@ -11,7 +11,13 @@ import {
   MenuList,
   Popover,
 } from "@mui/material";
-import { Resource, RESOURCE_STATUSES, ResourceStatus, ResourceWithId, toResource } from "../logic/types";
+import {
+  Resource,
+  RESOURCE_STATUSES,
+  ResourceStatus,
+  ResourceWithId,
+  toResource,
+} from "../logic/types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 type ResourceEditDialogProps = {

@@ -43,9 +43,7 @@ export default function ResourceTable() {
     postDeleteResource(id);
     setTimeout(
       () =>
-        getResourcesDataTable().then((messages) =>
-          setTableContent(messages)
-        ),
+        getResourcesDataTable().then((messages) => setTableContent(messages)),
       500
     );
   };

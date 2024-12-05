@@ -12,7 +12,13 @@ import {
   Popover,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Application, APPLICATION_STATUSES, ApplicationStatus, ApplicationWithId, toApplication } from "../logic/types";
+import {
+  Application,
+  APPLICATION_STATUSES,
+  ApplicationStatus,
+  ApplicationWithId,
+  toApplication,
+} from "../logic/types";
 
 type ApplicationEditDialogProps = {
   open: boolean;
