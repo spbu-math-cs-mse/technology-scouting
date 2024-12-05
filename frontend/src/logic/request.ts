@@ -10,23 +10,23 @@ import {
 
 // Function to perform login and store token
 export async function postLogin(username: string, password: string): Promise<boolean> {
-  const response = await fetch("/login", {
+  return fetch("/api/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username, password }),
-  });
-
-  const result = await response.json();
-
-  if (result.success && result.token) {
-    storeToken(result.token); // Store token instead of password
-    return true;
-  } else {
-    console.error(result.message || "Login failed");
-    return false;
-  }
+    body: JSON.stringify({ login: username, password: password }),
+  })
+    .then((response) => response.json())
+    .then(async (response) => {
+      console.log("Get response from server: ", response);
+      storeToken(response.token);
+      return true;
+    })
+    .catch((error) => {
+      console.error("Get error from server: ", error);
+      return false;
+    });
 }
 
 export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
@@ -40,7 +40,7 @@ export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      return (response as ApplicationDataTableResponse).requests;
+      return (response as ApplicationDataTableResponse).applications;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);
@@ -74,10 +74,9 @@ export function postDeleteApplication(id: string) {
       "Content-type": "application/json",
       Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ "_id": id }),
   })
     .then(async (response) => {
-      await response.json();
       if (response.ok)
         console.log(`Application with ID ${id} deleted successfully.`);
       else
@@ -101,10 +100,9 @@ export function postDeleteResource(id: string) {
       "Content-type": "application/json",
       Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ "_id": id }),
   })
     .then(async (response) => {
-      await response.json();
       if (response.ok)
         console.log(`Resource with ID ${id} deleted successfully.`);
       else
@@ -128,9 +126,8 @@ export function postEditApplication(editedAplication: ApplicationWithId) {
     body: JSON.stringify(editedAplication),
   })
     .then(async (response) => {
-      await response.json();
       if (response.ok)
-        console.log(`Applictaion with ID ${editedAplication._id} editted successfully.`);
+        console.log(`Applicataion with ID ${editedAplication._id} edited successfully.`);
       else return console.error("Failed to edit request", response.statusText);
     })
     .catch((error) => {
@@ -142,7 +139,7 @@ export function postEditApplication(editedAplication: ApplicationWithId) {
 }
 
 export function postEditResource(editedResource: ResourceWithId) {
-  fetch("/api/update_application", {
+  fetch("/api/update_resource", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -151,9 +148,31 @@ export function postEditResource(editedResource: ResourceWithId) {
     body: JSON.stringify(editedResource),
   })
     .then(async (response) => {
-      await response.json();
       if (response.ok)
         console.log(`Resource with ID ${editedResource._id} editted successfully.`);
+      else return console.error("Failed to edit request", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
+export function postAddNewAdmin(login: string, password: string) {
+  fetch("/api/add_new_admin", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({ login: login, password: password }),
+  })
+    .then(async (response) => {
+      await response.json();
+      if (response.ok)
+        console.log(`Admin ${login} added successfully.`);
       else return console.error("Failed to edit request", response.statusText);
     })
     .catch((error) => {

@@ -29,6 +29,7 @@ export default function AdminRegistrationDialog(
     } else {
       props.addAdmin(login, password);
       handleClose();
+      setAdminAdded(true);
     }
   };
 
@@ -66,7 +67,7 @@ export default function AdminRegistrationDialog(
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleRegisterClick}>
+          <Button onClick={handleRegisterClick} color={confirmDialog ? "warning" : "primary"}>
             {confirmDialog ? "Confirm" : "Register"}
           </Button>
         </DialogActions>

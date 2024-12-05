@@ -6,6 +6,7 @@ import ApplicationTable from "./ApplicationTable";
 import ResourceTable from "./ResourceTable";
 import { styled } from "@mui/material/styles";
 import AdminRegistrationDialog from "./AddAdminDialog";
+import { postAddNewAdmin } from "../logic/request";
 
 const StyledBorderButton = styled(Button)<ButtonProps>({
   fontSize: "11px",
@@ -77,13 +78,19 @@ export default function AdminPanel() {
           overflow: "auto",
         }}
       >
-        {activeSection === "section1" ? <ApplicationTable /> : <ResourceTable />}
+        {activeSection === "section1" ? (
+          <ApplicationTable />
+        ) : (
+          <ResourceTable />
+        )}
       </Grid>
 
       <AdminRegistrationDialog
         open={registrationDialogOpen}
         setOpen={setRegistrationDialogOpen}
-        addAdmin={(login: string, password: string) => {}}
+        addAdmin={(login: string, password: string) =>
+          postAddNewAdmin(login, password)
+        }
       />
     </Box>
   );

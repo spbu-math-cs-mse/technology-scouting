@@ -12,6 +12,11 @@ export type Application = {
 
 export type ApplicationWithId = id & Application;
 
+export function toApplication (applicationWithId: ApplicationWithId) {
+  const {_id, ...application} = applicationWithId;
+  return application;
+}
+
 export type Resource = {
   date: string;
   organization: string;
@@ -23,10 +28,15 @@ export type Resource = {
   status: string;
 };
 
-export type ResourceWithId = id & Resource;
+export type ResourceWithId = id & Resource
+
+export function toResource (resourceWithId: ResourceWithId) {
+  const {_id, ...resource} = resourceWithId;
+  return resource;
+}
 
 export type ApplicationDataTableResponse = {
-  requests: ApplicationWithId[];
+  applications: ApplicationWithId[];
 };
 
 export type ResourceDataTableResponse = {

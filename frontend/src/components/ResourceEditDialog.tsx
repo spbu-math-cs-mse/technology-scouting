@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import {
   Dialog,
@@ -11,7 +11,7 @@ import {
   MenuList,
   Popover,
 } from "@mui/material";
-import { Resource, ResourceWithId } from "../logic/types";
+import { Resource, ResourceWithId, toResource } from "../logic/types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 type ResourceEditDialogProps = {
@@ -27,7 +27,12 @@ export default function ResourceEditDialog({
   initialState,
   editResource,
 }: ResourceEditDialogProps) {
-  const [editedState, setEditedState] = useState<Resource>({ ...initialState });
+  const [editedState, setEditedState] = useState(toResource(initialState));
+
+  useEffect(() => {
+    setEditedState(toResource(initialState));
+  }, [initialState]);
+
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
   const [status, setStatus] = useState(initialState.status);
@@ -43,7 +48,7 @@ export default function ResourceEditDialog({
   };
 
   const handleEdit = () => {
-    editResource({ ...editedState, ["_id"]: initialState._id });
+    editResource({ ...editedState, _id: initialState._id });
     setOpen(false);
   };
 
@@ -61,14 +66,14 @@ export default function ResourceEditDialog({
     setStatusPopoverAnchor(null);
   };
 
-  const statusOptions = ["Pending", "Approved", "Rejected", "In Progress"];
+  const statusOptions = ["In work", "Available"];
 
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(initialState) as Array<keyof Resource>).map((key) => (
+          {(Object.keys(editedState) as Array<keyof Resource>).map((key) => (
             <Grid size={{ xs: 6 }} key={key}>
               <TextField
                 name={key}
@@ -76,6 +81,11 @@ export default function ResourceEditDialog({
                 value={editedState[key]}
                 onChange={(event) => handleChange(key, event)}
                 fullWidth
+                slotProps={{
+                  input: {
+                    readOnly: key === "status" ? true : false,
+                  },
+                }}
                 margin="normal"
               />
             </Grid>

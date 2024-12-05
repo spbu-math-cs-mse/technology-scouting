@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ResourceWithId } from "../logic/types.ts";
 import {
   getResourcesDataTable,
-  getResourcesDataTableMock,
+  // getResourcesDataTableMock as getResourcesDataTable,
   postDeleteResource,
   postEditResource,
 } from "../logic/request.ts";
@@ -41,7 +41,13 @@ export default function ResourceTable() {
   const handleConfirmDelete = (id: string) => {
     setSelectedForDeleteRequestId(null);
     postDeleteResource(id);
-    getResourcesDataTable().then((messages) => setTableContent(messages));
+    setTimeout(
+      () =>
+        getResourcesDataTable().then((messages) =>
+          setTableContent(messages)
+        ),
+      500
+    );
   };
 
   useEffect(() => {
@@ -65,7 +71,6 @@ export default function ResourceTable() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Organization</TableCell>
               <TableCell>ContactName</TableCell>
@@ -79,7 +84,6 @@ export default function ResourceTable() {
           <TableBody>
             {tableContent.map((resourceMessage, ind) => (
               <TableRow key={ind}>
-                <TableCell>{resourceMessage._id}</TableCell>
                 <TableCell>{resourceMessage.date}</TableCell>
                 <TableCell>{resourceMessage.organization}</TableCell>
                 <TableCell>{resourceMessage.contactName}</TableCell>
@@ -144,7 +148,7 @@ export default function ResourceTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      {editingResource ? (
+      {editingResource && (
         <ResourceEditDialog
           open={resourceEditDialogOpen}
           setOpen={setResourceEditDialogOpen}
@@ -156,8 +160,6 @@ export default function ResourceTable() {
           }}
           initialState={editingResource}
         />
-      ) : (
-        <></>
       )}
     </>
   );

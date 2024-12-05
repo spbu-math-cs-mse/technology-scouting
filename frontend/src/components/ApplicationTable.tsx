@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ApplicationWithId } from "../logic/types.ts";
 import {
   getApplicationDataTable,
-  getApplicationDataTableMock,
+  // getApplicationDataTableMock as getApplicationDataTable,
   postDeleteApplication,
   postEditApplication,
 } from "../logic/request.ts";
@@ -30,7 +30,7 @@ export default function ApplicationTable() {
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
   >(null);
-  
+
   const handleOpenDialogForDelete = (id: string) => {
     setSelectedForDeleteRequestId(id);
   };
@@ -41,13 +41,21 @@ export default function ApplicationTable() {
   const handleConfirmDelete = (id: string) => {
     setSelectedForDeleteRequestId(null);
     postDeleteApplication(id);
-    getApplicationDataTable().then((messages) => setTableContent(messages));
+    setTimeout(
+      () =>
+        getApplicationDataTable().then((messages) =>
+          setTableContent(messages)
+        ),
+      500
+    );
   };
 
   useEffect(() => {
     getApplicationDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getApplicationDataTable().then((messages) => setTableContent(messages));
+      getApplicationDataTable().then((messages) =>
+        setTableContent(messages)
+      );
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -66,7 +74,6 @@ export default function ApplicationTable() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Organization</TableCell>
               <TableCell>ContactName</TableCell>
@@ -78,7 +85,6 @@ export default function ApplicationTable() {
           <TableBody>
             {tableContent.map((application, ind) => (
               <TableRow key={ind}>
-                <TableCell>{application._id}</TableCell>
                 <TableCell>{application.date}</TableCell>
                 <TableCell>{application.organization}</TableCell>
                 <TableCell>{application.contactName}</TableCell>
@@ -139,7 +145,7 @@ export default function ApplicationTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      {editingApplication ? (
+      {editingApplication && (
         <ApplicationEditDialog
           open={applicationEditDialogOpen}
           setOpen={setApplicationEditDialogOpen}
@@ -151,8 +157,6 @@ export default function ApplicationTable() {
           }}
           initialState={editingApplication}
         />
-      ) : (
-        <></>
       )}
     </>
   );

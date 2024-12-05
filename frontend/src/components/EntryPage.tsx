@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   Box,
-  Grid,
   TextField,
   FormControl,
   InputLabel,
@@ -11,6 +10,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -45,17 +45,6 @@ export default function EntryPageVisual() {
   //   inputUsername === targetUsernameValue &&
   //   inputPassword === targetPasswordValue;
 
-  const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const success = await postLogin(inputUsername, inputPassword);
-
-    if (success) {
-        navigate("/admin-panel"); // Переход на следующую страницу
-    } else {
-      setErrorMessage("Invalid username or password.");
-    }
-  };
   // const handleLogin = () => {
   //   if (isMatch) {
   //     navigate("/admin-panel");
@@ -64,9 +53,20 @@ export default function EntryPageVisual() {
   //   }
   // };
 
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const success = await postLogin(inputUsername, inputPassword);
+
+    if (success) {
+      navigate("/admin-panel"); // Переход на следующую страницу
+    } else {
+      setErrorMessage("Invalid username or password.");
+    }
+  };
+
   return (
     <Box
-    
       sx={{
         width: "100vw",
         height: "100vh",
@@ -97,7 +97,7 @@ export default function EntryPageVisual() {
           Login
         </Typography>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               label="Username"
               variant="outlined"
@@ -109,7 +109,7 @@ export default function EntryPageVisual() {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <FormControl variant="filled" fullWidth>
               <InputLabel htmlFor="filled-adornment-password">
                 Password
@@ -138,13 +138,13 @@ export default function EntryPageVisual() {
             </FormControl>
           </Grid>
           {errorMessage && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography color="error" variant="body2">
                 {errorMessage}
               </Typography>
             </Grid>
           )}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Button
               variant="contained"
               fullWidth

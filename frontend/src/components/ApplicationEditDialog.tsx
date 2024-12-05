@@ -12,7 +12,7 @@ import {
   Popover,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Application, ApplicationWithId } from "../logic/types";
+import { Application, ApplicationWithId, toApplication } from "../logic/types";
 
 type ApplicationEditDialogProps = {
   open: boolean;
@@ -27,11 +27,12 @@ export default function ApplicatonEditDialog({
   initialState,
   editApplication,
 }: ApplicationEditDialogProps) {
-  const [editedState, setEditedState] = useState<Application>(initialState);
+  const [editedState, setEditedState] = useState(toApplication(initialState));
+
   useEffect(() => {
-    setEditedState(initialState);
+    setEditedState(toApplication(initialState));
   }, [initialState]);
-  console.log(editedState);
+
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
   const [status, setStatus] = useState(initialState.status);
@@ -44,7 +45,7 @@ export default function ApplicatonEditDialog({
   };
 
   const handleEdit = () => {
-    editApplication({ ...editedState, ["_id"]: initialState._id });
+    editApplication({ ...editedState, _id: initialState._id });
     setOpen(false);
   };
 
@@ -62,14 +63,22 @@ export default function ApplicatonEditDialog({
     setStatusPopoverAnchor(null);
   };
 
-  const statusOptions = ["Pending", "Approved", "Rejected", "In Progress"];
+  const statusOptions = [
+    "Incoming",
+    "Resources search",
+    "Resources attached",
+    "In work",
+    "Ended",
+    "Declined by scout",
+    "Declined by client",
+  ];
 
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(initialState) as Array<keyof Application>).map((key) => (
+          {(Object.keys(editedState) as Array<keyof Application>).map((key) => (
             <Grid size={{ xs: 6 }} key={key}>
               <TextField
                 name={key}
@@ -78,6 +87,11 @@ export default function ApplicatonEditDialog({
                 onChange={(event) => handleChange(key, event)}
                 fullWidth
                 margin="normal"
+                slotProps={{
+                  input: {
+                    readOnly: key === "status" ? true : false,
+                  },
+                }}
               />
             </Grid>
           ))}
