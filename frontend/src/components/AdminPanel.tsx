@@ -16,9 +16,9 @@ const StyledBorderButton = styled(Button)<ButtonProps>({
 });
 
 export default function AdminPanel() {
-  const [activeSection, setActiveSection] = useState<"section1" | "section2">(
-    "section1"
-  );
+  const [activeSection, setActiveSection] = useState<
+    "applications" | "resources"
+  >("applications");
 
   const [registrationDialogOpen, setRegistrationDialogOpen] = useState(false);
 
@@ -43,14 +43,14 @@ export default function AdminPanel() {
           flexDirection="column"
         >
           <StyledBorderButton
-            onClick={() => setActiveSection("section1")}
+            onClick={() => setActiveSection("applications")}
             variant="contained"
           >
             Show requests
           </StyledBorderButton>
 
           <StyledBorderButton
-            onClick={() => setActiveSection("section2")}
+            onClick={() => setActiveSection("resources")}
             variant="contained"
           >
             Show resources
@@ -78,7 +78,7 @@ export default function AdminPanel() {
           overflow: "auto",
         }}
       >
-        {activeSection === "section1" ? (
+        {activeSection === "applications" ? (
           <ApplicationTable />
         ) : (
           <ResourceTable />
