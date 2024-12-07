@@ -39,11 +39,11 @@ export default function EntryPageVisual() {
   const [inputPassword, setInputPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [targetUsernameValue] = useState("test");
-  const [targetPasswordValue] = useState("12345");
-  const isMatch =
-    inputUsername === targetUsernameValue &&
-    inputPassword === targetPasswordValue;
+  // const [targetUsernameValue] = useState("test");
+  // const [targetPasswordValue] = useState("12345");
+  // const isMatch =
+  //   inputUsername === targetUsernameValue &&
+  //   inputPassword === targetPasswordValue;
 
   // const handleLogin = () => {
   //   if (isMatch) {

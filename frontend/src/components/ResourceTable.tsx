@@ -95,9 +95,7 @@ export default function ResourceTable() {
                     aria-label="delete"
                     size="large"
                     color="error"
-                    onClick={() =>
-                      handleOpenDialogForDelete(resource._id)
-                    }
+                    onClick={() => handleOpenDialogForDelete(resource._id)}
                   >
                     <DeleteIcon />
                   </IconButton>

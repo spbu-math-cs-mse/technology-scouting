@@ -198,8 +198,8 @@ export default function ApplicationTable() {
         <ResourceAssignDialog
           open={resourceAssignDialogOpen}
           setOpen={setResourceAssignDialogOpen}
-          assignResources={(resourceIds: string[]) =>
-            postAssignResources(applicationAssignTo._id, resourceIds)
+          assignResources={(resourceIds: string[], message: string) =>
+            postAssignResources(applicationAssignTo._id, resourceIds, message)
           }
           resources={resourcesToAssign}
         />

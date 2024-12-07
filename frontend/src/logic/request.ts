@@ -183,7 +183,7 @@ export function postAddNewAdmin(login: string, password: string) {
     });
 }
 
-export function postAssignResources(applicationId: string, resourceIds: string[]) {
+export function postAssignResources(applicationId: string, resourceIds: string[], message: string) {
   // TODO
 }
 
