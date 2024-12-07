@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { ResourceWithId } from "../logic/types.ts";
 import {
-  getResourcesDataTable,
-  // getResourcesDataTableMock as getResourcesDataTable,
+  // getResourcesDataTable,
+  getResourcesDataTableMock as getResourcesDataTable,
   postDeleteResource,
   postEditResource,
 } from "../logic/request.ts";
@@ -25,7 +25,7 @@ import IconButton from "@mui/material/IconButton";
 import ResourceEditDialog from "./ResourceEditDialog.tsx";
 
 export default function ResourceTable() {
-  const [tableContent, setTableContent] = useState<ResourceWithId[]>([]);
+  const [resourcesTable, setResourcesTable] = useState<ResourceWithId[]>([]);
 
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
@@ -43,15 +43,15 @@ export default function ResourceTable() {
     postDeleteResource(id);
     setTimeout(
       () =>
-        getResourcesDataTable().then((messages) => setTableContent(messages)),
+        getResourcesDataTable().then((messages) => setResourcesTable(messages)),
       500
     );
   };
 
   useEffect(() => {
-    getResourcesDataTable().then((messages) => setTableContent(messages));
+    getResourcesDataTable().then((messages) => setResourcesTable(messages));
     const interval = setInterval(() => {
-      getResourcesDataTable().then((messages) => setTableContent(messages));
+      getResourcesDataTable().then((messages) => setResourcesTable(messages));
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -71,32 +71,32 @@ export default function ResourceTable() {
             <TableRow>
               <TableCell>Date</TableCell>
               <TableCell>Organization</TableCell>
-              <TableCell>ContactName</TableCell>
-              <TableCell>TelegramId</TableCell>
-              <TableCell>CompetenceField</TableCell>
+              <TableCell>Contact name</TableCell>
+              <TableCell>Telegram id</TableCell>
+              <TableCell>Competence field</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Tags</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableContent.map((resourceMessage, ind) => (
+            {resourcesTable.map((resource, ind) => (
               <TableRow key={ind}>
-                <TableCell>{resourceMessage.date}</TableCell>
-                <TableCell>{resourceMessage.organization}</TableCell>
-                <TableCell>{resourceMessage.contactName}</TableCell>
-                <TableCell>{resourceMessage.telegramId}</TableCell>
-                <TableCell>{resourceMessage.competenceField}</TableCell>
-                <TableCell>{resourceMessage.description}</TableCell>
-                <TableCell>{resourceMessage.tags.join(", ")}</TableCell>
-                <TableCell>{resourceMessage.status}</TableCell>
+                <TableCell>{resource.date}</TableCell>
+                <TableCell>{resource.organization}</TableCell>
+                <TableCell>{resource.contactName}</TableCell>
+                <TableCell>{resource.telegramId}</TableCell>
+                <TableCell>{resource.competenceField}</TableCell>
+                <TableCell>{resource.description}</TableCell>
+                <TableCell>{resource.tags.join(", ")}</TableCell>
+                <TableCell>{resource.status}</TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="delete"
                     size="large"
                     color="error"
                     onClick={() =>
-                      handleOpenDialogForDelete(resourceMessage._id)
+                      handleOpenDialogForDelete(resource._id)
                     }
                   >
                     <DeleteIcon />
@@ -119,7 +119,7 @@ export default function ResourceTable() {
                         Cancel
                       </Button>
                       <Button
-                        onClick={() => handleConfirmDelete(resourceMessage._id)}
+                        onClick={() => handleConfirmDelete(resource._id)}
                         color="error"
                         variant="contained"
                       >
@@ -134,7 +134,7 @@ export default function ResourceTable() {
                     size="large"
                     color="warning"
                     onClick={() => {
-                      setEditingResource(resourceMessage);
+                      setEditingResource(resource);
                       setResourceEditDialogOpen(true);
                     }}
                   >
@@ -153,7 +153,7 @@ export default function ResourceTable() {
           editResource={(resource) => {
             postEditResource(resource);
             getResourcesDataTable().then((messages) =>
-              setTableContent(messages)
+              setResourcesTable(messages)
             );
           }}
           initialState={editingResource}

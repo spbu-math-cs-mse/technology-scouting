@@ -183,6 +183,10 @@ export function postAddNewAdmin(login: string, password: string) {
     });
 }
 
+export function postAssignResources(applicationId: string, resourceIds: string[]) {
+  // TODO
+}
+
 export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
@@ -223,7 +227,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
         status: "In work",
       },
       {
-        _id: "1",
+        _id: "2",
         date: "1",
         organization: "1",
         contactName: "1",

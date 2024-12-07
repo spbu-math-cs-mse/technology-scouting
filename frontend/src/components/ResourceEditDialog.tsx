@@ -132,10 +132,10 @@ export default function ResourceEditDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpen(false)} color="secondary">
-          Discard
+          Cancel
         </Button>
         <Button onClick={handleEdit} color="primary">
-          Edit
+          Apply
         </Button>
       </DialogActions>
     </Dialog>

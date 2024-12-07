@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { ApplicationWithId } from "../logic/types.ts";
+import { ApplicationWithId, ResourceWithId } from "../logic/types.ts";
 import {
+  getResourcesDataTable,
+  // getResourcesDataTableMock as getResourcesDataTable,
   getApplicationDataTable,
   // getApplicationDataTableMock as getApplicationDataTable,
   postDeleteApplication,
   postEditApplication,
+  postAssignResources,
 } from "../logic/request.ts";
 import {
   Table,
@@ -23,9 +26,15 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
+import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
 
 export default function ApplicationTable() {
-  const [tableContent, setTableContent] = useState<ApplicationWithId[]>([]);
+  const [applicationTable, setApplicationTable] = useState<ApplicationWithId[]>(
+    []
+  );
+  const [resourcesToAssign, setResourcesToAssign] = useState<ResourceWithId[]>(
+    []
+  );
 
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
@@ -43,15 +52,19 @@ export default function ApplicationTable() {
     postDeleteApplication(id);
     setTimeout(
       () =>
-        getApplicationDataTable().then((messages) => setTableContent(messages)),
+        getApplicationDataTable().then((messages) =>
+          setApplicationTable(messages)
+        ),
       500
     );
   };
 
   useEffect(() => {
-    getApplicationDataTable().then((messages) => setTableContent(messages));
+    getApplicationDataTable().then((messages) => setApplicationTable(messages));
     const interval = setInterval(() => {
-      getApplicationDataTable().then((messages) => setTableContent(messages));
+      getApplicationDataTable().then((messages) =>
+        setApplicationTable(messages)
+      );
     }, 5000);
     return () => {
       clearInterval(interval);
@@ -60,7 +73,15 @@ export default function ApplicationTable() {
 
   const [applicationEditDialogOpen, setApplicationEditDialogOpen] =
     useState(false);
+
   const [editingApplication, setEditingApplication] = useState<
+    ApplicationWithId | undefined
+  >(undefined);
+
+  const [resourceAssignDialogOpen, setResourceAssignDialogOpen] =
+    useState(false);
+
+  const [applicationAssignTo, setApplicationAssignTo] = useState<
     ApplicationWithId | undefined
   >(undefined);
 
@@ -73,13 +94,13 @@ export default function ApplicationTable() {
               <TableCell>Date</TableCell>
               <TableCell>Organization</TableCell>
               <TableCell>ContactName</TableCell>
-              <TableCell>TelegramId</TableCell>
-              <TableCell>RequestText</TableCell>
+              <TableCell>Telegram id</TableCell>
+              <TableCell>Request text</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableContent.map((application, ind) => (
+            {applicationTable.map((application, ind) => (
               <TableRow key={ind}>
                 <TableCell>{application.date}</TableCell>
                 <TableCell>{application.organization}</TableCell>
@@ -136,6 +157,24 @@ export default function ApplicationTable() {
                     Edit
                   </Button>
                 </TableCell>
+                {application.status === "Incoming" && (
+                  <TableCell>
+                    <Button
+                      aria-label="edit"
+                      size="large"
+                      color="warning"
+                      onClick={() => {
+                        setApplicationAssignTo(application);
+                        setResourceAssignDialogOpen(true);
+                        getResourcesDataTable().then((resources) =>
+                          setResourcesToAssign(resources)
+                        );
+                      }}
+                    >
+                      Assign
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -148,10 +187,21 @@ export default function ApplicationTable() {
           editApplication={(editedState: ApplicationWithId) => {
             postEditApplication(editedState);
             getApplicationDataTable().then((messages) =>
-              setTableContent(messages)
+              setApplicationTable(messages)
             );
           }}
           initialState={editingApplication}
+        />
+      )}
+
+      {applicationAssignTo && (
+        <ResourceAssignDialog
+          open={resourceAssignDialogOpen}
+          setOpen={setResourceAssignDialogOpen}
+          assignResources={(resourceIds: string[]) =>
+            postAssignResources(applicationAssignTo._id, resourceIds)
+          }
+          resources={resourcesToAssign}
         />
       )}
     </>
