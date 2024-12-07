@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { ResourceWithId } from "../logic/types.ts";
 import {
-  // getResourcesDataTable,
-  getResourcesDataTableMock as getResourcesDataTable,
+  getResourcesDataTable,
+  // getResourcesDataTableMock as getResourcesDataTable,
   postDeleteResource,
   postEditResource,
 } from "../logic/request.ts";

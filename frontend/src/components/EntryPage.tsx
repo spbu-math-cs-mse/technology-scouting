@@ -45,25 +45,25 @@ export default function EntryPageVisual() {
     inputUsername === targetUsernameValue &&
     inputPassword === targetPasswordValue;
 
-  const handleLogin = () => {
-    if (isMatch) {
-      navigate("/admin-panel");
-    } else {
-      setErrorMessage("Invalid username or password.");
-    }
-  };
-
-  // const handleLogin = async (event: React.FormEvent) => {
-  //   event.preventDefault();
-
-  //   const success = await postLogin(inputUsername, inputPassword);
-
-  //   if (success) {
-  //     navigate("/admin-panel"); // Переход на следующую страницу
+  // const handleLogin = () => {
+  //   if (isMatch) {
+  //     navigate("/admin-panel");
   //   } else {
   //     setErrorMessage("Invalid username or password.");
   //   }
   // };
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const success = await postLogin(inputUsername, inputPassword);
+
+    if (success) {
+      navigate("/admin-panel"); // Переход на следующую страницу
+    } else {
+      setErrorMessage("Invalid username or password.");
+    }
+  };
 
   return (
     <Box
