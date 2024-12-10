@@ -46,7 +46,7 @@ export default function AdminPanel() {
             onClick={() => setActiveSection("applications")}
             variant="contained"
           >
-            Show requests
+            Show applications
           </StyledBorderButton>
 
           <StyledBorderButton

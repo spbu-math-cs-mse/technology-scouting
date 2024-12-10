@@ -29,6 +29,15 @@ export function toApplication(applicationWithId: ApplicationWithId) {
   return application;
 }
 
+export const DEFAULT_APPLICATION : Application = {
+  date: "",
+  organization: "",
+  contactName: "",
+  telegramId: "",
+  requestText: "",
+  status: "Incoming",
+};
+
 export const RESOURCE_STATUSES = ["In work", "Available"] as const;
 
 export type ResourceStatus = (typeof RESOURCE_STATUSES)[number];

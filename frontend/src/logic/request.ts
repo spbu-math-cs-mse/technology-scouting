@@ -2,10 +2,12 @@ import { getToken, storeToken } from "./authToken";
 import {
   ApplicationDataTableResponse,
   ApplicationWithId,
+  Application
 } from "./types";
 import {
   ResourceDataTableResponse,
   ResourceWithId,
+  Resource
 } from "./types";
 
 // Function to perform login and store token
@@ -116,6 +118,53 @@ export function postDeleteResource(id: string) {
     });
 }
 
+export function postCreateApplication(createdAplication: Application) {
+  fetch("/api/create_application", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(createdAplication),
+  })
+    .then(async (response) => {
+      if (response.ok)
+        console.log(`New applicataion created successfully.`);
+      else return console.error("Failed to created application", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
+export function postCreateResource(createdResource: Resource) {
+  fetch("/api/create_resource", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(createdResource),
+  })
+    .then(async (response) => {
+      if (response.ok)
+        console.log(`New resource created successfully.`);
+      else
+        return console.error("Failed to created resource", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
+
+
 export function postEditApplication(editedAplication: ApplicationWithId) {
   fetch("/api/update_application", {
     method: "POST",
@@ -128,7 +177,7 @@ export function postEditApplication(editedAplication: ApplicationWithId) {
     .then(async (response) => {
       if (response.ok)
         console.log(`Applicataion with ID ${editedAplication._id} edited successfully.`);
-      else return console.error("Failed to edit request", response.statusText);
+      else return console.error("Failed to edit application", response.statusText);
     })
     .catch((error) => {
       console.error(error);
@@ -173,7 +222,7 @@ export function postAddNewAdmin(login: string, password: string) {
       await response.json();
       if (response.ok)
         console.log(`Admin ${login} added successfully.`);
-      else return console.error("Failed to edit request", response.statusText);
+      else return console.error("Failed to add admin", response.statusText);
     })
     .catch((error) => {
       console.error(error);

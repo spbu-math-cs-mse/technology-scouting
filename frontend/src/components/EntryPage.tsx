@@ -39,21 +39,21 @@ export default function EntryPageVisual() {
   const [inputPassword, setInputPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // const [targetUsernameValue] = useState("test");
-  // const [targetPasswordValue] = useState("12345");
-  // const isMatch =
-  //   inputUsername === targetUsernameValue &&
-  //   inputPassword === targetPasswordValue;
+  const [targetUsernameValue] = useState("test");
+  const [targetPasswordValue] = useState("12345");
+  const isMatch =
+    inputUsername === targetUsernameValue &&
+    inputPassword === targetPasswordValue;
 
-  // const handleLogin = () => {
-  //   if (isMatch) {
-  //     navigate("/admin-panel");
-  //   } else {
-  //     setErrorMessage("Invalid username or password.");
-  //   }
-  // };
+  const handleLogin = () => {
+    if (isMatch) {
+      navigate("/admin-panel");
+    } else {
+      setErrorMessage("Invalid username or password.");
+    }
+  };
 
-  const handleLogin = async (event: React.FormEvent) => {
+  /*const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const success = await postLogin(inputUsername, inputPassword);
@@ -63,7 +63,7 @@ export default function EntryPageVisual() {
     } else {
       setErrorMessage("Invalid username or password.");
     }
-  };
+  };*/
 
   return (
     <Box

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { ResourceWithId } from "../logic/types.ts";
 import {
-  getResourcesDataTable,
-  // getResourcesDataTableMock as getResourcesDataTable,
+  //getResourcesDataTable,
+   getResourcesDataTableMock as getResourcesDataTable,
   postDeleteResource,
   postEditResource,
 } from "../logic/request.ts";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -144,6 +145,19 @@ export default function ResourceTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box display="flex" justifyContent="flex-end" mt={2}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => {
+            // Логика кнопки
+            console.log("Button clicked!");
+          }}
+        >
+          Add Resource
+        </Button>
+      </Box>
+
       {editingResource && (
         <ResourceEditDialog
           open={resourceEditDialogOpen}

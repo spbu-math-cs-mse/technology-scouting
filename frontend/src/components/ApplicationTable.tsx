@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { ApplicationWithId, ResourceWithId } from "../logic/types.ts";
+import { ApplicationWithId, ResourceWithId, Application, DEFAULT_APPLICATION } from "../logic/types.ts";
 import {
-  getResourcesDataTable,
-  // getResourcesDataTableMock as getResourcesDataTable,
-  getApplicationDataTable,
-  // getApplicationDataTableMock as getApplicationDataTable,
+  //getResourcesDataTable,
+  getResourcesDataTableMock as getResourcesDataTable,
+  //getApplicationDataTable,
+  getApplicationDataTableMock as getApplicationDataTable,
   postDeleteApplication,
   postEditApplication,
   postAssignResources,
+  postCreateApplication,
 } from "../logic/request.ts";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -26,6 +28,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
+import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
 
 export default function ApplicationTable() {
@@ -39,6 +42,27 @@ export default function ApplicationTable() {
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
   >(null);
+
+  const [applicationEditDialogOpen, setApplicationEditDialogOpen] =
+    useState(false);
+
+  const [editingApplication, setEditingApplication] = useState<
+    ApplicationWithId | undefined
+  >(undefined);
+
+  const [applicationCreateDialogOpen, setApplicationCreateDialogOpen] =
+    useState(false);
+
+  const [createdApplication, setCreatedApplication] = useState<
+    Application | undefined
+  >(undefined);
+
+  const [resourceAssignDialogOpen, setResourceAssignDialogOpen] =
+    useState(false);
+
+  const [applicationAssignTo, setApplicationAssignTo] = useState<
+    ApplicationWithId | undefined
+  >(undefined);
 
   const handleOpenDialogForDelete = (id: string) => {
     setSelectedForDeleteRequestId(id);
@@ -59,6 +83,7 @@ export default function ApplicationTable() {
     );
   };
 
+
   useEffect(() => {
     getApplicationDataTable().then((messages) => setApplicationTable(messages));
     const interval = setInterval(() => {
@@ -71,22 +96,21 @@ export default function ApplicationTable() {
     };
   }, []);
 
-  const [applicationEditDialogOpen, setApplicationEditDialogOpen] =
-    useState(false);
-
-  const [editingApplication, setEditingApplication] = useState<
-    ApplicationWithId | undefined
-  >(undefined);
-
-  const [resourceAssignDialogOpen, setResourceAssignDialogOpen] =
-    useState(false);
-
-  const [applicationAssignTo, setApplicationAssignTo] = useState<
-    ApplicationWithId | undefined
-  >(undefined);
-
   return (
     <>
+      <Box display="flex" justifyContent="flex-end" mt={2}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => {
+            setCreatedApplication(DEFAULT_APPLICATION);
+            setApplicationCreateDialogOpen(true);
+          }}
+        >
+          Create Application
+        </Button>
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -180,6 +204,20 @@ export default function ApplicationTable() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {createdApplication && (
+        <ApplicatonCreateDialog
+          open={applicationCreateDialogOpen}
+          setOpen={setApplicationCreateDialogOpen}
+          createApplication={(createdState: Application) => {
+            postCreateApplication(createdState);
+            getApplicationDataTable().then((messages) =>
+              setApplicationTable(messages)
+            );
+          }}
+        />
+      )}
+
       {editingApplication && (
         <ApplicationEditDialog
           open={applicationEditDialogOpen}
