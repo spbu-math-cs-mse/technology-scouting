@@ -265,13 +265,13 @@ fun Application.configureRouting(bot: Bot) {
                 }
             }
 
-            post("/api/assign_resources"){
+            post("/api/assign_resources") {
                 val attacher = call.receive<Attacher>()
 
-                try{
+                try {
                     val applicationId = attacher.applicationId
 
-                    for(resourceId in attacher.resourceIds){
+                    for (resourceId in attacher.resourceIds) {
                         applicationsService.addResourceToApplication(applicationId, resourceId)
                         resourcesService.addApplicationToResource(resourceId, applicationId)
                         var tg = resourcesService.getResource(resourceId)?.telegramId

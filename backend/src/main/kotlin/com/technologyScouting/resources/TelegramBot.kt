@@ -32,25 +32,25 @@ fun createBot(): Bot =
     }
 
 fun Bot.sendMessagesToUsersByUsername(
-    username:String,
+    username: String,
     message: String,
 ) {
-        try {
-            val chatId = ChatId.fromChannelUsername(username.removePrefix("@"))
-            val result = this.getChat(chatId)
-            val chat = result.getOrNull()
-            if (chat != null) {
-                this.sendMessage(
-                    chatId = ChatId.fromId(chat.id),
-                    text = message,
-                )
-            } else {
-                logger.warn("User $username not found or unable to retrieve chat.")
-            }
-        } catch (e: Exception) {
-            logger.error("Failed to send message to user $username: ${e.message}")
+    try {
+        val chatId = ChatId.fromChannelUsername(username.removePrefix("@"))
+        val result = this.getChat(chatId)
+        val chat = result.getOrNull()
+        if (chat != null) {
+            this.sendMessage(
+                chatId = ChatId.fromId(chat.id),
+                text = message,
+            )
+        } else {
+            logger.warn("User $username not found or unable to retrieve chat.")
         }
+    } catch (e: Exception) {
+        logger.error("Failed to send message to user $username: ${e.message}")
     }
+}
 
 private var currentStep: String? = null
 
