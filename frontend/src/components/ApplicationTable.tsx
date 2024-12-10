@@ -37,6 +37,8 @@ import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
 
+
+
 function getFittingCharacters(
   text: string,
   width: number,
@@ -56,6 +58,22 @@ function getFittingCharacters(
 
   return charCount;
 }
+
+const renderWithTooltip = (
+  text: string,
+  maxWidth: number,
+  font: string
+) => {
+  const isTextOverflowing = text.length > getFittingCharacters(text, maxWidth, font);
+
+  return isTextOverflowing ? (
+    <Tooltip title={text} placement="bottom-start">
+      <span>{text}</span>
+    </Tooltip>
+  ) : (
+    <span>{text}</span>
+  );
+};
 
 export default function ApplicationTable() {
   const font = "14px Times New Roman";
@@ -157,7 +175,7 @@ export default function ApplicationTable() {
                 Organization
               </TableCell>
               <TableCell sx={{ font: font, textAlign: "center" }}>
-                ContactName
+                Contact name
               </TableCell>
               <TableCell sx={{ font: font, textAlign: "center" }}>
                 Telegram id
@@ -180,27 +198,13 @@ export default function ApplicationTable() {
                   sx={{
                     font: font,
                     textAlign: "center",
-                    maxWidth: maxWidthByColumn.contactName,
+                    maxWidth: maxWidthByColumn.organization,
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {application.organization.length >
-                  getFittingCharacters(
-                    application.organization,
-                    maxWidthByColumn.organization,
-                    font
-                  ) ? (
-                    <Tooltip
-                      title={application.organization}
-                      placement="bottom-start"
-                    >
-                      <span>{application.organization}</span>
-                    </Tooltip>
-                  ) : (
-                    <span>{application.organization}</span>
-                  )}
+                  {renderWithTooltip(application.organization, maxWidthByColumn.organization, font)}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -212,48 +216,20 @@ export default function ApplicationTable() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {application.contactName.length >
-                  getFittingCharacters(
-                    application.contactName,
-                    maxWidthByColumn.contactName,
-                    font
-                  ) ? (
-                    <Tooltip
-                      title={application.contactName}
-                      placement="bottom-start"
-                    >
-                      <span>{application.contactName}</span>
-                    </Tooltip>
-                  ) : (
-                    <span>{application.contactName}</span>
-                  )}
+                  {renderWithTooltip(application.contactName, maxWidthByColumn.contactName, font)}
                 </TableCell>
 
                 <TableCell
                   sx={{
                     font: font,
                     textAlign: "center",
-                    maxWidth: maxWidthByColumn.contactName,
+                    maxWidth: maxWidthByColumn.telegramId,
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {application.telegramId.length >
-                  getFittingCharacters(
-                    application.telegramId,
-                    maxWidthByColumn.telegramId,
-                    font
-                  ) ? (
-                    <Tooltip
-                      title={application.telegramId}
-                      placement="bottom-start"
-                    >
-                      <span>{application.telegramId}</span>
-                    </Tooltip>
-                  ) : (
-                    <span>{application.telegramId}</span>
-                  )}
+                  {renderWithTooltip(application.telegramId, maxWidthByColumn.telegramId, font)}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -265,21 +241,7 @@ export default function ApplicationTable() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {application.requestText.length >
-                  getFittingCharacters(
-                    application.requestText,
-                    maxWidthByColumn.requestText,
-                    font
-                  ) ? (
-                    <Tooltip
-                      title={application.requestText}
-                      placement="bottom-start"
-                    >
-                      <span>{application.requestText}</span>
-                    </Tooltip>
-                  ) : (
-                    <span>{application.requestText}</span>
-                  )}
+                  {renderWithTooltip(application.requestText, maxWidthByColumn.requestText, font)}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -291,21 +253,7 @@ export default function ApplicationTable() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {application.status.length >
-                  getFittingCharacters(
-                    application.status,
-                    maxWidthByColumn.status,
-                    font
-                  ) ? (
-                    <Tooltip
-                      title={application.status}
-                      placement="bottom-start"
-                    >
-                      <span>{application.status}</span>
-                    </Tooltip>
-                  ) : (
-                    <span>{application.status}</span>
-                  )}
+                  {renderWithTooltip(application.status, maxWidthByColumn.status, font)}
                 </TableCell>
 
                 <TableCell
