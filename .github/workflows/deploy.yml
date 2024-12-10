@@ -3,7 +3,6 @@ name: Deploy Application
 on:
   push:
     branches:
-      # - main
       - 32-cd-add-deployment
   workflow_dispatch:
 
@@ -18,19 +17,28 @@ jobs:
       - name: Deploy via rsync & ssh
         uses: easingthemes/ssh-deploy@v5.1.0
         with:
-          ARGS: -rlgoDzvc -i --delete
+          ARGS: -rlgoDzvc --delete
           SSH_CMD_ARGS: -o ServerAliveInterval=1500
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_SSH_USER }}
           TARGET: /home/${{ secrets.DEPLOY_SSH_USER }}/app
-          EXCLUDE: /.git/, /**/.env
+          EXCLUDE: |
+            .git/
+            .env
           SCRIPT_BEFORE_REQUIRED: true
           SCRIPT_BEFORE: |
+            # Clean up existing application files
+            rm -rf /home/${{ secrets.DEPLOY_SSH_USER }}/app
+            # Recreate application directory
+            mkdir -p /home/${{ secrets.DEPLOY_SSH_USER }}/app
+            # Navigate to app directory
             cd /home/${{ secrets.DEPLOY_SSH_USER }}/app
-            docker system prune -f
-            docker compose down
+            # Stop and remove existing containers
+            docker compose down --remove-orphans
           SCRIPT_AFTER_REQUIRED: true
           SCRIPT_AFTER: |
+            # Navigate to app directory
             cd /home/${{ secrets.DEPLOY_SSH_USER }}/app
+            # Build and launch fresh containers
             docker compose up -d --remove-orphans --build
