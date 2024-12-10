@@ -229,7 +229,7 @@ export default function ApplicationTable() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {renderWithTooltip(application.telegramId, maxWidthByColumn.telegramId, font)}
+                  {renderWithTooltip(application.telegramId.toString(), maxWidthByColumn.telegramId, font)}
                 </TableCell>
                 <TableCell
                   sx={{

@@ -18,7 +18,7 @@ export type Application = {
   date: string;
   organization: string;
   contactName: string;
-  telegramId: string;
+  telegramId: number;
   requestText: string;
   status: ApplicationStatus;
 };
@@ -34,7 +34,7 @@ export const DEFAULT_APPLICATION: Application = {
   date: "",
   organization: "",
   contactName: "",
-  telegramId: "",
+  telegramId: 0,
   requestText: "",
   status: "incoming",
 };
@@ -47,7 +47,7 @@ export type Resource = {
   date: string;
   organization: string;
   contactName: string;
-  telegramId: string;
+  telegramId: number;
   competenceField: string;
   description: string;
   tags: string[];
@@ -58,7 +58,7 @@ export const DEFAULT_RESOURCE: Resource = {
   date: "",
   organization: "",
   contactName: "",
-  telegramId: "",
+  telegramId: 0,
   competenceField: "",
   description: "",
   tags: [],
