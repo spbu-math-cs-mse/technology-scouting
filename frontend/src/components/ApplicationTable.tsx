@@ -239,9 +239,9 @@ export default function ApplicationTable() {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {application.telegramId.length >
+                  {application.telegramId.toString().length >
                   getFittingCharacters(
-                    application.telegramId,
+                    application.telegramId.toString(),
                     maxWidthByColumn.telegramId,
                     font
                   ) ? (
