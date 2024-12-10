@@ -26,8 +26,26 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ResourceEditDialog from "./ResourceEditDialog.tsx";
 import ResourceCreateDialog from "./ResourceCreationDialog.tsx";
+import {
+  renderWithTooltip,
+  StyledTableCell,
+  SimpleStyledTableCell,
+} from "./TableFitting.tsx";
 
 export default function ResourceTable() {
+  const font = "14px Times New Roman";
+  const maxWidthByColumn = {
+    date: 50,
+    organization: 80,
+    contactName: 50,
+    telegramId: 50,
+    requestText: 100,
+    competenceField: 100,
+    description: 100,
+    tags: 100,
+    status: 100,
+  };
+
   const [resourcesTable, setResourcesTable] = useState<ResourceWithId[]>([]);
 
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
@@ -91,20 +109,22 @@ export default function ResourceTable() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Organization</TableCell>
-              <TableCell>Contact name</TableCell>
-              <TableCell>Telegram id</TableCell>
-              <TableCell>Competence field</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Status</TableCell>
+              <SimpleStyledTableCell>Date</SimpleStyledTableCell>
+              <SimpleStyledTableCell>Organization</SimpleStyledTableCell>
+              <SimpleStyledTableCell>Contact name</SimpleStyledTableCell>
+              <SimpleStyledTableCell>Telegram id</SimpleStyledTableCell>
+              <SimpleStyledTableCell>Competence field</SimpleStyledTableCell>
+              <SimpleStyledTableCell>Description</SimpleStyledTableCell>
+              <SimpleStyledTableCell>Tags</SimpleStyledTableCell>
+              <SimpleStyledTableCell>Status</SimpleStyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {resourcesTable.map((resource, ind) => (
               <TableRow key={ind}>
-                <TableCell>{resource.date}</TableCell>
+                <TableCell sx={{ font: font, textAlign: "center" }}>
+                  {resource.date}
+                </TableCell>
                 <TableCell>{resource.organization}</TableCell>
                 <TableCell>{resource.contactName}</TableCell>
                 <TableCell>{resource.telegramId}</TableCell>

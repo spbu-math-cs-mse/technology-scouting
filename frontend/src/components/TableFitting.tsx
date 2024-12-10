@@ -1,9 +1,13 @@
 import { styled, Tooltip } from "@mui/material";
 
-interface StyledTextCellProps {
+interface StyledTableCellProps {
   maxWidth?: number;
   font?: string;
 }
+
+interface SimpleStyledTableCell {
+    font?: string;
+  }
 
 export function getFittingCharacters(
   text: string,
@@ -42,7 +46,7 @@ export const renderWithTooltip = (
   );
 };
 
-export const StyledTableCell = styled("div")<StyledTextCellProps>(
+export const StyledTableCell = styled("div")<StyledTableCellProps>(
   ({ font = "inherit", maxWidth = "auto" }) => ({
     font,
     textAlign: "center",
@@ -50,5 +54,12 @@ export const StyledTableCell = styled("div")<StyledTextCellProps>(
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+  })
+);
+
+export const SimpleStyledTableCell = styled("div")<SimpleStyledTableCell>(
+  ({ font = "inherit" }) => ({
+    font: font,
+    textAlign: "center",
   })
 );
