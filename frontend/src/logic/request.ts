@@ -1,13 +1,16 @@
 import { getToken, storeToken } from "./authToken";
-import { ApplicationDataTableResponse, ApplicationWithId } from "./types";
-import { ResourceDataTableResponse, ResourceWithId } from "./types";
+import {
+  ApplicationDataTableResponse,
+  ApplicationWithId,
+} from "./types";
+import {
+  ResourceDataTableResponse,
+  ResourceWithId,
+} from "./types";
 
 // Function to perform login and store token
 // Function to perform login and store token
-export async function postLogin(
-  username: string,
-  password: string
-): Promise<boolean> {
+export async function postLogin(username: string, password: string): Promise<boolean> {
   return fetch("/api/login", {
     method: "POST",
     headers: {
@@ -15,16 +18,16 @@ export async function postLogin(
     },
     body: JSON.stringify({ login: username, password: password }),
   })
-    .then((response) => response.json())
-    .then(async (response) => {
-      console.log("Get response from server: ", response);
-      storeToken(response.token);
-      return true;
-    })
-    .catch((error) => {
-      console.error("Get error from server: ", error);
-      return false;
-    });
+      .then((response) => response.json())
+      .then(async (response) => {
+        console.log("Get response from server: ", response);
+        storeToken(response.token);
+        return true;
+      })
+      .catch((error) => {
+        console.error("Get error from server: ", error);
+        return false;
+      });
 }
 
 export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
@@ -35,15 +38,15 @@ export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
       Authorization: `Bearer ${getToken()}`,
     },
   })
-    .then((response) => response.json())
-    .then(async (response) => {
-      console.log("Get response from server: ", response);
-      return (response as ApplicationDataTableResponse).applications;
-    })
-    .catch((error) => {
-      console.error("Get error from server: ", error);
-      return [];
-    });
+      .then((response) => response.json())
+      .then(async (response) => {
+        console.log("Get response from server: ", response);
+        return (response as ApplicationDataTableResponse).applications;
+      })
+      .catch((error) => {
+        console.error("Get error from server: ", error);
+        return [];
+      });
 }
 
 export function getResourcesDataTable(): Promise<ResourceWithId[]> {
@@ -72,7 +75,7 @@ export function postDeleteApplication(id: string) {
       "Content-type": "application/json",
       Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ _id: id }),
+    body: JSON.stringify({ "_id": id }),
   })
     .then(async (response) => {
       if (response.ok)
@@ -98,7 +101,7 @@ export function postDeleteResource(id: string) {
       "Content-type": "application/json",
       Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ _id: id }),
+    body: JSON.stringify({ "_id": id }),
   })
     .then(async (response) => {
       if (response.ok)
@@ -125,9 +128,7 @@ export function postEditApplication(editedAplication: ApplicationWithId) {
   })
     .then(async (response) => {
       if (response.ok)
-        console.log(
-          `Applictaion with ID ${editedAplication._id} editted successfully.`
-        );
+        console.log(`Applictaion with ID ${editedAplication._id} editted successfully.`);
       else return console.error("Failed to edit request", response.statusText);
     })
     .catch((error) => {
@@ -149,9 +150,7 @@ export function postEditResource(editedResource: ResourceWithId) {
   })
     .then(async (response) => {
       if (response.ok)
-        console.log(
-          `Resource with ID ${editedResource._id} editted successfully.`
-        );
+        console.log(`Resource with ID ${editedResource._id} editted successfully.`);
       else return console.error("Failed to edit request", response.statusText);
     })
     .catch((error) => {

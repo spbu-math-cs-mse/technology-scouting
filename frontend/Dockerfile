@@ -1,7 +1,5 @@
 FROM node:latest
 
-SHELL ["/bin/bash", "-c"]
-
 WORKDIR /app
 
 COPY . .

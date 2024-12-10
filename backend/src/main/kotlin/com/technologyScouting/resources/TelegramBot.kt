@@ -42,7 +42,6 @@ fun Bot.sendMessagesToUsersByUsername(
         )
     } catch (e: Exception) {
         logger.error("Failed to send message to user $id: ${e.message}")
-
     }
 }
 
