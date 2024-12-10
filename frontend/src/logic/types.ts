@@ -21,6 +21,7 @@ export type Application = {
   telegramId: number;
   requestText: string;
   status: ApplicationStatus;
+  associatedResources: string[];
 };
 
 export type ApplicationWithId = id & Application;
@@ -37,6 +38,7 @@ export const DEFAULT_APPLICATION: Application = {
   telegramId: 0,
   requestText: "",
   status: "incoming",
+  associatedResources: []
 };
 
 export const RESOURCE_STATUSES = ["in work", "available"] as const;
@@ -52,6 +54,7 @@ export type Resource = {
   description: string;
   tags: string[];
   status: ResourceStatus;
+  associatedApplications: string[];
 };
 
 export const DEFAULT_RESOURCE: Resource = {
@@ -63,6 +66,7 @@ export const DEFAULT_RESOURCE: Resource = {
   description: "",
   tags: [],
   status: "in work",
+  associatedApplications: []
 };
 
 export type ResourceWithId = id & Resource;
