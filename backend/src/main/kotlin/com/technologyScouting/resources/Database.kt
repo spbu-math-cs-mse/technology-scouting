@@ -46,6 +46,7 @@ object ApplicationFields {
     const val TELEGRAM_ID = "telegramId"
     const val REQUEST_TEXT = "requestText"
     const val STATUS = "status"
+    const val ASSOCIATED_RESOURCES = "associatedResources"
 }
 
 object FieldValidator {
@@ -92,6 +93,7 @@ class ApplicationsService(
                 .append(ApplicationFields.TELEGRAM_ID, telegramId)
                 .append(ApplicationFields.REQUEST_TEXT, requestText)
                 .append(ApplicationFields.STATUS, status)
+                .append(ApplicationFields.ASSOCIATED_RESOURCES, emptyList<String>())
 
         val result = connection.insertOne(document)
         return result.insertedId
@@ -116,6 +118,16 @@ class ApplicationsService(
         val updateResult = connection.updateOne(filter, update)
         return updateResult.matchedCount > 0
     }
+
+    fun addResourceToApplication(applicationId: String, resourceId: String): Boolean {
+        val applicationObjectId = ObjectId(applicationId)
+        val applicationFilter = Document(ApplicationFields.ID, applicationObjectId)
+        val applicationUpdate = Document("\$addToSet", Document(ApplicationFields.ASSOCIATED_RESOURCES, resourceId))
+
+        val applicationResult = connection.updateOne(applicationFilter, applicationUpdate)
+        return applicationResult.matchedCount > 0
+    }
+
 
     fun deleteApplication(applicationId: String): Boolean {
         val objectId = ObjectId(applicationId)
@@ -150,6 +162,7 @@ class ApplicationsService(
             telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
             requestText = this.getString(ApplicationFields.REQUEST_TEXT),
             status = Status.valueOf(this.getString(ApplicationFields.STATUS)).s,
+            associatedResources = this.getList(ApplicationFields.ASSOCIATED_RESOURCES, String::class.java) ?: emptyList()
         )
 }
 
@@ -163,6 +176,7 @@ object ResourceFields {
     const val DESCRIPTION = "description"
     const val TAGS = "tags"
     const val STATUS = "status"
+    const val ASSOCIATED_APPLICATIONS = "associatedApplications"
 }
 
 class ResourcesService(
@@ -200,6 +214,7 @@ class ResourcesService(
                 .append(ResourceFields.DESCRIPTION, description)
                 .append(ResourceFields.TAGS, tags)
                 .append(ResourceFields.STATUS, status.name)
+                .append(ResourceFields.ASSOCIATED_APPLICATIONS, emptyList<String>())
 
         val result = connection.insertOne(document)
         return result.insertedId
@@ -207,6 +222,16 @@ class ResourcesService(
             ?.value
             ?.toHexString()
     }
+
+    fun addApplicationToResource(resourceId: String, applicationId: String): Boolean {
+        val resourceObjectId = ObjectId(resourceId)
+        val resourceFilter = Document(ResourceFields.ID, resourceObjectId)
+        val resourceUpdate = Document("\$addToSet", Document(ResourceFields.ASSOCIATED_APPLICATIONS, applicationId))
+
+        val resourceResult = connection.updateOne(resourceFilter, resourceUpdate)
+        return resourceResult.matchedCount > 0
+    }
+
 
     fun updateResource(
         resourceId: String,
@@ -261,6 +286,7 @@ class ResourcesService(
             description = this.getString(ResourceFields.DESCRIPTION),
             tags = this.getList(ResourceFields.TAGS, String::class.java),
             status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)).s,
+            associatedApplications = this.getList(ResourceFields.ASSOCIATED_APPLICATIONS, String::class.java),
         )
 }
 

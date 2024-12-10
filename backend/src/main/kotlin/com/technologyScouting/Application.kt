@@ -50,6 +50,7 @@ data class ApplicationWithId(
     val telegramId: String,
     val requestText: String,
     val status: String,
+    val associatedResources: List<String>
 )
 
 @Serializable
@@ -96,6 +97,7 @@ data class ResourceWithId(
     val description: String,
     val tags: List<String>,
     val status: String,
+    val associatedApplications: List<String>,
 )
 
 @Serializable
