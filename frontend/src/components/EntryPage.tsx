@@ -51,7 +51,7 @@ export default function EntryPageVisual() {
     const success = await postLogin(inputUsername, inputPassword);
 
     if (success) {
-        navigate("/admin-panel"); // Переход на следующую страницу
+      navigate("/admin-panel"); // Переход на следующую страницу
     } else {
       setErrorMessage("Invalid username or password.");
     }
@@ -66,7 +66,6 @@ export default function EntryPageVisual() {
 
   return (
     <Box
-    
       sx={{
         width: "100vw",
         height: "100vh",

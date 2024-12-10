@@ -77,7 +77,11 @@ export default function AdminPanel() {
           overflow: "auto",
         }}
       >
-        {activeSection === "section1" ? <ApplicationTable /> : <ResourceTable />}
+        {activeSection === "section1" ? (
+          <ApplicationTable />
+        ) : (
+          <ResourceTable />
+        )}
       </Grid>
 
       <AdminRegistrationDialog

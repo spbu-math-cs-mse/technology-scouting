@@ -30,7 +30,7 @@ export default function ApplicationTable() {
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
   >(null);
-  
+
   const handleOpenDialogForDelete = (id: string) => {
     setSelectedForDeleteRequestId(id);
   };

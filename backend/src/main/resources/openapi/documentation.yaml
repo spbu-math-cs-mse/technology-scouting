@@ -92,6 +92,7 @@ components:
         applicationId:
           type: string
         resourceIds:
+
           type: array
           items:
             type: string
