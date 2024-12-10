@@ -119,7 +119,10 @@ class ApplicationsService(
         return updateResult.matchedCount > 0
     }
 
-    fun setApplicationStatus(applicationId: String, status: Status): Boolean {
+    fun setApplicationStatus(
+        applicationId: String,
+        status: Status,
+    ): Boolean {
         val updates = mapOf(ApplicationFields.STATUS to status)
         return updateApplication(applicationId, updates)
     }
@@ -259,7 +262,10 @@ class ResourcesService(
         return updateResult.matchedCount > 0
     }
 
-    fun setResourceStatus(resourceId: String, status: ResourceStatus): Boolean {
+    fun setResourceStatus(
+        resourceId: String,
+        status: ResourceStatus,
+    ): Boolean {
         val updates = mapOf(ResourceFields.STATUS to status)
         return updateResource(resourceId, updates)
     }

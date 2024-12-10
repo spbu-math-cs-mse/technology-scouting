@@ -104,7 +104,7 @@ private fun Dispatcher.setUpCommands() {
 
             "resource_contact" -> {
                 newResource = newResource.copy(contactName = message.text.toString())
-                //bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт (ник в telegram):")
+                // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт (ник в telegram):")
                 currentStep = "resource_tg"
             }
 
@@ -167,7 +167,7 @@ private fun Dispatcher.setUpCommands() {
 
             "request_contact" -> {
                 newApplication = newApplication.copy(contactName = message.text.toString())
-                //bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
+                // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
                 currentStep = "request_tg"
             }
 
