@@ -27,29 +27,15 @@ components:
         status:
           type: string
           enum: ["incoming", "resources search", "resources attached", "in work", "ended", "declined by scout", "declined by client"]
-
-    applicationWithId:
-      type: object
-      properties:
-        _id:
-          type: string
-        date:
-          type: string
-        organization:
-          type: string
-        contactName:
-          type: string
-        telegramId:
-          type: long
-        requestText:
-          type: string
-        status:
-          type: string
-          enum: [ "incoming", "resources search", "resources attached", "in work", "ended", "declined by scout", "declined by client" ]
         associatedResources:
           type: array
           items:
             type: string
+
+    applicationWithId:
+      allOf:
+        - $ref: "#/components/schemas/application"
+        - $ref: "#/components/schemas/id"
 
     resource:
       type: object
@@ -73,35 +59,16 @@ components:
         status:
           type: string
           enum: ["in work", "available"] #TODO: тут ещё скорее всего какие-то есть, не придумалось с ходу
-    
+        associatedApplications:
+          type: array
+          items:
+            type: string
+
     resourceWithId:
-      type: object
-      properties:
-        _id:
-          type: string
-        date:
-          type: string
-        organization:
-          type: string
-        contactName:
-          type: string
-        telegramId:
-          type: long
-        competenceField:
-          type: string
-        description:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-        status:
-          type: string
-          enum: [ "in work", "available" ]
-        associatedResources:
-          type: array
-          items:
-            type: string
+      allOf:
+        - $ref: "#/components/schemas/resource"
+        - $ref: "#/components/schemas/id"
+
 
     logIn:
       type:
