@@ -24,5 +24,6 @@ jobs:
           ssh_host_public_key: ${{ secrets.DEPLOY_SSH_HOST_PUBLIC_KEY }}
           ssh_jump_host: ${{ secrets.DEPLOY_SSH_JUMP_HOST }}
           ssh_jump_public_key: ${{ secrets.DEPLOY_SSH_JUMP_PUBLIC_KEY }}
+          docker_use_stack: false
           docker_compose_filename: docker-compose.yml
           docker_args: -d --remove-orphans --build
