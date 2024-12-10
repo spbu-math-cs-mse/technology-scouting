@@ -1,49 +1,93 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
-import ErrorAlert from "./ErrorAlert";
-import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
+import ApplicationTable from "./ApplicationTable";
+import ResourceTable from "./ResourceTable";
+import { styled } from "@mui/material/styles";
+import AdminRegistrationDialog from "./AddAdminDialog";
+
+const StyledBorderButton = styled(Button)<ButtonProps>({
+  fontSize: "11px",
+  width: "100%",
+  minWidth: "150px",
+  maxWidth: "200px",
+});
 
 export default function AdminPanel() {
-  const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState<"section1" | "section2">(
+    "section1"
+  );
 
-  const handleRequestTable = () => {
-    navigate("/request-table");
-  };
-  const handleResourceTable = () => {
-    navigate("/resource-table");
-  };
-  const [errorText, setErrorText] = useState("");
-
-  const [errorAlertOpened, setErrorAlertOpened] = useState(false);
+  const [registrationDialogOpen, setRegistrationDialogOpen] = useState(false);
 
   return (
-    <Box sx={{ width: "90%" }}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 4 }}>
-        <Grid size={6}>
-          <Button
-            onClick={handleRequestTable}
+    <Box sx={{ height: "100vh", display: "flex" }}>
+      <Grid
+        container
+        spacing={2}
+        padding={2}
+        justifyContent={"space-between"}
+        flexDirection="column"
+        width="fit-content"
+        sx={{
+          backgroundColor: "#f0f0f0",
+          flexShrink: 0,
+        }}
+      >
+        <Grid
+          container
+          size={{ xs: 2 }}
+          width="fit-content"
+          flexDirection="column"
+        >
+          <StyledBorderButton
+            onClick={() => setActiveSection("section1")}
             variant="contained"
-            sx={{ marginTop: "15%", marginLeft: "20%" }}
           >
-            Watch requests
-          </Button>
+            Show requests
+          </StyledBorderButton>
+
+          <StyledBorderButton
+            onClick={() => setActiveSection("section2")}
+            variant="contained"
+          >
+            Show resources
+          </StyledBorderButton>
         </Grid>
-        <Grid size={6}>
-          <Button
-            onClick={handleResourceTable}
+
+        <Grid container size={{ xs: 2 }} width="fit-content">
+          <StyledBorderButton
+            onClick={() => {
+              setRegistrationDialogOpen(true);
+            }}
             variant="contained"
-            sx={{ marginTop: "15%", marginLeft: "10%" }}
+            color="inherit"
+            sx={{ alignSelf: "center" }}
           >
-            Watch resources
-          </Button>
+            Add new admin
+          </StyledBorderButton>
         </Grid>
       </Grid>
-      <ErrorAlert
-        opened={errorAlertOpened}
-        setOpened={(open: boolean) => setErrorAlertOpened(open)}
-        errorText={errorText}
+
+      <Grid
+        size={{ xs: 10 }}
+        sx={{
+          padding: 2,
+          overflow: "auto",
+        }}
+      >
+        {activeSection === "section1" ? (
+          <ApplicationTable />
+        ) : (
+          <ResourceTable />
+        )}
+      </Grid>
+
+      <AdminRegistrationDialog
+        open={registrationDialogOpen}
+        setOpen={setRegistrationDialogOpen}
+        addAdmin={(login: string, password: string) => {}}
       />
     </Box>
   );

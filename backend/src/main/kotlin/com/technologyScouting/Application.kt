@@ -11,6 +11,16 @@ data class Id(
 )
 
 @Serializable
+data class InputApplication(
+    val date: String,
+    val organization: String,
+    val contactName: String,
+    val telegramId: String,
+    val requestText: String,
+    val status: String,
+)
+
+@Serializable
 data class Application(
     val date: String,
     val organization: String,
@@ -21,15 +31,15 @@ data class Application(
 )
 
 enum class Status(
-    s: String,
+    val s: String,
 ) {
     INCOMING("incoming"),
-    RESOURCES_SEARCH("resources_search"),
-    RESOURCES_ATTACHED("resources_attached"),
-    IN_WORK("in_work"),
+    RESOURCES_SEARCH("resources search"),
+    RESOURCES_ATTACHED("resources attached"),
+    IN_WORK("in work"),
     ENDED("ended"),
-    DECLINED_BY_SCOUT("declined_by_scout"),
-    DECLINED_BY_CLIENT("declined_by_client"),
+    DECLINED_BY_SCOUT("declined by scout"),
+    DECLINED_BY_CLIENT("declined by client"),
 }
 
 @Serializable
@@ -40,7 +50,20 @@ data class ApplicationWithId(
     val contactName: String,
     val telegramId: String,
     val requestText: String,
-    val status: Status,
+    val status: String,
+)
+
+@Serializable
+data class InputResource(
+    val _id: String,
+    val date: String,
+    val organization: String,
+    val contactName: String,
+    val telegramId: String,
+    val competenceField: String,
+    val description: String,
+    val tags: List<String>,
+    val status: String,
 )
 
 @Serializable
@@ -57,9 +80,9 @@ data class Resource(
 )
 
 enum class ResourceStatus(
-    s: String,
+    val s: String,
 ) {
-    IN_WORK("in_work"),
+    IN_WORK("in work"),
     AVAILABLE("available"),
 }
 
@@ -73,7 +96,7 @@ data class ResourceWithId(
     val competenceField: String,
     val description: String,
     val tags: List<String>,
-    val status: ResourceStatus,
+    val status: String,
 )
 
 @Serializable

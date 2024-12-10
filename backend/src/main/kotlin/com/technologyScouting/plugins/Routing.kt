@@ -55,7 +55,7 @@ fun Application.configureRouting() {
             }
         }
 
-        post("/api/log-in") {
+        post("/api/login") {
             try {
                 val credentials = call.receive<LogIn>()
 
@@ -63,7 +63,7 @@ fun Application.configureRouting() {
 
                 if (isValidUser) {
                     val token = UUID.randomUUID().toString()
-                    println(token)
+                    println("valid user confirmed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + token)
                     val expiryTime = Instant.now().plusSeconds(3600).toEpochMilli() // Токен на 1 час
 
                     tokenStorage.insertOne(
@@ -89,6 +89,7 @@ fun Application.configureRouting() {
 
                     call.respond(Applications(applications))
                 } catch (e: Exception) {
+                    println(e.message)
                     call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
                 }
             }
@@ -136,7 +137,17 @@ fun Application.configureRouting() {
                 }
             }
             post("/api/create_resource") {
-                val resource = call.receive<Resource>()
+                val resource = call.receive<InputResource>()
+                var status: ResourceStatus = ResourceStatus.IN_WORK
+                if (!ResourceStatus.entries.toTypedArray().map {
+                            it ->
+                        it.toString()
+                    }.contains(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                ) {
+                    call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                } else {
+                    status = ResourceStatus.valueOf(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                }
 
                 try {
                     val newId =
@@ -148,7 +159,7 @@ fun Application.configureRouting() {
                                 resource.competenceField,
                                 resource.description,
                                 resource.tags,
-                                resource.status,
+                                status,
                             )
 
                     if (newId == null) {
@@ -161,7 +172,17 @@ fun Application.configureRouting() {
                 }
             }
             post("/api/create_application") {
-                val application = call.receive<com.technologyScouting.Application>()
+                val application = call.receive<com.technologyScouting.InputApplication>()
+                var status: Status = Status.INCOMING
+                if (!Status.entries.toTypedArray().map {
+                            it ->
+                        it.toString()
+                    }.contains(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                ) {
+                    call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                } else {
+                    status = Status.valueOf(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                }
 
                 try {
                     val newId =
@@ -171,7 +192,7 @@ fun Application.configureRouting() {
                                 application.contactName,
                                 application.telegramId,
                                 application.requestText,
-                                application.status,
+                                status,
                             )
 
                     if (newId == null) {
@@ -180,6 +201,7 @@ fun Application.configureRouting() {
 
                     call.respond(HttpStatusCode.OK, Id(newId))
                 } catch (e: Exception) {
+                    println(e.message)
                     call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }
             }
