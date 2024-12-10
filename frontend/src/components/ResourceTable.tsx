@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { ResourceWithId } from "../logic/types.ts";
+import { ResourceWithId, Resource, DEFAULT_RESOURCE } from "../logic/types.ts";
 import {
   //getResourcesDataTable,
    getResourcesDataTableMock as getResourcesDataTable,
   postDeleteResource,
   postEditResource,
+  postCreateResource,
 } from "../logic/request.ts";
 import {
   Box,
@@ -24,6 +25,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ResourceEditDialog from "./ResourceEditDialog.tsx";
+import ResourceCreateDialog from "./ResourceCreationDialog.tsx";
 
 export default function ResourceTable() {
   const [resourcesTable, setResourcesTable] = useState<ResourceWithId[]>([]);
@@ -31,6 +33,18 @@ export default function ResourceTable() {
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
   >(null);
+
+  const [resourceCreateDialogOpen, setResourceCreateDialogOpen] =
+    useState(false);
+
+  const [createdResource, setCreatedResource] = useState<
+    Resource | undefined
+  >(undefined);
+
+  const [resourceEditDialogOpen, setResourceEditDialogOpen] = useState(false);
+  const [editingResource, setEditingResource] = useState<
+    ResourceWithId | undefined
+  >(undefined);
 
   const handleOpenDialogForDelete = (id: string) => {
     setSelectedForDeleteRequestId(id);
@@ -59,13 +73,20 @@ export default function ResourceTable() {
     };
   }, []);
 
-  const [resourceEditDialogOpen, setResourceEditDialogOpen] = useState(false);
-  const [editingResource, setEditingResource] = useState<
-    ResourceWithId | undefined
-  >(undefined);
-
   return (
     <>
+     <Box display="flex" justifyContent="flex-end" mt={2}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => {
+            setCreatedResource(DEFAULT_RESOURCE);
+            setResourceCreateDialogOpen(true);
+          }}
+        >
+          Create Resource
+        </Button>
+      </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -145,18 +166,19 @@ export default function ResourceTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box display="flex" justifyContent="flex-end" mt={2}>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={() => {
-            // Логика кнопки
-            console.log("Button clicked!");
+
+      {createdResource && (
+        <ResourceCreateDialog
+          open={resourceCreateDialogOpen}
+          setOpen={setResourceCreateDialogOpen}
+          createResource={(createdState: Resource) => {
+            postCreateResource(createdState);
+            getResourcesDataTable().then((messages) =>
+              setResourcesTable(messages)
+            );
           }}
-        >
-          Add Resource
-        </Button>
-      </Box>
+        />
+      )}
 
       {editingResource && (
         <ResourceEditDialog

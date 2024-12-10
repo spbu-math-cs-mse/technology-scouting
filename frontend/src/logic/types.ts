@@ -2,14 +2,15 @@ type id = {
   _id: string;
 };
 
-export const APPLICATION_STATUSES =
-  ["incoming",
-    "resources search",
-    "resources attached",
-    "in work",
-    "ended",
-    "declined by scout",
-    "declined by client"] as const;
+export const APPLICATION_STATUSES = [
+  "incoming",
+  "resources search",
+  "resources attached",
+  "in work",
+  "ended",
+  "declined by scout",
+  "declined by client",
+] as const;
 
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
@@ -29,7 +30,7 @@ export function toApplication(applicationWithId: ApplicationWithId) {
   return application;
 }
 
-export const DEFAULT_APPLICATION : Application = {
+export const DEFAULT_APPLICATION: Application = {
   date: "",
   organization: "",
   contactName: "",
@@ -38,7 +39,7 @@ export const DEFAULT_APPLICATION : Application = {
   status: "incoming",
 };
 
-export const RESOURCE_STATUSES = ["In work", "Available"] as const;
+export const RESOURCE_STATUSES = ["in work", "available"] as const;
 
 export type ResourceStatus = (typeof RESOURCE_STATUSES)[number];
 
@@ -53,7 +54,18 @@ export type Resource = {
   status: ResourceStatus;
 };
 
-export type ResourceWithId = id & Resource
+export const DEFAULT_RESOURCE: Resource = {
+  date: "",
+  organization: "",
+  contactName: "",
+  telegramId: "",
+  competenceField: "",
+  description: "",
+  tags: [],
+  status: "in work",
+};
+
+export type ResourceWithId = id & Resource;
 
 export function toResource(resourceWithId: ResourceWithId) {
   const { _id, ...resource } = resourceWithId;

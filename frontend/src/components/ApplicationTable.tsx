@@ -115,23 +115,23 @@ export default function ApplicationTable() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Organization</TableCell>
-              <TableCell>ContactName</TableCell>
-              <TableCell>Telegram id</TableCell>
-              <TableCell>Request text</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell sx={{ fontSize: '0.875rem' }}>Date</TableCell>
+              <TableCell sx={{ fontSize: '0.875rem' }}>Organization</TableCell>
+              <TableCell sx={{ fontSize: '0.875rem' }}>ContactName</TableCell>
+              <TableCell sx={{ fontSize: '0.875rem' }}>Telegram id</TableCell>
+              <TableCell sx={{ fontSize: '0.875rem' }}>Request text</TableCell>
+              <TableCell sx={{ fontSize: '0.875rem' }}>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {applicationTable.map((application, ind) => (
               <TableRow key={ind}>
-                <TableCell>{application.date}</TableCell>
-                <TableCell>{application.organization}</TableCell>
-                <TableCell>{application.contactName}</TableCell>
-                <TableCell>{application.telegramId}</TableCell>
-                <TableCell>{application.requestText}</TableCell>
-                <TableCell>{application.status}</TableCell>
+                <TableCell sx={{ fontSize: '0.875rem' }}>{application.date}</TableCell>
+                <TableCell sx={{ fontSize: '0.875rem' }}>{application.organization}</TableCell>
+                <TableCell sx={{ fontSize: '0.875rem' }}>{application.contactName}</TableCell>
+                <TableCell sx={{ fontSize: '0.875rem' }}>{application.telegramId}</TableCell>
+                <TableCell sx={{ fontSize: '0.875rem' }}>{application.requestText}</TableCell>
+                <TableCell sx={{ fontSize: '0.875rem' }}>{application.status}</TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="delete"
