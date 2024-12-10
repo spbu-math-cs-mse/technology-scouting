@@ -118,14 +118,14 @@ export function postDeleteResource(id: string) {
     });
 }
 
-export function postCreateApplication(createdAplication: Application) {
+export function postCreateApplication(createdApplication: Application) {
   fetch("/api/create_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
       Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify(createdAplication),
+    body: JSON.stringify(createdApplication),
   })
     .then(async (response) => {
       if (response.ok)
@@ -199,7 +199,7 @@ export function postEditResource(editedResource: ResourceWithId) {
     .then(async (response) => {
       if (response.ok)
         console.log(`Resource with ID ${editedResource._id} editted successfully.`);
-      else return console.error("Failed to edit request", response.statusText);
+      else return console.error("Failed to edit resource", response.statusText);
     })
     .catch((error) => {
       console.error(error);
@@ -233,7 +233,30 @@ export function postAddNewAdmin(login: string, password: string) {
 }
 
 export function postAssignResources(applicationId: string, resourceIds: string[], message: string) {
-  // TODO
+  const requestBody = {
+    applicationId,
+    resourceIds,
+    message,
+  };
+  fetch("/api/update_resource", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(requestBody),
+  })
+    .then(async (response) => {
+      if (response.ok)
+        console.log(`Resources added to application with ID ${requestBody.applicationId} successfully.`);
+      else return console.error("Failed to add resources", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
 }
 
 export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
@@ -246,7 +269,7 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
         contactName: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         telegramId: "@abs",
         requestText: "qweadsfgseh",
-        status: "Incoming",
+        status: "incoming",
       },
       {
         _id: "2",
@@ -255,7 +278,7 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
         contactName: "wkjhlkb",
         telegramId: "@gui",
         requestText: "asbw",
-        status: "Resources search",
+        status: "resources search",
       },
     ])
   );

@@ -3,13 +3,13 @@ type id = {
 };
 
 export const APPLICATION_STATUSES =
-  ["Incoming",
-    "Resources search",
-    "Resources attached",
-    "In work",
-    "Ended",
-    "Declined by scout",
-    "Declined by client"] as const;
+  ["incoming",
+    "resources search",
+    "resources attached",
+    "in work",
+    "ended",
+    "declined by scout",
+    "declined by client"] as const;
 
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
@@ -35,7 +35,7 @@ export const DEFAULT_APPLICATION : Application = {
   contactName: "",
   telegramId: "",
   requestText: "",
-  status: "Incoming",
+  status: "incoming",
 };
 
 export const RESOURCE_STATUSES = ["In work", "Available"] as const;

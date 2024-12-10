@@ -181,7 +181,7 @@ export default function ApplicationTable() {
                     Edit
                   </Button>
                 </TableCell>
-                {application.status === "Incoming" && (
+                {application.status === "incoming" && (
                   <TableCell>
                     <Button
                       aria-label="edit"

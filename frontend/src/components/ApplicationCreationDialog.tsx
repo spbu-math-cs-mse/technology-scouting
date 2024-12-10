@@ -130,7 +130,7 @@ export default function ApplicatonCreateDialog({
           Discard
         </Button>
         <Button onClick={handleCreate} color="primary">
-          Edit
+          Create
         </Button>
       </DialogActions>
     </Dialog>
