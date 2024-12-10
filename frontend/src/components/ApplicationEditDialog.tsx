@@ -78,7 +78,11 @@ export default function ApplicatonEditDialog({
           {(Object.keys(editedState) as Array<keyof Application>).map((key) => (
             <Grid size={{ xs: 6 }} key={key}>
               {key === "status" ? (
-                <FormControl fullWidth margin="normal" sx={{ '& .MuiInputLabel-root': { top: '-10px' }} }>
+                <FormControl
+                  fullWidth
+                  margin="normal"
+                  sx={{ "& .MuiInputLabel-root": { top: "-10px" } }}
+                >
                   <InputLabel>Status</InputLabel>
                   <Select
                     value={editedState.status}

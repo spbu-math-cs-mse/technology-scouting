@@ -73,40 +73,46 @@ export default function ApplicatonCreateDialog({
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(createdState) as Array<keyof Application>).map((key) => (
-            <Grid size={{ xs: 6 }} key={key}>
-              {key === "status" ? (
-                <FormControl fullWidth margin="normal" sx={{ '& .MuiInputLabel-root': { top: '-10px' }} }>
-                  <InputLabel>Status</InputLabel>
-                  <Select
-                    value={createdState.status}
-                    onChange={(event) =>
-                      setCreatedState({
-                        ...createdState,
-                        status: event.target.value as ApplicationStatus,
-                      })
-                    }
+          {(Object.keys(createdState) as Array<keyof Application>).map(
+            (key) => (
+              <Grid size={{ xs: 6 }} key={key}>
+                {key === "status" ? (
+                  <FormControl
                     fullWidth
+                    margin="normal"
+                    sx={{ "& .MuiInputLabel-root": { top: "-10px" } }}
                   >
-                    {APPLICATION_STATUSES.map((status) => (
-                      <MenuItem key={status} value={status}>
-                        {status}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : (
-                <TextField
-                  name={key}
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  value={createdState[key]}
-                  onChange={(event) => handleChange(key, event)}
-                  fullWidth
-                  margin="normal"
-                />
-              )}
-            </Grid>
-          ))}
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      value={createdState.status}
+                      onChange={(event) =>
+                        setCreatedState({
+                          ...createdState,
+                          status: event.target.value as ApplicationStatus,
+                        })
+                      }
+                      fullWidth
+                    >
+                      {APPLICATION_STATUSES.map((status) => (
+                        <MenuItem key={status} value={status}>
+                          {status}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ) : (
+                  <TextField
+                    name={key}
+                    label={key.charAt(0).toUpperCase() + key.slice(1)}
+                    value={createdState[key]}
+                    onChange={(event) => handleChange(key, event)}
+                    fullWidth
+                    margin="normal"
+                  />
+                )}
+              </Grid>
+            )
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>
