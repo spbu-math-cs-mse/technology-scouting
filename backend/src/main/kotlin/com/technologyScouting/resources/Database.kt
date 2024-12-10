@@ -131,6 +131,14 @@ class ApplicationsService(
         return document?.toApplicationWithId()
     }
 
+    fun getTelegramIdsFromApplications(applicationIds: List<String>): List<String> {
+        return applicationIds.mapNotNull { applicationId ->
+            val objectId = ObjectId(applicationId)
+            val filter = Document(ApplicationFields.ID, objectId)
+            connection.find(filter).firstOrNull()?.getString(ApplicationFields.TELEGRAM_ID)
+        }
+    };
+
     fun getAllApplications(): List<ApplicationWithId> = connection.find().map { it.toApplicationWithId() }.toList()
 
     private fun Document.toApplicationWithId(): ApplicationWithId =
@@ -223,6 +231,15 @@ class ResourcesService(
         val deleteResult = connection.deleteOne(filter)
         return deleteResult.deletedCount > 0
     }
+
+    fun getTelegramIdsFromResources(resourceObjectIds: List<String>): List<String> {
+        return resourceObjectIds.mapNotNull { resourceId ->
+            val objectId = ObjectId(resourceId)
+            val filter = Document(ResourceFields.ID, objectId)
+            connection.find(filter).firstOrNull()?.getString(ResourceFields.TELEGRAM_ID)
+        }
+    };
+
 
     fun getResource(resourceId: String): ResourceWithId? {
         val objectId = ObjectId(resourceId)
