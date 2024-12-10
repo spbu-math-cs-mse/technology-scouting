@@ -29,27 +29,44 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  Tooltip,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
-import {
-  renderWithTooltip,
-  StyledTableCell,
-} from "./TableFitting.tsx";
+import { renderWithTooltip, StyledTableCell } from "./TableFitting.tsx";
+
+function getFittingCharacters(
+  text: string,
+  width: number,
+  font: string
+): number {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d")!;
+  context.font = font;
+  let currentWidth = 0;
+  let charCount = 1000;
+
+  for (let char of text) {
+    currentWidth += context.measureText(char).width;
+    if (currentWidth > width) break;
+    charCount++;
+  }
+
+  return charCount;
+}
 
 export default function ApplicationTable() {
-  const font = "14px Times New Roman";
+  const font = "12px Times New Roman";
   const maxWidthByColumn = {
-    date: 50,
-    organization: 80,
+    organization: 50,
     contactName: 50,
     telegramId: 50,
-    requestText: 100,
-    status: 100,
-    associatedResources: 150,
+    requestText: 50,
+    status: 50,
+    associatedResources: 10,
   };
 
   const [applicationTable, setApplicationTable] = useState<ApplicationWithId[]>(
@@ -131,8 +148,8 @@ export default function ApplicationTable() {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ width: "100%" }}>
+        <Table sx={{ tableLayout: "fixed", width: "100%" }}>
           <TableHead>
             <TableRow>
               <TableCell sx={{ font: font, textAlign: "center" }}>
@@ -164,61 +181,150 @@ export default function ApplicationTable() {
                 <TableCell sx={{ font: font, textAlign: "center" }}>
                   {application.date}
                 </TableCell>
-                <StyledTableCell
-                  font={font}
-                  maxWidth={maxWidthByColumn.organization}
+
+                <TableCell
+                  sx={{
+                    font: font,
+                    textAlign: "center",
+                    maxWidth: maxWidthByColumn.organization,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
                 >
-                  {renderWithTooltip(
+                  {application.organization.length >
+                  getFittingCharacters(
                     application.organization,
                     maxWidthByColumn.organization,
                     font
+                  ) ? (
+                    <Tooltip
+                      id={ind.toString() + "organization"}
+                      title={application.organization}
+                    >
+                      <span>{application.organization}</span>
+                    </Tooltip>
+                  ) : (
+                    <span>{application.organization}</span>
                   )}
-                </StyledTableCell>
-                <StyledTableCell
-                  font={font}
-                  maxWidth={maxWidthByColumn.contactName}
+                </TableCell>
+
+                <TableCell
+                  sx={{
+                    font: font,
+                    textAlign: "center",
+                    maxWidth: maxWidthByColumn.contactName,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
                 >
-                  {renderWithTooltip(
+                  {application.contactName.length >
+                  getFittingCharacters(
                     application.contactName,
                     maxWidthByColumn.contactName,
                     font
+                  ) ? (
+                    <Tooltip
+                      title={application.contactName}
+                      id={ind.toString() + "contactName"}
+                    >
+                      <span>{application.contactName}</span>
+                    </Tooltip>
+                  ) : (
+                    <span>{application.contactName}</span>
                   )}
-                </StyledTableCell>
+                </TableCell>
 
-                <StyledTableCell
-                  font={font}
-                  maxWidth={maxWidthByColumn.telegramId}
+                <TableCell
+                  sx={{
+                    font: font,
+                    textAlign: "center",
+                  }}
                 >
-                  {renderWithTooltip(
-                    application.telegramId.toString(),
-                    maxWidthByColumn.telegramId,
-                    font
-                  )}
-                </StyledTableCell>
-                <StyledTableCell
-                  font={font}
-                  maxWidth={maxWidthByColumn.requestText}
+                  {application.telegramId.toString()}
+                </TableCell>
+
+                <TableCell
+                  sx={{
+                    font: font,
+                    textAlign: "center",
+                    maxWidth: maxWidthByColumn.requestText,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
                 >
-                  {renderWithTooltip(
+                  {application.requestText.length >
+                  getFittingCharacters(
                     application.requestText,
                     maxWidthByColumn.requestText,
                     font
+                  ) ? (
+                    <Tooltip
+                      id={ind.toString() + "requestText"}
+                      title={application.requestText}
+                    >
+                      <span>{application.requestText}</span>
+                    </Tooltip>
+                  ) : (
+                    <span>{application.requestText}</span>
                   )}
-                </StyledTableCell>
-                <StyledTableCell font={font} maxWidth={maxWidthByColumn.status}>
-                  {renderWithTooltip(
+                </TableCell>
+
+                <TableCell
+                  sx={{
+                    font: font,
+                    textAlign: "center",
+                    maxWidth: maxWidthByColumn.status,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {application.status.length >
+                  getFittingCharacters(
                     application.status,
                     maxWidthByColumn.status,
                     font
+                  ) ? (
+                    <Tooltip
+                      id={ind.toString() + "status"}
+                      title={application.status}
+                    >
+                      <span>{application.status}</span>
+                    </Tooltip>
+                  ) : (
+                    <span>{application.status}</span>
                   )}
-                </StyledTableCell>
-                <StyledTableCell font={font} maxWidth={maxWidthByColumn.status}>
-                  {renderWithTooltip(
+                </TableCell>
+                <TableCell
+                  sx={{
+                    font: font,
+                    textAlign: "center",
+                    maxWidth: maxWidthByColumn.associatedResources,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {application.associatedResources.join(", ").length >
+                  getFittingCharacters(
                     application.associatedResources.join(", "),
                     maxWidthByColumn.associatedResources,
                     font
+                  ) ? (
+                    <Tooltip
+                      id={ind.toString() + "associatedResources"}
+                      title={application.associatedResources.join(", ")}
+                      placement="bottom-start"
+                    >
+                      <span>{application.associatedResources.join(", ")}</span>
+                    </Tooltip>
+                  ) : (
+                    <span>{application.associatedResources.join(", ")}</span>
                   )}
-                </StyledTableCell>
+                </TableCell>
 
                 <TableCell sx={{ gap: 1 }}>
                   <IconButton

@@ -1,4 +1,4 @@
-import { styled, Tooltip } from "@mui/material";
+import { styled, Tooltip, TableCell } from "@mui/material";
 
 interface StyledTableCellProps {
   maxWidth?: number;
@@ -46,18 +46,20 @@ export const renderWithTooltip = (
   );
 };
 
-export const StyledTableCell = styled("div")<StyledTableCellProps>(
+export const StyledTableCell = styled(TableCell)<StyledTableCellProps>(
   ({ font = "inherit", maxWidth = "auto" }) => ({
     font,
     textAlign: "center",
     maxWidth,
+    minWidth: "50px",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    width: "150px"
   })
 );
 
-export const SimpleStyledTableCell = styled("div")<SimpleStyledTableCell>(
+export const SimpleStyledTableCell = styled(TableCell)<SimpleStyledTableCell>(
   ({ font = "inherit" }) => ({
     font: font,
     textAlign: "center",
