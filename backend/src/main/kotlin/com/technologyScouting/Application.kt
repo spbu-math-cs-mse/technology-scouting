@@ -56,20 +56,18 @@ data class ApplicationWithId(
 
 @Serializable
 data class InputResource(
-    val _id: String,
     val date: String,
     val organization: String,
     val contactName: String,
     val telegramId: String,
     val competenceField: String,
     val description: String,
-    val tags: List<String>,
+    val tags: List<String> = emptyList<String>(),
     val status: String,
 )
 
 @Serializable
 data class Resource(
-    val _id: String,
     val date: String,
     val organization: String,
     val contactName: String,
@@ -133,6 +131,13 @@ data class Token(
     val token: String,
 )
 
+@Serializable
+data class Attacher(
+    val applicationId: String,
+    val resourceIds: List<String>,
+    val message: String,
+)
+
 fun main(args: Array<String>) {
     io
         .ktor
@@ -146,5 +151,5 @@ fun Application.module() {
     val bot = createBot()
     bot.startPolling()
 
-    configureRouting()
+    configureRouting(bot)
 }

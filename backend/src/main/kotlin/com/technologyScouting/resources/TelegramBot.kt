@@ -32,10 +32,9 @@ fun createBot(): Bot =
     }
 
 fun Bot.sendMessagesToUsersByUsername(
-    usernames: List<String>,
+    username:String,
     message: String,
 ) {
-    usernames.forEach { username ->
         try {
             val chatId = ChatId.fromChannelUsername(username.removePrefix("@"))
             val result = this.getChat(chatId)
@@ -52,12 +51,11 @@ fun Bot.sendMessagesToUsersByUsername(
             logger.error("Failed to send message to user $username: ${e.message}")
         }
     }
-}
 
 private var currentStep: String? = null
 
 private fun Dispatcher.setUpCommands() {
-    var newResource = Resource("", "", "", "", "", "", "", emptyList(), ResourceStatus.AVAILABLE)
+    var newResource = Resource("", "", "", "", "", "", emptyList(), ResourceStatus.AVAILABLE)
     var newApplication = Application("", "", "", "", "", Status.INCOMING)
     command("start") {
         val inlineKeyboardMarkup =
