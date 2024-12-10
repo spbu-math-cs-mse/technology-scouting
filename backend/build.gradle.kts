@@ -7,8 +7,7 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("io.ktor.plugin") version "3.0.1"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
-    // TODO: enable ktlint back
-    //id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
 group = "org.example"
@@ -68,7 +67,6 @@ kotlin {
     jvmToolchain(11)
 }
 
-// TODO: enable ktlint back
-//subprojects {
-//    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-//}
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+}

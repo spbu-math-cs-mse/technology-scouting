@@ -1,5 +1,7 @@
 package com.technologyScouting.plugins
 
+import com.github.kotlintelegrambot.Bot
+import com.github.kotlintelegrambot.bot
 import com.technologyScouting.*
 import com.technologyScouting.resources.*
 import io.ktor.http.*
@@ -30,7 +32,7 @@ val resourcesService = ResourcesService(dbService.database)
 val adminAuthService = AdminAuthService(dbService.database)
 val tokenStorage = dbService.database.getCollection("tokens")
 
-fun Application.configureRouting() {
+fun Application.configureRouting(bot: Bot) {
     routing {
         staticResources("static", "static")
 
@@ -256,6 +258,27 @@ fun Application.configureRouting() {
 
                 try {
                     adminAuthService.addAdmin(newAdmin.login, newAdmin.password)
+
+                    call.respond((HttpStatusCode.OK))
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+                }
+            }
+
+            post("/api/assign_resources") {
+                val attacher = call.receive<Attacher>()
+
+                try {
+                    val applicationId = attacher.applicationId
+
+                    applicationsService.setApplicationStatus(applicationId, Status.IN_WORK)
+                    for (resourceId in attacher.resourceIds) {
+                        applicationsService.addResourceToApplication(applicationId, resourceId)
+                        resourcesService.addApplicationToResource(resourceId, applicationId)
+                        resourcesService.setResourceStatus(resourceId, ResourceStatus.IN_WORK)
+                        var tg = resourcesService.getResource(resourceId)?.telegramId
+                        bot.sendMessagesToUsersByUsername(tg!!, attacher.message)
+                    }
 
                     call.respond((HttpStatusCode.OK))
                 } catch (e: Exception) {

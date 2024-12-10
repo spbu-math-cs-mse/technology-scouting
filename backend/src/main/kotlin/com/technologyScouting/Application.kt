@@ -15,7 +15,7 @@ data class InputApplication(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val requestText: String,
     val status: String,
 )
@@ -25,7 +25,7 @@ data class Application(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val requestText: String,
     val status: Status,
 )
@@ -48,31 +48,30 @@ data class ApplicationWithId(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val requestText: String,
     val status: String,
+    val associatedResources: List<String>,
 )
 
 @Serializable
 data class InputResource(
-    val _id: String,
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val competenceField: String,
     val description: String,
-    val tags: List<String>,
+    val tags: List<String> = emptyList<String>(),
     val status: String,
 )
 
 @Serializable
 data class Resource(
-    val _id: String,
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val competenceField: String,
     val description: String,
     val tags: List<String>,
@@ -92,11 +91,12 @@ data class ResourceWithId(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val competenceField: String,
     val description: String,
     val tags: List<String>,
     val status: String,
+    val associatedApplications: List<String>,
 )
 
 @Serializable
@@ -131,6 +131,13 @@ data class Token(
     val token: String,
 )
 
+@Serializable
+data class Attacher(
+    val applicationId: String,
+    val resourceIds: List<String>,
+    val message: String,
+)
+
 fun main(args: Array<String>) {
     io
         .ktor
@@ -144,5 +151,5 @@ fun Application.module() {
     val bot = createBot()
     bot.startPolling()
 
-    configureRouting()
+    configureRouting(bot)
 }

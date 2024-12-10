@@ -75,49 +75,43 @@ export default function ApplicatonEditDialog({
     setStatusPopoverAnchor(null);
   };
 
-  const statusOptions = [
-    "INCOMING",
-    "RESOURCES_SEARCH",
-    "RESOURCES_ATTACHED",
-    "IN_WORK",
-    "ENDED",
-    "DECLINED_BY_SCOUT",
-    "DECLINED_BY_CLIENT",
-  ];
+  const statusOptions = ["INCOMING", "RESOURCES_SEARCH", "RESOURCES_ATTACHED", "IN_WORK", "ENDED", "DECLINED_BY_SCOUT", "DECLINED_BY_CLIENT"];
 
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(editedState) as Array<keyof Application>).map((key) => (
-            <Grid size={{ xs: 6 }} key={key}>
-              {key === "status" ? (
-                <TextField
-                  name={key}
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  value={editedState[key]}
-                  onChange={(event) => handleChange(key, event)}
-                  fullWidth
-                  margin="normal"
-                  slotProps={{
-                    input: {
-                      readOnly: true,
-                    },
-                  }}
-                />
-              ) : (
-                <TextField
-                  name={key}
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  value={editedState[key]}
-                  onChange={(event) => handleChange(key, event)}
-                  fullWidth
-                  margin="normal"
-                />
-              )}
-            </Grid>
-          ))}
+          {(Object.keys(editedState) as Array<keyof Application>).map(
+              (key) => (
+                  <Grid size={{ xs: 6 }} key={key}>
+                    {key === "status" ? (
+                        <TextField
+                            name={key}
+                            label={key.charAt(0).toUpperCase() + key.slice(1)}
+                            value={editedState[key]}
+                            onChange={(event) => handleChange(key, event)}
+                            fullWidth
+                            margin="normal"
+                            slotProps={{
+                              input: {
+                                readOnly: true,
+                              },
+                            }}
+                        />
+                    ) : (
+                        <TextField
+                            name={key}
+                            label={key.charAt(0).toUpperCase() + key.slice(1)}
+                            value={editedState[key]}
+                            onChange={(event) => handleChange(key, event)}
+                            fullWidth
+                            margin="normal"
+                        />
+                    )}
+                  </Grid>
+              )
+          )}
         </Grid>
         <Grid size={{ xs: 12 }}>
           <Button

@@ -26,10 +26,12 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Build project (and check ktlint)
-      run: |
-        cd backend
-        ./gradlew build
+    - name: Run KtLint with Reviewdog
+      uses: ScaCap/action-ktlint@v1.9.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        level: error
 
     - name: Run tests
       run: |
