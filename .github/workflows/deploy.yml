@@ -15,15 +15,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy via Docker Compose Remote SSH
-        uses: astappiev/docker-compose-remote-action@v1
+      - name: Deploy via rsync & ssh
+        uses: easingthemes/ssh-deploy@v5.1.0
         with:
-          ssh_user: ${{ secrets.DEPLOY_SSH_USER }}
-          ssh_host: ${{ secrets.DEPLOY_SSH_HOST }}
-          ssh_private_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          ssh_host_public_key: ${{ secrets.DEPLOY_SSH_HOST_PUBLIC_KEY }}
-          ssh_jump_host: ${{ secrets.DEPLOY_SSH_JUMP_HOST }}
-          ssh_jump_public_key: ${{ secrets.DEPLOY_SSH_JUMP_PUBLIC_KEY }}
-          docker_use_stack: false
-          docker_compose_filename: docker-compose.yml
-          docker_args: -d --remove-orphans --build
+          ARGS: -rlgoDzvc -i --delete
+          SSH_CMD_ARGS: -o ServerAliveInterval=1500
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          TARGET: /home/${{ secrets.DEPLOY_SSH_USER }}/app
+          EXCLUDE: /.git/, /**/.env
+          SCRIPT_BEFORE_REQUIRED: true
+          SCRIPT_BEFORE: |
+            cd /home/${{ secrets.DEPLOY_SSH_USER }}/app
+            docker system prune -f
+            docker compose down
+          SCRIPT_AFTER_REQUIRED: true
+          SCRIPT_AFTER: |
+            cd /home/${{ secrets.DEPLOY_SSH_USER }}/app
+            docker compose up -d --remove-orphans --build
