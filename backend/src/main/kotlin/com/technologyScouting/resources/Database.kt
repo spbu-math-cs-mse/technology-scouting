@@ -81,7 +81,7 @@ class ApplicationsService(
     fun addApplication(
         organization: String,
         contactName: String,
-        telegramId: String,
+        telegramId: Long,
         requestText: String,
         status: Status = Status.INCOMING,
     ): String? {
@@ -200,7 +200,7 @@ class ResourcesService(
     fun addResource(
         organization: String,
         contactName: String,
-        telegramId: String,
+        telegramId: Long,
         competenceField: String,
         description: String,
         tags: List<String>,

@@ -71,7 +71,7 @@ data class Resource(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val competenceField: String,
     val description: String,
     val tags: List<String>,
