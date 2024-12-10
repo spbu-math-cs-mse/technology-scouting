@@ -10,6 +10,9 @@ import {
   MenuItem,
   MenuList,
   Popover,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
@@ -70,9 +73,29 @@ export default function ApplicatonCreateDialog({
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(createdState) as Array<keyof Application>).map(
-            (key) => (
-              <Grid size={{ xs: 6 }} key={key}>
+          {(Object.keys(createdState) as Array<keyof Application>).map((key) => (
+            <Grid size={{ xs: 6 }} key={key}>
+              {key === "status" ? (
+                <FormControl fullWidth margin="normal" sx={{ '& .MuiInputLabel-root': { top: '-10px' }} }>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={createdState.status}
+                    onChange={(event) =>
+                      setCreatedState({
+                        ...createdState,
+                        status: event.target.value as ApplicationStatus,
+                      })
+                    }
+                    fullWidth
+                  >
+                    {APPLICATION_STATUSES.map((status) => (
+                      <MenuItem key={status} value={status}>
+                        {status}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : (
                 <TextField
                   name={key}
                   label={key.charAt(0).toUpperCase() + key.slice(1)}
@@ -80,51 +103,10 @@ export default function ApplicatonCreateDialog({
                   onChange={(event) => handleChange(key, event)}
                   fullWidth
                   margin="normal"
-                  slotProps={{
-                    input: {
-                      readOnly: key === "status" ? true : false,
-                    },
-                  }}
                 />
-              </Grid>
-            )
-          )}
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Button
-            aria-label="status"
-            onClick={handleOpenPopover}
-            size="small"
-            color="primary"
-            startIcon={<ExpandMoreIcon />}
-          >
-            Change Status (Current: {createdState.status})
-          </Button>
-
-          <Popover
-            open={Boolean(statusPopoverAnchor)}
-            anchorEl={statusPopoverAnchor}
-            onClose={handleClosePopover}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            <MenuList>
-              {APPLICATION_STATUSES.map((option) => (
-                <MenuItem
-                  key={option}
-                  onClick={() => handleStatusChange(option)}
-                >
-                  {option}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Popover>
+              )}
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>
