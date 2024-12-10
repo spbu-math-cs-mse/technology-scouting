@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ResourceWithId, Resource, DEFAULT_RESOURCE } from "../logic/types.ts";
 import {
   //getResourcesDataTable,
-   getResourcesDataTableMock as getResourcesDataTable,
+  getResourcesDataTableMock as getResourcesDataTable,
   postDeleteResource,
   postEditResource,
   postCreateResource,
@@ -37,9 +37,9 @@ export default function ResourceTable() {
   const [resourceCreateDialogOpen, setResourceCreateDialogOpen] =
     useState(false);
 
-  const [createdResource, setCreatedResource] = useState<
-    Resource | undefined
-  >(undefined);
+  const [createdResource, setCreatedResource] = useState<Resource | undefined>(
+    undefined
+  );
 
   const [resourceEditDialogOpen, setResourceEditDialogOpen] = useState(false);
   const [editingResource, setEditingResource] = useState<
@@ -75,7 +75,7 @@ export default function ResourceTable() {
 
   return (
     <>
-     <Box display="flex" justifyContent="flex-end" mt={2}>
+      <Box display="flex" justifyContent="flex-end" mt={2}>
         <Button
           variant="contained"
           color="success"

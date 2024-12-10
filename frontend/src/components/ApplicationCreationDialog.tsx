@@ -38,7 +38,7 @@ export default function ApplicatonCreateDialog({
 
   useEffect(() => {
     setCreatedState(DEFAULT_APPLICATION);
-  }, [open]); 
+  }, [open]);
 
   const handleChange = (
     key: string,
@@ -70,23 +70,25 @@ export default function ApplicatonCreateDialog({
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(createdState) as Array<keyof Application>).map((key) => (
-            <Grid size={{ xs: 6 }} key={key}>
-              <TextField
-                name={key}
-                label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={createdState[key]}
-                onChange={(event) => handleChange(key, event)}
-                fullWidth
-                margin="normal"
-                slotProps={{
-                  input: {
-                    readOnly: key === "status" ? true : false,
-                  },
-                }}
-              />
-            </Grid>
-          ))}
+          {(Object.keys(createdState) as Array<keyof Application>).map(
+            (key) => (
+              <Grid size={{ xs: 6 }} key={key}>
+                <TextField
+                  name={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={createdState[key]}
+                  onChange={(event) => handleChange(key, event)}
+                  fullWidth
+                  margin="normal"
+                  slotProps={{
+                    input: {
+                      readOnly: key === "status" ? true : false,
+                    },
+                  }}
+                />
+              </Grid>
+            )
+          )}
         </Grid>
         <Grid size={{ xs: 12 }}>
           <Button

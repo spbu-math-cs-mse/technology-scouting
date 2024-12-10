@@ -11,8 +11,16 @@ import { postAddNewAdmin } from "../logic/request";
 const StyledBorderButton = styled(Button)<ButtonProps>({
   fontSize: "11px",
   width: "100%",
-  minWidth: "150px",
-  maxWidth: "200px",
+  minWidth: "50px",
+  maxWidth: "120px",
+  height: "48px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  textAlign: "center",
+  lineHeight: "1.2",
+  whiteSpace: "normal",
+  wordBreak: "break-word",
 });
 
 export default function AdminPanel() {
@@ -45,6 +53,7 @@ export default function AdminPanel() {
           <StyledBorderButton
             onClick={() => setActiveSection("applications")}
             variant="contained"
+            sx={{ fontSize: "0.6rem" }}
           >
             Show applications
           </StyledBorderButton>
@@ -52,6 +61,7 @@ export default function AdminPanel() {
           <StyledBorderButton
             onClick={() => setActiveSection("resources")}
             variant="contained"
+            sx={{ fontSize: "0.6rem" }}
           >
             Show resources
           </StyledBorderButton>
@@ -64,7 +74,7 @@ export default function AdminPanel() {
             }}
             variant="contained"
             color="inherit"
-            sx={{ alignSelf: "center" }}
+            sx={{ alignSelf: "center", fontSize: "0.6rem"}}
           >
             Add new admin
           </StyledBorderButton>

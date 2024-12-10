@@ -2,16 +2,15 @@ import { getToken, storeToken } from "./authToken";
 import {
   ApplicationDataTableResponse,
   ApplicationWithId,
-  Application
+  Application,
 } from "./types";
-import {
-  ResourceDataTableResponse,
-  ResourceWithId,
-  Resource
-} from "./types";
+import { ResourceDataTableResponse, ResourceWithId, Resource } from "./types";
 
 // Function to perform login and store token
-export async function postLogin(username: string, password: string): Promise<boolean> {
+export async function postLogin(
+  username: string,
+  password: string
+): Promise<boolean> {
   return fetch("/api/login", {
     method: "POST",
     headers: {
@@ -76,7 +75,7 @@ export function postDeleteApplication(id: string) {
       "Content-type": "application/json",
       Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ "_id": id }),
+    body: JSON.stringify({ _id: id }),
   })
     .then(async (response) => {
       if (response.ok)
@@ -102,7 +101,7 @@ export function postDeleteResource(id: string) {
       "Content-type": "application/json",
       Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ "_id": id }),
+    body: JSON.stringify({ _id: id }),
   })
     .then(async (response) => {
       if (response.ok)
@@ -128,9 +127,12 @@ export function postCreateApplication(createdApplication: Application) {
     body: JSON.stringify(createdApplication),
   })
     .then(async (response) => {
-      if (response.ok)
-        console.log(`New applicataion created successfully.`);
-      else return console.error("Failed to created application", response.statusText);
+      if (response.ok) console.log(`New applicataion created successfully.`);
+      else
+        return console.error(
+          "Failed to created application",
+          response.statusText
+        );
     })
     .catch((error) => {
       console.error(error);
@@ -150,8 +152,7 @@ export function postCreateResource(createdResource: Resource) {
     body: JSON.stringify(createdResource),
   })
     .then(async (response) => {
-      if (response.ok)
-        console.log(`New resource created successfully.`);
+      if (response.ok) console.log(`New resource created successfully.`);
       else
         return console.error("Failed to created resource", response.statusText);
     })
@@ -162,8 +163,6 @@ export function postCreateResource(createdResource: Resource) {
       };
     });
 }
-
-
 
 export function postEditApplication(editedAplication: ApplicationWithId) {
   fetch("/api/update_application", {
@@ -176,8 +175,11 @@ export function postEditApplication(editedAplication: ApplicationWithId) {
   })
     .then(async (response) => {
       if (response.ok)
-        console.log(`Applicataion with ID ${editedAplication._id} edited successfully.`);
-      else return console.error("Failed to edit application", response.statusText);
+        console.log(
+          `Applicataion with ID ${editedAplication._id} edited successfully.`
+        );
+      else
+        return console.error("Failed to edit application", response.statusText);
     })
     .catch((error) => {
       console.error(error);
@@ -198,7 +200,9 @@ export function postEditResource(editedResource: ResourceWithId) {
   })
     .then(async (response) => {
       if (response.ok)
-        console.log(`Resource with ID ${editedResource._id} editted successfully.`);
+        console.log(
+          `Resource with ID ${editedResource._id} editted successfully.`
+        );
       else return console.error("Failed to edit resource", response.statusText);
     })
     .catch((error) => {
@@ -220,8 +224,7 @@ export function postAddNewAdmin(login: string, password: string) {
   })
     .then(async (response) => {
       await response.json();
-      if (response.ok)
-        console.log(`Admin ${login} added successfully.`);
+      if (response.ok) console.log(`Admin ${login} added successfully.`);
       else return console.error("Failed to add admin", response.statusText);
     })
     .catch((error) => {
@@ -232,7 +235,11 @@ export function postAddNewAdmin(login: string, password: string) {
     });
 }
 
-export function postAssignResources(applicationId: string, resourceIds: string[], message: string) {
+export function postAssignResources(
+  applicationId: string,
+  resourceIds: string[],
+  message: string
+) {
   const requestBody = {
     applicationId,
     resourceIds,
@@ -248,7 +255,9 @@ export function postAssignResources(applicationId: string, resourceIds: string[]
   })
     .then(async (response) => {
       if (response.ok)
-        console.log(`Resources added to application with ID ${requestBody.applicationId} successfully.`);
+        console.log(
+          `Resources added to application with ID ${requestBody.applicationId} successfully.`
+        );
       else return console.error("Failed to add resources", response.statusText);
     })
     .catch((error) => {
@@ -296,7 +305,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
         competenceField: "1",
         description: "1",
         tags: ["1", "2"],
-        status: "In work",
+        status: "in work",
       },
       {
         _id: "2",
@@ -307,7 +316,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
         competenceField: "1",
         description: "1",
         tags: ["1", "2"],
-        status: "In work",
+        status: "in work",
       },
     ])
   );

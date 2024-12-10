@@ -13,8 +13,10 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
-    Resource, DEFAULT_RESOURCE, ResourceStatus,
-    RESOURCE_STATUSES
+  Resource,
+  DEFAULT_RESOURCE,
+  ResourceStatus,
+  RESOURCE_STATUSES,
 } from "../logic/types";
 
 type ResourceCreateDialogProps = {
@@ -28,14 +30,13 @@ export default function ResourceCreateDialog({
   setOpen,
   createResource,
 }: ResourceCreateDialogProps) {
-  
   const [createdState, setCreatedState] = useState(DEFAULT_RESOURCE);
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
 
   useEffect(() => {
     setCreatedState(DEFAULT_RESOURCE);
-  }, [open]); 
+  }, [open]);
 
   const handleChange = (
     key: string,
