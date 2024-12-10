@@ -26,6 +26,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
+    - name: Build project
+      run: |
+        cd backend
+        ./gradlew build
+
     - name: Run KtLint Check
       run: |
         cd backend

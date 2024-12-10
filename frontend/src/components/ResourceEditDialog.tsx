@@ -94,28 +94,28 @@ export default function ResourceEditDialog({
           {(Object.keys(editedState) as Array<keyof Resource>).map((key) => (
             <Grid size={{ xs: 6 }} key={key}>
               {key === "status" ? (
-                  <TextField
-                      name={key}
-                      label={key.charAt(0).toUpperCase() + key.slice(1)}
-                      value={editedState[key]}
-                      onChange={(event) => handleChange(key, event)}
-                      fullWidth
-                      slotProps={{
-                        input: {
-                          readOnly: true,
-                        },
-                      }}
-                      margin="normal"
-                  />
+                <TextField
+                  name={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={editedState[key]}
+                  onChange={(event) => handleChange(key, event)}
+                  fullWidth
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                  margin="normal"
+                />
               ) : (
-                  <TextField
-                      name={key}
-                      label={key.charAt(0).toUpperCase() + key.slice(1)}
-                      value={editedState[key]}
-                      onChange={(event) => handleChange(key, event)}
-                      fullWidth
-                      margin="normal"
-                  />
+                <TextField
+                  name={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={editedState[key]}
+                  onChange={(event) => handleChange(key, event)}
+                  fullWidth
+                  margin="normal"
+                />
               )}
             </Grid>
           ))}
