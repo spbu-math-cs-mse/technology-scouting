@@ -21,7 +21,7 @@ components:
         contactName:
           type: string
         telegramId:
-          type: string
+          type: long
         requestText:
           type: string
         status:
@@ -29,9 +29,27 @@ components:
           enum: ["incoming", "resources search", "resources attached", "in work", "ended", "declined by scout", "declined by client"]
 
     applicationWithId:
-      allOf:
-        - $ref: "#/components/schemas/application"
-        - $ref: "#/components/schemas/id"
+      type: object
+      properties:
+        _id:
+          type: string
+        date:
+          type: string
+        organization:
+          type: string
+        contactName:
+          type: string
+        telegramId:
+          type: long
+        requestText:
+          type: string
+        status:
+          type: string
+          enum: [ "incoming", "resources search", "resources attached", "in work", "ended", "declined by scout", "declined by client" ]
+        associatedResources:
+          type: array
+          items:
+            type: string
 
     resource:
       type: object
@@ -43,7 +61,7 @@ components:
         contactName:
           type: string
         telegramId:
-          type: string
+          type: long
         competenceField:
           type: string
         description:
@@ -57,9 +75,33 @@ components:
           enum: ["in work", "available"] #TODO: тут ещё скорее всего какие-то есть, не придумалось с ходу
     
     resourceWithId:
-      allOf:
-        - $ref: "#/components/schemas/resource"
-        - $ref: "#/components/schemas/id"
+      type: object
+      properties:
+        _id:
+          type: string
+        date:
+          type: string
+        organization:
+          type: string
+        contactName:
+          type: string
+        telegramId:
+          type: long
+        competenceField:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [ "in work", "available" ]
+        associatedResources:
+          type: array
+          items:
+            type: string
 
     logIn:
       type:
