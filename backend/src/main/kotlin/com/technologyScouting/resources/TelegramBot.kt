@@ -31,6 +31,20 @@ fun createBot(): Bot =
         }
     }
 
+fun Bot.sendMessagesToUsers(userIds: List<Long>, message: String) {
+    userIds.forEach { userId ->
+        try {
+            this.sendMessage(
+                chatId = ChatId.fromId(userId),
+                text = message
+            )
+        } catch (e: Exception) {
+            logger.error("Failed to send message to user $userId: ${e.message}")
+        }
+    }
+}
+
+
 private var currentStep: String? = null
 
 private fun Dispatcher.setUpCommands() {
