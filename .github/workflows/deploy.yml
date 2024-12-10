@@ -3,7 +3,8 @@ name: Deploy Application
 on:
   push:
     branches:
-      - main
+      # - main
+      - 32-cd-add-deployment
   workflow_dispatch:
 
 jobs:
