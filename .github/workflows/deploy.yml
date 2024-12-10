@@ -23,9 +23,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_SSH_USER }}
           TARGET: /home/${{ secrets.DEPLOY_SSH_USER }}/app
-          EXCLUDE: |
-            .git/
-            .env
           SCRIPT_BEFORE_REQUIRED: true
           SCRIPT_BEFORE: |
             # Stop and remove existing containers
