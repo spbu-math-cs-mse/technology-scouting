@@ -91,7 +91,7 @@ class ApplicationsService(
                 .append(ApplicationFields.CONTACT_NAME, contactName)
                 .append(ApplicationFields.TELEGRAM_ID, telegramId)
                 .append(ApplicationFields.REQUEST_TEXT, requestText)
-                .append(ApplicationFields.STATUS, status.name)
+                .append(ApplicationFields.STATUS, status)
 
         val result = connection.insertOne(document)
         return result.insertedId
@@ -141,7 +141,7 @@ class ApplicationsService(
             contactName = this.getString(ApplicationFields.CONTACT_NAME),
             telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
             requestText = this.getString(ApplicationFields.REQUEST_TEXT),
-            status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
+            status = Status.valueOf(this.getString(ApplicationFields.STATUS)).s,
         )
 }
 
@@ -243,7 +243,7 @@ class ResourcesService(
             competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
             description = this.getString(ResourceFields.DESCRIPTION),
             tags = this.getList(ResourceFields.TAGS, String::class.java),
-            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
+            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)).s,
         )
 }
 
