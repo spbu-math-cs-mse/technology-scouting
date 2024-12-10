@@ -271,11 +271,13 @@ fun Application.configureRouting(bot: Bot) {
                 try {
                     val applicationId = attacher.applicationId
 
+                    applicationsService.setApplicationStatus(applicationId, Status.IN_WORK)
                     for (resourceId in attacher.resourceIds) {
                         applicationsService.addResourceToApplication(applicationId, resourceId)
                         resourcesService.addApplicationToResource(resourceId, applicationId)
+                        resourcesService.setResourceStatus(resourceId, ResourceStatus.IN_WORK)
                         var tg = resourcesService.getResource(resourceId)?.telegramId
-                        bot.sendMessagesToUsersByUsername(attacher.message, tg!!)
+                        bot.sendMessagesToUsersByUsername(tg!!, attacher.message)
                     }
 
                     call.respond((HttpStatusCode.OK))
