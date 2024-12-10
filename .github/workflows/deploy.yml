@@ -22,5 +22,7 @@ jobs:
           ssh_host: ${{ secrets.DEPLOY_SSH_HOST }}
           ssh_private_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           ssh_host_public_key: ${{ secrets.DEPLOY_SSH_HOST_PUBLIC_KEY }}
+          ssh_jump_host: ${{ secrets.DEPLOY_SSH_JUMP_HOST }}
+          ssh_jump_public_key: ${{ secrets.DEPLOY_SSH_JUMP_PUBLIC_KEY }}
           docker_compose_filename: docker-compose.yml
           docker_args: -d --remove-orphans --build
