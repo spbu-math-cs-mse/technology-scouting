@@ -91,7 +91,7 @@ class ApplicationsService(
                 .append(ApplicationFields.CONTACT_NAME, contactName)
                 .append(ApplicationFields.TELEGRAM_ID, telegramId)
                 .append(ApplicationFields.REQUEST_TEXT, requestText)
-                .append(ApplicationFields.STATUS, status.name)
+                .append(ApplicationFields.STATUS, status)
 
         val result = connection.insertOne(document)
         return result.insertedId
@@ -131,6 +131,14 @@ class ApplicationsService(
         return document?.toApplicationWithId()
     }
 
+    fun getTelegramIdsFromApplications(applicationIds: List<String>): List<String> {
+        return applicationIds.mapNotNull { applicationId ->
+            val objectId = ObjectId(applicationId)
+            val filter = Document(ApplicationFields.ID, objectId)
+            connection.find(filter).firstOrNull()?.getString(ApplicationFields.TELEGRAM_ID)
+        }
+    }
+
     fun getAllApplications(): List<ApplicationWithId> = connection.find().map { it.toApplicationWithId() }.toList()
 
     private fun Document.toApplicationWithId(): ApplicationWithId =
@@ -141,7 +149,7 @@ class ApplicationsService(
             contactName = this.getString(ApplicationFields.CONTACT_NAME),
             telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
             requestText = this.getString(ApplicationFields.REQUEST_TEXT),
-            status = Status.valueOf(this.getString(ApplicationFields.STATUS)),
+            status = Status.valueOf(this.getString(ApplicationFields.STATUS)).s,
         )
 }
 
@@ -224,6 +232,14 @@ class ResourcesService(
         return deleteResult.deletedCount > 0
     }
 
+    fun getTelegramIdsFromResources(resourceObjectIds: List<String>): List<String> {
+        return resourceObjectIds.mapNotNull { resourceId ->
+            val objectId = ObjectId(resourceId)
+            val filter = Document(ResourceFields.ID, objectId)
+            connection.find(filter).firstOrNull()?.getString(ResourceFields.TELEGRAM_ID)
+        }
+    }
+
     fun getResource(resourceId: String): ResourceWithId? {
         val objectId = ObjectId(resourceId)
         val filter = Document(ResourceFields.ID, objectId)
@@ -243,7 +259,7 @@ class ResourcesService(
             competenceField = this.getString(ResourceFields.COMPETENCE_FIELD),
             description = this.getString(ResourceFields.DESCRIPTION),
             tags = this.getList(ResourceFields.TAGS, String::class.java),
-            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)),
+            status = ResourceStatus.valueOf(this.getString(ResourceFields.STATUS)).s,
         )
 }
 

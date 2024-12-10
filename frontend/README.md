@@ -7,26 +7,32 @@ React-based frontend application for the Technology Scouting platform, connectin
 The following npm scripts are available for development:
 
 ### Development Server
+
 ```bash
 npm start
 ```
+
 - Starts the development server
 - Opens [http://localhost:3000](http://localhost:3000) in your browser
 - Enables hot reload for file changes
 - Shows lint errors in the console
 
 ### Testing
+
 ```bash
 npm test
 ```
+
 - Launches the test runner in watch mode
 - Runs tests interactively
 - For more details, see [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 
 ### Production Build
+
 ```bash
 npm run build
 ```
+
 - Creates optimized production build in `build/` folder
 - Bundles and minifies React in production mode
 - Adds content hashes to filenames

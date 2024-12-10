@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { ResourceWithId } from "../logic/types.ts";
+import { ApplicationWithId } from "../logic/types.ts";
 import {
-  getResourcesDataTable,
-  getResourcesDataTableMock,
-  postDeleteResource,
-  postEditResource,
+  getApplicationDataTable,
+  getApplicationDataTableMock,
+  postDeleteApplication,
+  postEditApplication,
 } from "../logic/request.ts";
 import {
   Table,
@@ -22,10 +22,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import ResourceEditDialog from "./ResourceEditDialog.tsx";
+import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 
-export default function ResourceTable() {
-  const [tableContent, setTableContent] = useState<ResourceWithId[]>([]);
+export default function ApplicationTable() {
+  const [tableContent, setTableContent] = useState<ApplicationWithId[]>([]);
 
   const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
     string | null
@@ -40,23 +40,24 @@ export default function ResourceTable() {
 
   const handleConfirmDelete = (id: string) => {
     setSelectedForDeleteRequestId(null);
-    postDeleteResource(id);
-    getResourcesDataTable().then((messages) => setTableContent(messages));
+    postDeleteApplication(id);
+    getApplicationDataTable().then((messages) => setTableContent(messages));
   };
 
   useEffect(() => {
-    getResourcesDataTable().then((messages) => setTableContent(messages));
+    getApplicationDataTable().then((messages) => setTableContent(messages));
     const interval = setInterval(() => {
-      getResourcesDataTable().then((messages) => setTableContent(messages));
+      getApplicationDataTable().then((messages) => setTableContent(messages));
     }, 5000);
     return () => {
       clearInterval(interval);
     };
   }, []);
 
-  const [resourceEditDialogOpen, setResourceEditDialogOpen] = useState(false);
-  const [editingResource, setEditingResource] = useState<
-    ResourceWithId | undefined
+  const [applicationEditDialogOpen, setApplicationEditDialogOpen] =
+    useState(false);
+  const [editingApplication, setEditingApplication] = useState<
+    ApplicationWithId | undefined
   >(undefined);
 
   return (
@@ -70,32 +71,26 @@ export default function ResourceTable() {
               <TableCell>Organization</TableCell>
               <TableCell>ContactName</TableCell>
               <TableCell>TelegramId</TableCell>
-              <TableCell>CompetenceField</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Tags</TableCell>
+              <TableCell>RequestText</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableContent.map((resourceMessage, ind) => (
+            {tableContent.map((application, ind) => (
               <TableRow key={ind}>
-                <TableCell>{resourceMessage._id}</TableCell>
-                <TableCell>{resourceMessage.date}</TableCell>
-                <TableCell>{resourceMessage.organization}</TableCell>
-                <TableCell>{resourceMessage.contactName}</TableCell>
-                <TableCell>{resourceMessage.telegramId}</TableCell>
-                <TableCell>{resourceMessage.competenceField}</TableCell>
-                <TableCell>{resourceMessage.description}</TableCell>
-                <TableCell>{resourceMessage.tags.join(", ")}</TableCell>
-                <TableCell>{resourceMessage.status}</TableCell>
+                <TableCell>{application._id}</TableCell>
+                <TableCell>{application.date}</TableCell>
+                <TableCell>{application.organization}</TableCell>
+                <TableCell>{application.contactName}</TableCell>
+                <TableCell>{application.telegramId}</TableCell>
+                <TableCell>{application.requestText}</TableCell>
+                <TableCell>{application.status}</TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="delete"
                     size="large"
                     color="error"
-                    onClick={() =>
-                      handleOpenDialogForDelete(resourceMessage._id)
-                    }
+                    onClick={() => handleOpenDialogForDelete(application._id)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -117,7 +112,7 @@ export default function ResourceTable() {
                         Cancel
                       </Button>
                       <Button
-                        onClick={() => handleConfirmDelete(resourceMessage._id)}
+                        onClick={() => handleConfirmDelete(application._id)}
                         color="error"
                         variant="contained"
                       >
@@ -132,8 +127,8 @@ export default function ResourceTable() {
                     size="large"
                     color="warning"
                     onClick={() => {
-                      setEditingResource(resourceMessage);
-                      setResourceEditDialogOpen(true);
+                      setEditingApplication(application);
+                      setApplicationEditDialogOpen(true);
                     }}
                   >
                     Edit
@@ -144,17 +139,17 @@ export default function ResourceTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      {editingResource ? (
-        <ResourceEditDialog
-          open={resourceEditDialogOpen}
-          setOpen={setResourceEditDialogOpen}
-          editResource={(resource) => {
-            postEditResource(resource);
-            getResourcesDataTable().then((messages) =>
+      {editingApplication ? (
+        <ApplicationEditDialog
+          open={applicationEditDialogOpen}
+          setOpen={setApplicationEditDialogOpen}
+          editApplication={(editedState: ApplicationWithId) => {
+            postEditApplication(editedState);
+            getApplicationDataTable().then((messages) =>
               setTableContent(messages)
             );
           }}
-          initialState={editingResource}
+          initialState={editingApplication}
         />
       ) : (
         <></>

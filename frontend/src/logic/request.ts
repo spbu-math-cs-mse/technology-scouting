@@ -1,30 +1,34 @@
 import { getToken, storeToken } from "./authToken";
-import { RequestDataTableResponse, RequestMessage } from "./types";
-import { ResourceDataTableResponse, ResourceMessage } from "./types";
+import { ApplicationDataTableResponse, ApplicationWithId } from "./types";
+import { ResourceDataTableResponse, ResourceWithId } from "./types";
 
 // Function to perform login and store token
-async function login(username: string, password: string): Promise<boolean> {
-  const response = await fetch("/login", {
+// Function to perform login and store token
+export async function postLogin(
+  username: string,
+  password: string
+): Promise<boolean> {
+  return fetch("/api/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username, password }),
-  });
-
-  const result = await response.json();
-
-  if (result.success && result.token) {
-    storeToken(result.token); // Store token instead of password
-    return true;
-  } else {
-    console.error(result.message || "Login failed");
-    return false;
-  }
+    body: JSON.stringify({ login: username, password: password }),
+  })
+    .then((response) => response.json())
+    .then(async (response) => {
+      console.log("Get response from server: ", response);
+      storeToken(response.token);
+      return true;
+    })
+    .catch((error) => {
+      console.error("Get error from server: ", error);
+      return false;
+    });
 }
 
-export function getRequestDataTable(): Promise<RequestMessage[]> {
-  return fetch("/api/requests", {
+export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
+  return fetch("/api/applications", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
@@ -34,7 +38,7 @@ export function getRequestDataTable(): Promise<RequestMessage[]> {
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      return (response as RequestDataTableResponse).requests;
+      return (response as ApplicationDataTableResponse).applications;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);
@@ -42,7 +46,7 @@ export function getRequestDataTable(): Promise<RequestMessage[]> {
     });
 }
 
-export function getResourcesDataTable(): Promise<ResourceMessage[]> {
+export function getResourcesDataTable(): Promise<ResourceWithId[]> {
   return fetch("/api/resources", {
     method: "GET",
     headers: {
@@ -61,20 +65,23 @@ export function getResourcesDataTable(): Promise<ResourceMessage[]> {
     });
 }
 
-export function postDeleteRequest(id: string) {
-  fetch("/api/delete_request", {
+export function postDeleteApplication(id: string) {
+  fetch("/api/delete_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ _id: id }),
   })
     .then(async (response) => {
-      await response.json();
       if (response.ok)
-        console.log(`Request with ID ${id} deleted successfully.`);
+        console.log(`Application with ID ${id} deleted successfully.`);
       else
-        return console.error("Failed to delete request", response.statusText);
+        return console.error(
+          "Failed to delete application",
+          response.statusText
+        );
     })
     .catch((error) => {
       console.error(error);
@@ -89,11 +96,11 @@ export function postDeleteResource(id: string) {
     method: "POST",
     headers: {
       "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ _id: id }),
   })
     .then(async (response) => {
-      await response.json();
       if (response.ok)
         console.log(`Resource with ID ${id} deleted successfully.`);
       else
@@ -107,45 +114,103 @@ export function postDeleteResource(id: string) {
     });
 }
 
-export function getRequestDataTableMock(): Promise<RequestMessage[]> {
+export function postEditApplication(editedAplication: ApplicationWithId) {
+  fetch("/api/update_application", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(editedAplication),
+  })
+    .then(async (response) => {
+      if (response.ok)
+        console.log(
+          `Applictaion with ID ${editedAplication._id} editted successfully.`
+        );
+      else return console.error("Failed to edit request", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
+export function postEditResource(editedResource: ResourceWithId) {
+  fetch("/api/update_resource", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(editedResource),
+  })
+    .then(async (response) => {
+      if (response.ok)
+        console.log(
+          `Resource with ID ${editedResource._id} editted successfully.`
+        );
+      else return console.error("Failed to edit request", response.statusText);
+    })
+    .catch((error) => {
+      console.error(error);
+      return {
+        error: error,
+      };
+    });
+}
+
+export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
       {
         _id: "1",
-        tg_id: "1",
-        request_type: "get sth",
-        request_desciption: "a lot of",
-        status_id: "in process",
+        date: "20.12.2020",
+        organization: "a",
+        contactName: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        telegramId: "@abs",
+        requestText: "qweadsfgseh",
+        status: "123",
       },
       {
         _id: "2",
-        tg_id: "2",
-        request_type: "get sth",
-        request_desciption: "a lot of",
-        status_id: "in process",
+        date: "08.04.2024",
+        organization: "13e41",
+        contactName: "wkjhlkb",
+        telegramId: "@gui",
+        requestText: "asbw",
+        status: "98706123",
       },
     ])
   );
 }
 
-export function getResourcesDataTableMock(): Promise<ResourceMessage[]> {
+export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
       {
         _id: "1",
-        tg_id: "1",
-        resource_name: "kids",
-        resource_description: "get sth",
-        resource_type: "a lot of",
-        available_quantity: "4",
+        date: "1",
+        organization: "1",
+        contactName: "1",
+        telegramId: "1",
+        competenceField: "1",
+        description: "1",
+        tags: ["1", "2"],
+        status: "in progress",
       },
       {
-        _id: "2",
-        tg_id: "1",
-        resource_name: "parents",
-        resource_description: "teach",
-        resource_type: "a lot of",
-        available_quantity: "3",
+        _id: "1",
+        date: "1",
+        organization: "1",
+        contactName: "1",
+        telegramId: "1",
+        competenceField: "1",
+        description: "1",
+        tags: ["1", "2"],
+        status: "in progress",
       },
     ])
   );
