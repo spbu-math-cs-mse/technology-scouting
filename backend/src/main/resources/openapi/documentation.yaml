@@ -76,6 +76,19 @@ components:
       properties:
         token: string
 
+    attacher:
+      type:
+        object
+      properties:
+        application_id:
+          type: string
+        usernames:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -255,3 +268,16 @@ paths:
                 $ref: "#/components/schemas/token"
         '401':
           $ref: "#/components/responses/UnauthorizedError"
+  /api/assign_resources:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/attacher"
+      responses:
+        "200":
+          description: Message was sent
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+
