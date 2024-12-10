@@ -28,17 +28,18 @@ jobs:
             .env
           SCRIPT_BEFORE_REQUIRED: true
           SCRIPT_BEFORE: |
+            # Stop and remove existing containers
+            docker compose down --remove-orphans
             # Clean up existing application files
             rm -rf /home/${{ secrets.DEPLOY_SSH_USER }}/app
             # Recreate application directory
             mkdir -p /home/${{ secrets.DEPLOY_SSH_USER }}/app
             # Navigate to app directory
             cd /home/${{ secrets.DEPLOY_SSH_USER }}/app
-            # Stop and remove existing containers
-            docker compose down --remove-orphans
           SCRIPT_AFTER_REQUIRED: true
           SCRIPT_AFTER: |
             # Navigate to app directory
             cd /home/${{ secrets.DEPLOY_SSH_USER }}/app
+            ls -la
             # Build and launch fresh containers
             docker compose up -d --remove-orphans --build
