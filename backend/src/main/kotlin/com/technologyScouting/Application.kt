@@ -6,7 +6,7 @@ import io.ktor.server.application.Application
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Id(
+data class Id (
     val _id: String,
 )
 
