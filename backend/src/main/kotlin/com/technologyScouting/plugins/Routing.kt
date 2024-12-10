@@ -139,11 +139,15 @@ fun Application.configureRouting() {
             post("/api/create_resource") {
                 val resource = call.receive<InputResource>()
                 var status: ResourceStatus = ResourceStatus.IN_WORK
-                if(!ResourceStatus.entries.toTypedArray().map{it -> it.toString()}.contains(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))) {
+                if (!ResourceStatus.entries.toTypedArray().map {
+                            it ->
+                        it.toString()
+                    }.contains(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                ) {
                     call.respond(HttpStatusCode.NotFound, UnauthorizedError)
-                }
-                else
+                } else {
                     status = ResourceStatus.valueOf(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                }
 
                 try {
                     val newId =
@@ -170,11 +174,15 @@ fun Application.configureRouting() {
             post("/api/create_application") {
                 val application = call.receive<com.technologyScouting.InputApplication>()
                 var status: Status = Status.INCOMING
-                if(!Status.entries.toTypedArray().map{it -> it.toString()}.contains(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))) {
+                if (!Status.entries.toTypedArray().map {
+                            it ->
+                        it.toString()
+                    }.contains(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                ) {
                     call.respond(HttpStatusCode.NotFound, UnauthorizedError)
-                }
-                else
+                } else {
                     status = Status.valueOf(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                }
 
                 try {
                     val newId =

@@ -137,7 +137,7 @@ class ApplicationsService(
             val filter = Document(ApplicationFields.ID, objectId)
             connection.find(filter).firstOrNull()?.getString(ApplicationFields.TELEGRAM_ID)
         }
-    };
+    }
 
     fun getAllApplications(): List<ApplicationWithId> = connection.find().map { it.toApplicationWithId() }.toList()
 
@@ -238,8 +238,7 @@ class ResourcesService(
             val filter = Document(ResourceFields.ID, objectId)
             connection.find(filter).firstOrNull()?.getString(ResourceFields.TELEGRAM_ID)
         }
-    };
-
+    }
 
     fun getResource(resourceId: String): ResourceWithId? {
         val objectId = ObjectId(resourceId)

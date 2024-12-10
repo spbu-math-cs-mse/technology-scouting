@@ -19,6 +19,7 @@ data class InputApplication(
     val requestText: String,
     val status: String,
 )
+
 @Serializable
 data class Application(
     val date: String,
