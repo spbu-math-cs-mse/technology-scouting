@@ -15,7 +15,7 @@ data class InputApplication(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val requestText: String,
     val status: String,
 )
@@ -25,7 +25,7 @@ data class Application(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val requestText: String,
     val status: Status,
 )
@@ -59,7 +59,7 @@ data class InputResource(
     val date: String,
     val organization: String,
     val contactName: String,
-    val telegramId: String,
+    val telegramId: Long,
     val competenceField: String,
     val description: String,
     val tags: List<String> = emptyList<String>(),
