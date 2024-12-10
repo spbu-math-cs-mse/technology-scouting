@@ -29,7 +29,7 @@ jobs:
           SCRIPT_BEFORE_REQUIRED: true
           SCRIPT_BEFORE: |
             # Stop and remove existing containers
-            docker compose down --remove-orphans
+            # docker compose down --remove-orphans
           SCRIPT_AFTER_REQUIRED: true
           SCRIPT_AFTER: |
             # Navigate to app directory
