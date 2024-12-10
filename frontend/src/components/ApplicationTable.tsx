@@ -159,6 +159,7 @@ export default function ApplicationTable() {
             setCreatedApplication(DEFAULT_APPLICATION);
             setApplicationCreateDialogOpen(true);
           }}
+          sx = {{font: font,}}
         >
           Create Application
         </Button>
