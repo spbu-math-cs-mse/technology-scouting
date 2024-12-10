@@ -31,19 +31,25 @@ fun createBot(): Bot =
         }
     }
 
-fun Bot.sendMessagesToUsers(userIds: List<Long>, message: String) {
-    userIds.forEach { userId ->
+fun Bot.sendMessagesToUsersByUsername(usernames: List<String>, message: String) {
+    usernames.forEach { username ->
         try {
-            this.sendMessage(
-                chatId = ChatId.fromId(userId),
-                text = message
-            )
+            val chatId = ChatId.fromChannelUsername(username.removePrefix("@"))
+            val result = this.getChat(chatId)
+            val chat = result.getOrNull()
+            if (chat != null) {
+                this.sendMessage(
+                    chatId = ChatId.fromId(chat.id),
+                    text = message
+                )
+            } else {
+                logger.warn("User $username not found or unable to retrieve chat.")
+            }
         } catch (e: Exception) {
-            logger.error("Failed to send message to user $userId: ${e.message}")
+            logger.error("Failed to send message to user $username: ${e.message}")
         }
     }
 }
-
 
 private var currentStep: String? = null
 
@@ -104,7 +110,7 @@ private fun Dispatcher.setUpCommands() {
 
             "resource_contact" -> {
                 newResource = newResource.copy(contactName = message.text.toString())
-                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
+                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт (ник в telegram):")
                 currentStep = "resource_tg"
             }
 
