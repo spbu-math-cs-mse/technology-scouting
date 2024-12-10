@@ -36,44 +36,11 @@ import IconButton from "@mui/material/IconButton";
 import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
-
-
-
-function getFittingCharacters(
-  text: string,
-  width: number,
-  font: string
-): number {
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d")!;
-  context.font = font;
-  let currentWidth = 0;
-  let charCount = 0;
-
-  for (let char of text) {
-    currentWidth += context.measureText(char).width;
-    if (currentWidth > width) break;
-    charCount++;
-  }
-
-  return charCount;
-}
-
-const renderWithTooltip = (
-  text: string,
-  maxWidth: number,
-  font: string
-) => {
-  const isTextOverflowing = text.length > getFittingCharacters(text, maxWidth, font);
-
-  return isTextOverflowing ? (
-    <Tooltip title={text} placement="bottom-start">
-      <span>{text}</span>
-    </Tooltip>
-  ) : (
-    <span>{text}</span>
-  );
-};
+import {
+  getFittingCharacters,
+  renderWithTooltip,
+  StyledTableCell,
+} from "./TableFitting.tsx";
 
 export default function ApplicationTable() {
   const font = "14px Times New Roman";
@@ -159,7 +126,7 @@ export default function ApplicationTable() {
             setCreatedApplication(DEFAULT_APPLICATION);
             setApplicationCreateDialogOpen(true);
           }}
-          sx = {{font: font,}}
+          sx={{ font: font }}
         >
           Create Application
         </Button>
@@ -195,71 +162,56 @@ export default function ApplicationTable() {
                 <TableCell sx={{ font: font, textAlign: "center" }}>
                   {application.date}
                 </TableCell>
-                <TableCell
-                  sx={{
-                    font: font,
-                    textAlign: "center",
-                    maxWidth: maxWidthByColumn.organization,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
+                <StyledTableCell
+                  font={font}
+                  maxWidth={maxWidthByColumn.organization}
                 >
-                  {renderWithTooltip(application.organization, maxWidthByColumn.organization, font)}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    font: font,
-                    textAlign: "center",
-                    maxWidth: maxWidthByColumn.contactName,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
+                  {renderWithTooltip(
+                    application.organization,
+                    maxWidthByColumn.organization,
+                    font
+                  )}
+                </StyledTableCell>
+                <StyledTableCell
+                  font={font}
+                  maxWidth={maxWidthByColumn.contactName}
                 >
-                  {renderWithTooltip(application.contactName, maxWidthByColumn.contactName, font)}
-                </TableCell>
+                  {renderWithTooltip(
+                    application.contactName,
+                    maxWidthByColumn.contactName,
+                    font
+                  )}
+                </StyledTableCell>
 
-                <TableCell
-                  sx={{
-                    font: font,
-                    textAlign: "center",
-                    maxWidth: maxWidthByColumn.telegramId,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
+                <StyledTableCell
+                  font={font}
+                  maxWidth={maxWidthByColumn.telegramId}
                 >
-                  {renderWithTooltip(application.telegramId.toString(), maxWidthByColumn.telegramId, font)}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    font: font,
-                    textAlign: "center",
-                    maxWidth: maxWidthByColumn.requestText,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
+                  {renderWithTooltip(
+                    application.telegramId.toString(),
+                    maxWidthByColumn.telegramId,
+                    font
+                  )}
+                </StyledTableCell>
+                <StyledTableCell
+                  font={font}
+                  maxWidth={maxWidthByColumn.requestText}
                 >
-                  {renderWithTooltip(application.requestText, maxWidthByColumn.requestText, font)}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    font: font,
-                    textAlign: "center",
-                    maxWidth: maxWidthByColumn.status,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {renderWithTooltip(application.status, maxWidthByColumn.status, font)}
-                </TableCell>
+                  {renderWithTooltip(
+                    application.requestText,
+                    maxWidthByColumn.requestText,
+                    font
+                  )}
+                </StyledTableCell>
+                <StyledTableCell font={font} maxWidth={maxWidthByColumn.status}>
+                  {renderWithTooltip(
+                    application.status,
+                    maxWidthByColumn.status,
+                    font
+                  )}
+                </StyledTableCell>
 
-                <TableCell
-                  sx={{ gap: 1 }}
-                >
+                <TableCell sx={{ gap: 1 }}>
                   <IconButton
                     aria-label="delete"
                     size="large"
@@ -295,9 +247,7 @@ export default function ApplicationTable() {
                     </DialogActions>
                   </Dialog>
                 </TableCell>
-                <TableCell
-                  sx={{ gap: 1 }}
-                >
+                <TableCell sx={{ gap: 1 }}>
                   <Button
                     aria-label="edit"
                     color="warning"
@@ -316,9 +266,7 @@ export default function ApplicationTable() {
                   </Button>
                 </TableCell>
                 {application.status === "incoming" && (
-                  <TableCell
-                    sx={{ gap: 1 }}
-                  >
+                  <TableCell sx={{ gap: 1 }}>
                     <Button
                       aria-label="edit"
                       color="warning"
