@@ -29,7 +29,6 @@ import {
   DialogContent,
   DialogTitle,
   Button,
-  Tooltip,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
@@ -37,7 +36,6 @@ import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
 import {
-  getFittingCharacters,
   renderWithTooltip,
   StyledTableCell,
 } from "./TableFitting.tsx";
@@ -51,6 +49,7 @@ export default function ApplicationTable() {
     telegramId: 50,
     requestText: 100,
     status: 100,
+    associatedResources: 150,
   };
 
   const [applicationTable, setApplicationTable] = useState<ApplicationWithId[]>(
@@ -154,6 +153,9 @@ export default function ApplicationTable() {
               <TableCell sx={{ font: font, textAlign: "center" }}>
                 Status
               </TableCell>
+              <TableCell sx={{ font: font, textAlign: "center" }}>
+                Assigns
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -207,6 +209,13 @@ export default function ApplicationTable() {
                   {renderWithTooltip(
                     application.status,
                     maxWidthByColumn.status,
+                    font
+                  )}
+                </StyledTableCell>
+                <StyledTableCell font={font} maxWidth={maxWidthByColumn.status}>
+                  {renderWithTooltip(
+                    application.associatedResources.join(", "),
+                    maxWidthByColumn.associatedResources,
                     font
                   )}
                 </StyledTableCell>
