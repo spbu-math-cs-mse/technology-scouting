@@ -119,7 +119,10 @@ class ApplicationsService(
         return updateResult.matchedCount > 0
     }
 
-    fun addResourceToApplication(applicationId: String, resourceId: String): Boolean {
+    fun addResourceToApplication(
+        applicationId: String,
+        resourceId: String,
+    ): Boolean {
         val applicationObjectId = ObjectId(applicationId)
         val applicationFilter = Document(ApplicationFields.ID, applicationObjectId)
         val applicationUpdate = Document("\$addToSet", Document(ApplicationFields.ASSOCIATED_RESOURCES, resourceId))
@@ -127,7 +130,6 @@ class ApplicationsService(
         val applicationResult = connection.updateOne(applicationFilter, applicationUpdate)
         return applicationResult.matchedCount > 0
     }
-
 
     fun deleteApplication(applicationId: String): Boolean {
         val objectId = ObjectId(applicationId)
@@ -149,7 +151,7 @@ class ApplicationsService(
             val filter = Document(ApplicationFields.ID, objectId)
             connection.find(filter).firstOrNull()?.getString(ApplicationFields.TELEGRAM_ID)
         }
-    };
+    }
 
     fun getAllApplications(): List<ApplicationWithId> = connection.find().map { it.toApplicationWithId() }.toList()
 
@@ -162,7 +164,7 @@ class ApplicationsService(
             telegramId = this.getString(ApplicationFields.TELEGRAM_ID),
             requestText = this.getString(ApplicationFields.REQUEST_TEXT),
             status = Status.valueOf(this.getString(ApplicationFields.STATUS)).s,
-            associatedResources = this.getList(ApplicationFields.ASSOCIATED_RESOURCES, String::class.java) ?: emptyList()
+            associatedResources = this.getList(ApplicationFields.ASSOCIATED_RESOURCES, String::class.java) ?: emptyList(),
         )
 }
 
@@ -223,7 +225,10 @@ class ResourcesService(
             ?.toHexString()
     }
 
-    fun addApplicationToResource(resourceId: String, applicationId: String): Boolean {
+    fun addApplicationToResource(
+        resourceId: String,
+        applicationId: String,
+    ): Boolean {
         val resourceObjectId = ObjectId(resourceId)
         val resourceFilter = Document(ResourceFields.ID, resourceObjectId)
         val resourceUpdate = Document("\$addToSet", Document(ResourceFields.ASSOCIATED_APPLICATIONS, applicationId))
@@ -231,7 +236,6 @@ class ResourcesService(
         val resourceResult = connection.updateOne(resourceFilter, resourceUpdate)
         return resourceResult.matchedCount > 0
     }
-
 
     fun updateResource(
         resourceId: String,
@@ -263,8 +267,7 @@ class ResourcesService(
             val filter = Document(ResourceFields.ID, objectId)
             connection.find(filter).firstOrNull()?.getString(ResourceFields.TELEGRAM_ID)
         }
-    };
-
+    }
 
     fun getResource(resourceId: String): ResourceWithId? {
         val objectId = ObjectId(resourceId)
@@ -331,7 +334,6 @@ class AdminAuthService(
         val deleteResult = connection.deleteOne(filter)
         return deleteResult.deletedCount > 0
     }
-
 
     fun verifyAdmin(
         username: String,

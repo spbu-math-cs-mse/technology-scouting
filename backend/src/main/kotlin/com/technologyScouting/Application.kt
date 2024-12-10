@@ -19,6 +19,7 @@ data class InputApplication(
     val requestText: String,
     val status: String,
 )
+
 @Serializable
 data class Application(
     val date: String,
@@ -50,7 +51,7 @@ data class ApplicationWithId(
     val telegramId: String,
     val requestText: String,
     val status: String,
-    val associatedResources: List<String>
+    val associatedResources: List<String>,
 )
 
 @Serializable

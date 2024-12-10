@@ -31,7 +31,10 @@ fun createBot(): Bot =
         }
     }
 
-fun Bot.sendMessagesToUsersByUsername(usernames: List<String>, message: String) {
+fun Bot.sendMessagesToUsersByUsername(
+    usernames: List<String>,
+    message: String,
+) {
     usernames.forEach { username ->
         try {
             val chatId = ChatId.fromChannelUsername(username.removePrefix("@"))
@@ -40,7 +43,7 @@ fun Bot.sendMessagesToUsersByUsername(usernames: List<String>, message: String) 
             if (chat != null) {
                 this.sendMessage(
                     chatId = ChatId.fromId(chat.id),
-                    text = message
+                    text = message,
                 )
             } else {
                 logger.warn("User $username not found or unable to retrieve chat.")
