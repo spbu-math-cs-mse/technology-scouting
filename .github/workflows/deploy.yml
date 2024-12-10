@@ -1,0 +1,42 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy via rsync & ssh
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          ARGS: -rlgoDzvc --delete
+          SSH_CMD_ARGS: -o ServerAliveInterval=1500
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          TARGET: /home/${{ secrets.DEPLOY_SSH_USER }}/app
+          EXCLUDE: |
+            .git/
+          SCRIPT_BEFORE_REQUIRED: true
+          SCRIPT_BEFORE: |
+            # Stop and remove existing containers
+            # docker compose down --remove-orphans
+          SCRIPT_AFTER_REQUIRED: true
+          SCRIPT_AFTER: |
+            # Navigate to app directory
+            cd /home/${{ secrets.DEPLOY_SSH_USER }}/app
+            # Export environment variables
+            export MONGODB_DBNAME=${{ secrets.MONGODB_DBNAME }}
+            export MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }}
+            export MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}
+            export BOT_TOKEN=${{ secrets.BOT_TOKEN }}
+            # Build and launch fresh containers
+            docker compose up -d --remove-orphans --build
