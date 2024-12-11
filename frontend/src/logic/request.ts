@@ -280,7 +280,7 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
         telegramId: 123,
         requestText: "qweadsfgseh",
         status: "incoming",
-        associatedResources: []
+        associatedResources: [],
       },
       {
         _id: "2",
@@ -290,7 +290,7 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
         telegramId: 456,
         requestText: "asbw",
         status: "resources search",
-        associatedResources: []
+        associatedResources: [],
       },
     ])
   );
@@ -309,7 +309,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
         description: "1",
         tags: ["1", "2"],
         status: "in work",
-        associatedApplications: []
+        associatedApplications: [],
       },
       {
         _id: "2",
@@ -321,7 +321,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
         description: "1",
         tags: ["1", "2"],
         status: "in work",
-        associatedApplications: []
+        associatedApplications: [],
       },
     ])
   );
