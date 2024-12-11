@@ -246,7 +246,7 @@ export function postAssignResources(
     "resourceIds": resourceIds,
     "message": message,
   };
-  fetch("/api/update_resource", {
+  fetch("/api/assign_resources", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
