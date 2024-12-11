@@ -99,16 +99,12 @@ private fun Dispatcher.setUpCommands() {
             "resource_organization" -> {
                 newResource = newResource.copy(organization = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
-                currentStep = "resource_contact"
+                currentStep = "resource_contact_tg"
             }
 
-            "resource_contact" -> {
+            "resource_contact_tg" -> {
                 newResource = newResource.copy(contactName = message.text.toString())
                 // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт (ник в telegram):")
-                currentStep = "resource_tg"
-            }
-
-            "resource_tg" -> {
                 newResource = newResource.copy(telegramId = message.chat.id)
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите тему ресурса:")
                 currentStep = "resource_competenceField"
@@ -165,13 +161,9 @@ private fun Dispatcher.setUpCommands() {
                 currentStep = "request_contact"
             }
 
-            "request_contact" -> {
+            "request_contact_tg" -> {
                 newApplication = newApplication.copy(contactName = message.text.toString())
                 // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
-                currentStep = "request_tg"
-            }
-
-            "request_tg" -> {
                 newApplication = newApplication.copy(telegramId = message.chat.id)
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите свой запрос:")
                 currentStep = "request_text"
