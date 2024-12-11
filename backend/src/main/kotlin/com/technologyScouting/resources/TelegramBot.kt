@@ -158,7 +158,7 @@ private fun Dispatcher.setUpCommands() {
             "request_organization" -> {
                 newApplication = newApplication.copy(organization = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
-                currentStep = "request_contact"
+                currentStep = "request_contact_tg"
             }
 
             "request_contact_tg" -> {
