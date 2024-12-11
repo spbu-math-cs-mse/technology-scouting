@@ -242,9 +242,9 @@ export function postAssignResources(
   message: string
 ) {
   const requestBody = {
-    applicationId,
-    resourceIds,
-    message,
+    "applicationId": applicationId,
+    "resourceIds": resourceIds,
+    "message": message,
   };
   fetch("/api/update_resource", {
     method: "POST",

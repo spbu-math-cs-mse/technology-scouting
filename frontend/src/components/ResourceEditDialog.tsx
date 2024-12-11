@@ -48,7 +48,10 @@ export default function ResourceEditDialog({
   ) => {
     setEditedState({
       ...editedState,
-      [key]: key === "tags" ? e.target.value.split(", ") : e.target.value,
+      [key]:
+        key === "tags" || key === "associatedApplications"
+          ? e.target.value.split(", ")
+          : e.target.value,
     });
   };
 

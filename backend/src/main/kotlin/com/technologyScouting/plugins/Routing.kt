@@ -91,7 +91,7 @@ fun Application.configureRouting(bot: Bot) {
 
                     call.respond(Applications(applications))
                 } catch (e: Exception) {
-                    println(e.message)
+                    println()
                     call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
                 }
             }
@@ -211,17 +211,27 @@ fun Application.configureRouting(bot: Bot) {
                 val newApplication = call.receive<ApplicationWithId>()
 
                 try {
+                    var status: Status = Status.INCOMING
+                    if (!Status.entries.toTypedArray().map {
+                                it ->
+                            it.toString()
+                        }.contains(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    ) {
+                        call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                    } else {
+                        status = Status.valueOf(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    }
+
                     val updatedValues =
                         mapOf(
                             ApplicationFields.ID to newApplication._id,
-                            ApplicationFields.STATUS to newApplication.status,
                             ApplicationFields.DATE to newApplication.date,
                             ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
                             ApplicationFields.CONTACT_NAME to newApplication.contactName,
                             ApplicationFields.ORGANIZATION to newApplication.organization,
                             ApplicationFields.REQUEST_TEXT to newApplication.requestText,
+                            ApplicationFields.STATUS to status,
                         )
-
                     applicationsService.updateApplication(newApplication._id, updatedValues)
 
                     call.respond((HttpStatusCode.OK))
@@ -233,12 +243,22 @@ fun Application.configureRouting(bot: Bot) {
                 val newResource = call.receive<ResourceWithId>()
 
                 try {
+                    var status: ResourceStatus = ResourceStatus.IN_WORK
+                    if (!ResourceStatus.entries.toTypedArray().map {
+                                it ->
+                            it.toString()
+                        }.contains(newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    ) {
+                        call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                    } else {
+                        status = ResourceStatus.valueOf(newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    }
                     val updatedValues =
                         mapOf(
                             ResourceFields.ID to newResource._id,
                             ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
                             ResourceFields.TAGS to newResource.tags,
-                            ResourceFields.STATUS to newResource.status,
+                            ResourceFields.STATUS to status,
                             ResourceFields.DATE to newResource.date,
                             ResourceFields.CONTACT_NAME to newResource.contactName,
                             ResourceFields.DESCRIPTION to newResource.description,
@@ -261,6 +281,7 @@ fun Application.configureRouting(bot: Bot) {
 
                     call.respond((HttpStatusCode.OK))
                 } catch (e: Exception) {
+                    println()
                     call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }
             }

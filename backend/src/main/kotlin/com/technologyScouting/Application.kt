@@ -18,6 +18,7 @@ data class InputApplication(
     val telegramId: Long,
     val requestText: String,
     val status: String,
+    val associatedResources: List<String> = emptyList<String>(),
 )
 
 @Serializable
@@ -28,6 +29,7 @@ data class Application(
     val telegramId: Long,
     val requestText: String,
     val status: Status,
+    val associatedResources: List<String>,
 )
 
 enum class Status(
@@ -64,6 +66,7 @@ data class InputResource(
     val description: String,
     val tags: List<String> = emptyList<String>(),
     val status: String,
+    val associatedApplications: List<String> = emptyList<String>(),
 )
 
 @Serializable
@@ -76,6 +79,7 @@ data class Resource(
     val description: String,
     val tags: List<String>,
     val status: ResourceStatus,
+    val associatedApplications: List<String>,
 )
 
 enum class ResourceStatus(

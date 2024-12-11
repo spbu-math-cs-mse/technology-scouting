@@ -69,6 +69,10 @@ class ApplicationsService(
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("applications")
 
+    init {
+        connection.deleteMany(Document())
+    }
+
     private val allowedFields =
         listOf(
             ApplicationFields.ORGANIZATION,
@@ -193,6 +197,10 @@ class ResourcesService(
     private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("resources")
+
+    init {
+        connection.deleteMany(Document())
+    }
 
     private val allowedFields =
         listOf(

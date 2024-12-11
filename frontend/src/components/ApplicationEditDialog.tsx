@@ -46,7 +46,13 @@ export default function ApplicatonEditDialog({
     key: string,
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setEditedState({ ...editedState, [key]: e.target.value });
+    setEditedState({
+      ...editedState,
+      [key]:
+        key === "associatedResources"
+          ? e.target.value.split(", ")
+          : e.target.value,
+    });
   };
 
   const handleEdit = () => {

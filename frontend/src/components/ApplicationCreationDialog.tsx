@@ -47,7 +47,13 @@ export default function ApplicatonCreateDialog({
     key: string,
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setCreatedState({ ...createdState, [key]: e.target.value });
+    setCreatedState({
+      ...createdState,
+      [key]:
+        key === "associatedResources"
+          ? e.target.value.split(", ")
+          : e.target.value,
+    });
   };
 
   const handleCreate = () => {
