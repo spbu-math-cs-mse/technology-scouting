@@ -6,10 +6,10 @@ import {
   DEFAULT_APPLICATION,
 } from "../logic/types.ts";
 import {
-  //getResourcesDataTable,
-  getResourcesDataTableMock as getResourcesDataTable,
-  //getApplicationDataTable,
-  getApplicationDataTableMock as getApplicationDataTable,
+  getResourcesDataTable,
+  //getResourcesDataTableMock as getResourcesDataTable,
+  getApplicationDataTable,
+  //getApplicationDataTableMock as getApplicationDataTable,
   postDeleteApplication,
   postEditApplication,
   postAssignResources,
@@ -36,7 +36,6 @@ import IconButton from "@mui/material/IconButton";
 import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
-import { renderWithTooltip, StyledTableCell } from "./TableFitting.tsx";
 
 function getFittingCharacters(
   text: string,
