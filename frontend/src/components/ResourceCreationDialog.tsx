@@ -11,54 +11,47 @@ import {
   MenuList,
   Popover,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Resource,
-  RESOURCE_STATUSES,
+  DEFAULT_RESOURCE,
   ResourceStatus,
-  ResourceWithId,
-  toResource,
+  RESOURCE_STATUSES,
 } from "../logic/types";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-type ResourceEditDialogProps = {
+type ResourceCreateDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  initialState: ResourceWithId;
-  editResource: (editedState: ResourceWithId) => void;
+  createResource: (createdState: Resource) => void;
 };
 
-export default function ResourceEditDialog({
+export default function ResourceCreateDialog({
   open,
   setOpen,
-  initialState,
-  editResource,
-}: ResourceEditDialogProps) {
-  const [editedState, setEditedState] = useState(toResource(initialState));
-
-  useEffect(() => {
-    setEditedState(toResource(initialState));
-  }, [initialState]);
-
+  createResource,
+}: ResourceCreateDialogProps) {
+  const [createdState, setCreatedState] = useState(DEFAULT_RESOURCE);
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
 
+  useEffect(() => {
+    setCreatedState(DEFAULT_RESOURCE);
+  }, [open]);
+
   const handleChange = (
-    key: keyof Resource,
+    key: string,
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setEditedState({
-      ...editedState,
-      [key]: key === "tags" ? e.target.value.split(", ") : e.target.value,
-    });
+    setCreatedState({ ...createdState, [key]: e.target.value });
   };
 
-  const handleEdit = () => {
-    editResource({ ...editedState, _id: initialState._id });
+  const handleCreate = () => {
+    createResource(createdState);
     setOpen(false);
   };
 
   const handleStatusChange = (newStatus: ResourceStatus) => {
-    setEditedState({ ...editedState, status: newStatus });
+    setCreatedState({ ...createdState, status: newStatus });
     setStatusPopoverAnchor(null);
   };
 
@@ -75,20 +68,20 @@ export default function ResourceEditDialog({
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(editedState) as Array<keyof Resource>).map((key) => (
+          {(Object.keys(createdState) as Array<keyof Resource>).map((key) => (
             <Grid size={{ xs: 6 }} key={key}>
               <TextField
                 name={key}
                 label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={editedState[key]}
+                value={createdState[key]}
                 onChange={(event) => handleChange(key, event)}
                 fullWidth
+                margin="normal"
                 slotProps={{
                   input: {
                     readOnly: key === "status" ? true : false,
                   },
                 }}
-                margin="normal"
               />
             </Grid>
           ))}
@@ -101,7 +94,7 @@ export default function ResourceEditDialog({
             color="primary"
             startIcon={<ExpandMoreIcon />}
           >
-            Change Status (Current: {editedState.status})
+            Change Status (Current: {createdState.status})
           </Button>
 
           <Popover
@@ -132,10 +125,10 @@ export default function ResourceEditDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpen(false)} color="secondary">
-          Cancel
+          Discard
         </Button>
-        <Button onClick={handleEdit} color="primary">
-          Apply
+        <Button onClick={handleCreate} color="primary">
+          Create
         </Button>
       </DialogActions>
     </Dialog>

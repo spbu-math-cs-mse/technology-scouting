@@ -15,9 +15,11 @@ type AdminRegistrationDialogProps = {
   addAdmin: (login: string, password: string) => void;
 };
 
-export default function AdminRegistrationDialog(
-  props: AdminRegistrationDialogProps
-) {
+export default function AdminRegistrationDialog({
+  open,
+  setOpen,
+  addAdmin,
+}: AdminRegistrationDialogProps) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [confirmDialog, setConfirmDialog] = useState(false);
@@ -27,13 +29,14 @@ export default function AdminRegistrationDialog(
     if (!confirmDialog) {
       setConfirmDialog(true);
     } else {
-      props.addAdmin(login, password);
+      addAdmin(login, password);
       handleClose();
+      setAdminAdded(true);
     }
   };
 
   const handleClose = () => {
-    props.setOpen(false);
+    setOpen(false);
     setLogin("");
     setPassword("");
     setConfirmDialog(false);
@@ -41,7 +44,7 @@ export default function AdminRegistrationDialog(
 
   return (
     <>
-      <Dialog open={props.open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Admin Registration</DialogTitle>
         <DialogContent>
           <TextField
@@ -66,7 +69,10 @@ export default function AdminRegistrationDialog(
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleRegisterClick}>
+          <Button
+            onClick={handleRegisterClick}
+            color={confirmDialog ? "warning" : "primary"}
+          >
             {confirmDialog ? "Confirm" : "Register"}
           </Button>
         </DialogActions>

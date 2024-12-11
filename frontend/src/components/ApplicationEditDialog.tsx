@@ -8,11 +8,17 @@ import {
   TextField,
   Button,
   MenuItem,
-  MenuList,
-  Popover,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Application, ApplicationWithId } from "../logic/types";
+import {
+  Application,
+  APPLICATION_STATUSES,
+  ApplicationStatus,
+  ApplicationWithId,
+  toApplication,
+} from "../logic/types";
 
 type ApplicationEditDialogProps = {
   open: boolean;
@@ -27,27 +33,14 @@ export default function ApplicatonEditDialog({
   initialState,
   editApplication,
 }: ApplicationEditDialogProps) {
-  const [editedState, setEditedState] = useState<Application>({
-    date: initialState.date,
-    organization: initialState.organization,
-    contactName: initialState.contactName,
-    telegramId: initialState.telegramId,
-    requestText: initialState.requestText,
-    status: initialState.status,
-  });
+  const [editedState, setEditedState] = useState(toApplication(initialState));
+
   useEffect(() => {
-    setEditedState({
-      date: initialState.date,
-      organization: initialState.organization,
-      contactName: initialState.contactName,
-      telegramId: initialState.telegramId,
-      requestText: initialState.requestText,
-      status: initialState.status,
-    });
+    setEditedState(toApplication(initialState));
   }, [initialState]);
+
   const [statusPopoverAnchor, setStatusPopoverAnchor] =
     useState<null | HTMLElement>(null);
-  const [status, setStatus] = useState(initialState.status);
 
   const handleChange = (
     key: string,
@@ -57,97 +50,53 @@ export default function ApplicatonEditDialog({
   };
 
   const handleEdit = () => {
-    editApplication({ ...editedState, ["_id"]: initialState._id });
+    editApplication({ ...editedState, _id: initialState._id });
     setOpen(false);
   };
-
-  const handleStatusChange = (newStatus: string) => {
-    setStatus(newStatus);
-    setEditedState({ ...editedState, status: newStatus });
-    setStatusPopoverAnchor(null);
-  };
-
-  const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
-    setStatusPopoverAnchor(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setStatusPopoverAnchor(null);
-  };
-
-  const statusOptions = ["INCOMING", "RESOURCES_SEARCH", "RESOURCES_ATTACHED", "IN_WORK", "ENDED", "DECLINED_BY_SCOUT", "DECLINED_BY_CLIENT"];
 
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          {(Object.keys(editedState) as Array<keyof Application>).map(
-              (key) => (
-                  <Grid size={{ xs: 6 }} key={key}>
-                    {key === "status" ? (
-                        <TextField
-                            name={key}
-                            label={key.charAt(0).toUpperCase() + key.slice(1)}
-                            value={editedState[key]}
-                            onChange={(event) => handleChange(key, event)}
-                            fullWidth
-                            margin="normal"
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                              },
-                            }}
-                        />
-                    ) : (
-                        <TextField
-                            name={key}
-                            label={key.charAt(0).toUpperCase() + key.slice(1)}
-                            value={editedState[key]}
-                            onChange={(event) => handleChange(key, event)}
-                            fullWidth
-                            margin="normal"
-                        />
-                    )}
-                  </Grid>
-              )
-          )}
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Button
-            aria-label="status"
-            onClick={handleOpenPopover}
-            size="small"
-            color="primary"
-            startIcon={<ExpandMoreIcon />}
-          >
-            Change Status (Current: {status})
-          </Button>
-
-          <Popover
-            open={Boolean(statusPopoverAnchor)}
-            anchorEl={statusPopoverAnchor}
-            onClose={handleClosePopover}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            <MenuList>
-              {statusOptions.map((option) => (
-                <MenuItem
-                  key={option}
-                  onClick={() => handleStatusChange(option)}
+          {(Object.keys(editedState) as Array<keyof Application>).map((key) => (
+            <Grid size={{ xs: 6 }} key={key}>
+              {key === "status" ? (
+                <FormControl
+                  fullWidth
+                  margin="normal"
+                  sx={{ "& .MuiInputLabel-root": { top: "-10px" } }}
                 >
-                  {option}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Popover>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={editedState.status}
+                    onChange={(event) =>
+                      setEditedState({
+                        ...editedState,
+                        status: event.target.value as ApplicationStatus,
+                      })
+                    }
+                    fullWidth
+                  >
+                    {APPLICATION_STATUSES.map((status) => (
+                      <MenuItem key={status} value={status}>
+                        {status}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : (
+                <TextField
+                  name={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={editedState[key]}
+                  onChange={(event) => handleChange(key, event)}
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -155,7 +104,7 @@ export default function ApplicatonEditDialog({
           Discard
         </Button>
         <Button onClick={handleEdit} color="primary">
-          Edit
+          Create
         </Button>
       </DialogActions>
     </Dialog>
