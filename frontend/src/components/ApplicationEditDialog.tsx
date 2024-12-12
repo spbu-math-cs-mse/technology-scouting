@@ -42,9 +42,6 @@ export default function ApplicatonEditDialog({
     setEditedState(toApplication(initialState));
   }, [initialState]);
 
-  const [statusPopoverAnchor, setStatusPopoverAnchor] =
-    useState<null | HTMLElement>(null);
-
   const handleChange = (
     key: string,
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -55,19 +52,6 @@ export default function ApplicatonEditDialog({
   const handleEdit = () => {
     editApplication({ ...editedState, _id: initialState._id });
     setOpen(false);
-  };
-
-  const handleStatusChange = (newStatus: ApplicationStatus) => {
-    setEditedState({ ...editedState, status: newStatus });
-    setStatusPopoverAnchor(null);
-  };
-
-  const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
-    setStatusPopoverAnchor(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setStatusPopoverAnchor(null);
   };
 
   return (
@@ -120,7 +104,7 @@ export default function ApplicatonEditDialog({
           Discard
         </Button>
         <Button onClick={handleEdit} color="primary">
-          Create
+          Apply
         </Button>
       </DialogActions>
     </Dialog>

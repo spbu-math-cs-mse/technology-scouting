@@ -60,8 +60,12 @@ interface SimpleStyledTableCell {
 // );
 
 export const SimpleStyledTableCell = styled(TableCell)<SimpleStyledTableCell>(
-  ({ font = "inherit" }) => ({
-    font: font,
+  ({ font, width }) => ({
+    font,
     textAlign: "center",
+    whiteSpace: "normal",
+    wordWrap: "break-word",
+    padding: "10px",
+    width,
   })
 );

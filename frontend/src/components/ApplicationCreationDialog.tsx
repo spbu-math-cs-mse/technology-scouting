@@ -8,20 +8,15 @@ import {
   TextField,
   Button,
   MenuItem,
-  MenuList,
-  Popover,
   Select,
   FormControl,
   InputLabel,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Application,
   APPLICATION_STATUSES,
   DEFAULT_APPLICATION,
   ApplicationStatus,
-  ApplicationWithId,
-  toApplication,
 } from "../logic/types";
 
 type ApplicationCreateDialogProps = {
@@ -36,8 +31,6 @@ export default function ApplicatonCreateDialog({
   createApplication,
 }: ApplicationCreateDialogProps) {
   const [createdState, setCreatedState] = useState(DEFAULT_APPLICATION);
-  const [statusPopoverAnchor, setStatusPopoverAnchor] =
-    useState<null | HTMLElement>(null);
 
   useEffect(() => {
     setCreatedState(DEFAULT_APPLICATION);
@@ -53,19 +46,6 @@ export default function ApplicatonCreateDialog({
   const handleCreate = () => {
     createApplication(createdState);
     setOpen(false);
-  };
-
-  const handleStatusChange = (newStatus: ApplicationStatus) => {
-    setCreatedState({ ...createdState, status: newStatus });
-    setStatusPopoverAnchor(null);
-  };
-
-  const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
-    setStatusPopoverAnchor(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setStatusPopoverAnchor(null);
   };
 
   return (

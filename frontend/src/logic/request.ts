@@ -130,7 +130,7 @@ export function postCreateApplication(createdApplication: Application) {
       if (response.ok) console.log(`New applicataion created successfully.`);
       else
         return console.error(
-          "Failed to created application",
+          "Failed to create application",
           response.statusText
         );
     })
@@ -154,7 +154,7 @@ export function postCreateResource(createdResource: Resource) {
     .then(async (response) => {
       if (response.ok) console.log(`New resource created successfully.`);
       else
-        return console.error("Failed to created resource", response.statusText);
+        return console.error("Failed to create resource", response.statusText);
     })
     .catch((error) => {
       console.error(error);
@@ -279,17 +279,17 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
         telegramId: 123,
         requestText: "qweadsfgseh",
         status: "incoming",
-        associatedResources: []
+        associatedResources: [],
       },
       {
         _id: "2",
         date: "08.04.2024",
         organization: "13e41",
-        contactName: "wkjhlkb",
+        contactName: "wkjhlti",
         telegramId: 456,
         requestText: "asbw",
         status: "resources search",
-        associatedResources: []
+        associatedResources: [],
       },
     ])
   );
@@ -308,7 +308,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
         description: "1",
         tags: ["1", "2"],
         status: "in work",
-        associatedApplications: []
+        associatedApplications: [],
       },
       {
         _id: "2",
@@ -320,7 +320,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
         description: "1",
         tags: ["1", "2"],
         status: "in work",
-        associatedApplications: []
+        associatedApplications: [],
       },
     ])
   );

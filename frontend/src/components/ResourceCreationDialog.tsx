@@ -8,10 +8,10 @@ import {
   TextField,
   Button,
   MenuItem,
-  MenuList,
-  Popover,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Resource,
   DEFAULT_RESOURCE,
@@ -31,8 +31,6 @@ export default function ResourceCreateDialog({
   createResource,
 }: ResourceCreateDialogProps) {
   const [createdState, setCreatedState] = useState(DEFAULT_RESOURCE);
-  const [statusPopoverAnchor, setStatusPopoverAnchor] =
-    useState<null | HTMLElement>(null);
 
   useEffect(() => {
     setCreatedState(DEFAULT_RESOURCE);
@@ -50,19 +48,6 @@ export default function ResourceCreateDialog({
     setOpen(false);
   };
 
-  const handleStatusChange = (newStatus: ResourceStatus) => {
-    setCreatedState({ ...createdState, status: newStatus });
-    setStatusPopoverAnchor(null);
-  };
-
-  const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
-    setStatusPopoverAnchor(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setStatusPopoverAnchor(null);
-  };
-
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>
@@ -70,57 +55,42 @@ export default function ResourceCreateDialog({
         <Grid container spacing={2}>
           {(Object.keys(createdState) as Array<keyof Resource>).map((key) => (
             <Grid size={{ xs: 6 }} key={key}>
-              <TextField
-                name={key}
-                label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={createdState[key]}
-                onChange={(event) => handleChange(key, event)}
-                fullWidth
-                margin="normal"
-                slotProps={{
-                  input: {
-                    readOnly: key === "status" ? true : false,
-                  },
-                }}
-              />
+              {key === "status" ? (
+                <FormControl
+                  fullWidth
+                  margin="normal"
+                  sx={{ "& .MuiInputLabel-root": { top: "-10px" } }}
+                >
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={createdState.status}
+                    onChange={(event) =>
+                      setCreatedState({
+                        ...createdState,
+                        status: event.target.value as ResourceStatus,
+                      })
+                    }
+                    fullWidth
+                  >
+                    {RESOURCE_STATUSES.map((status) => (
+                      <MenuItem key={status} value={status}>
+                        {status}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : (
+                <TextField
+                  name={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={createdState[key]}
+                  onChange={(event) => handleChange(key, event)}
+                  fullWidth
+                  margin="normal"
+                />
+              )}
             </Grid>
           ))}
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Button
-            aria-label="status"
-            onClick={handleOpenPopover}
-            size="small"
-            color="primary"
-            startIcon={<ExpandMoreIcon />}
-          >
-            Change Status (Current: {createdState.status})
-          </Button>
-
-          <Popover
-            open={Boolean(statusPopoverAnchor)}
-            anchorEl={statusPopoverAnchor}
-            onClose={handleClosePopover}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            <MenuList>
-              {RESOURCE_STATUSES.map((option) => (
-                <MenuItem
-                  key={option}
-                  onClick={() => handleStatusChange(option)}
-                >
-                  {option}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Popover>
         </Grid>
       </DialogContent>
       <DialogActions>
