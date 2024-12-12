@@ -6,10 +6,10 @@ import {
   DEFAULT_APPLICATION,
 } from "../logic/types.ts";
 import {
-  //getResourcesDataTable,
-  getResourcesDataTableMock as getResourcesDataTable,
-  //getApplicationDataTable,
-  getApplicationDataTableMock as getApplicationDataTable,
+  getResourcesDataTable,
+  //getResourcesDataTableMock as getResourcesDataTable,
+  getApplicationDataTable,
+  //getApplicationDataTableMock as getApplicationDataTable,
   postDeleteApplication,
   postEditApplication,
   postAssignResources,
