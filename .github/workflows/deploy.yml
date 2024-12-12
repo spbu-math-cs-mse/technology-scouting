@@ -35,4 +35,5 @@ jobs:
             export MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}
             export BOT_TOKEN=${{ secrets.BOT_TOKEN }}
             # Build and launch fresh containers
+            docker compose build --no-cache
             docker compose up -d --remove-orphans --build
