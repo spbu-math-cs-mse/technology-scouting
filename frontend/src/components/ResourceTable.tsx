@@ -26,9 +26,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ResourceEditDialog from "./ResourceEditDialog.tsx";
 import ResourceCreateDialog from "./ResourceCreationDialog.tsx";
-import {
-  SimpleStyledTableCell,
-} from "./TableFitting.tsx";
+import { SimpleStyledTableCell } from "./TableFitting.tsx";
 
 export default function ResourceTable() {
   const font = "14px Times New Roman";

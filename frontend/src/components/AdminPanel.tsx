@@ -74,7 +74,7 @@ export default function AdminPanel() {
             }}
             variant="contained"
             color="inherit"
-            sx={{ alignSelf: "center", fontSize: "0.6rem"}}
+            sx={{ alignSelf: "center", fontSize: "0.6rem" }}
           >
             Add new admin
           </StyledBorderButton>
