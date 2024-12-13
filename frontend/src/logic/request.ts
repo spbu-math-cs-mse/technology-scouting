@@ -131,7 +131,7 @@ export function postCreateApplication(createdApplication: Application) {
       if (response.ok) console.log(`New applicataion created successfully.`);
       else
         return console.error(
-          "Failed to created application",
+          "Failed to create application",
           response.statusText
         );
     })
@@ -155,7 +155,7 @@ export function postCreateResource(createdResource: Resource) {
     .then(async (response) => {
       if (response.ok) console.log(`New resource created successfully.`);
       else
-        return console.error("Failed to created resource", response.statusText);
+        return console.error("Failed to create resource", response.statusText);
     })
     .catch((error) => {
       console.error(error);
@@ -242,9 +242,9 @@ export function postAssignResources(
   message: string
 ) {
   const requestBody = {
-    "applicationId": applicationId,
-    "resourceIds": resourceIds,
-    "message": message,
+    applicationId: applicationId,
+    resourceIds: resourceIds,
+    message: message,
   };
   fetch("/api/assign_resources", {
     method: "POST",
@@ -286,7 +286,7 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
         _id: "2",
         date: "08.04.2024",
         organization: "13e41",
-        contactName: "wkjhlkb",
+        contactName: "wkjhlti",
         telegramId: 456,
         requestText: "asbw",
         status: "resources search",

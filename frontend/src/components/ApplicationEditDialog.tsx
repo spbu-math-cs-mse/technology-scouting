@@ -39,9 +39,6 @@ export default function ApplicatonEditDialog({
     setEditedState(toApplication(initialState));
   }, [initialState]);
 
-  const [statusPopoverAnchor, setStatusPopoverAnchor] =
-    useState<null | HTMLElement>(null);
-
   const handleChange = (
     key: string,
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -110,7 +107,7 @@ export default function ApplicatonEditDialog({
           Discard
         </Button>
         <Button onClick={handleEdit} color="primary">
-          Create
+          Apply
         </Button>
       </DialogActions>
     </Dialog>

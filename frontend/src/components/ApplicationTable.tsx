@@ -36,6 +36,7 @@ import IconButton from "@mui/material/IconButton";
 import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
+import { SimpleStyledTableCell } from "./TableFitting.tsx";
 
 function getFittingCharacters(
   text: string,
@@ -46,7 +47,7 @@ function getFittingCharacters(
   const context = canvas.getContext("2d")!;
   context.font = font;
   let currentWidth = 0;
-  let charCount = 1000;
+  let charCount = 0;
 
   for (let char of text) {
     currentWidth += context.measureText(char).width;
@@ -60,12 +61,12 @@ function getFittingCharacters(
 export default function ApplicationTable() {
   const font = "12px Times New Roman";
   const maxWidthByColumn = {
-    organization: 50,
-    contactName: 50,
-    telegramId: 50,
-    requestText: 50,
+    organization: 100,
+    contactName: 100,
+    telegramId: 100,
+    requestText: 100,
     status: 50,
-    associatedResources: 10,
+    associatedResources: 40,
   };
 
   const [applicationTable, setApplicationTable] = useState<ApplicationWithId[]>(
@@ -151,27 +152,21 @@ export default function ApplicationTable() {
         <Table sx={{ tableLayout: "fixed", width: "100%" }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ font: font, textAlign: "center" }}>
-                Date
-              </TableCell>
-              <TableCell sx={{ font: font, textAlign: "center" }}>
+              <SimpleStyledTableCell font={font}>Date</SimpleStyledTableCell>
+              <SimpleStyledTableCell font={font}>
                 Organization
-              </TableCell>
-              <TableCell sx={{ font: font, textAlign: "center" }}>
+              </SimpleStyledTableCell>
+              <SimpleStyledTableCell font={font}>
                 Contact name
-              </TableCell>
-              <TableCell sx={{ font: font, textAlign: "center" }}>
+              </SimpleStyledTableCell>
+              <SimpleStyledTableCell font={font}>
                 Telegram id
-              </TableCell>
-              <TableCell sx={{ font: font, textAlign: "center" }}>
+              </SimpleStyledTableCell>
+              <SimpleStyledTableCell font={font}>
                 Request text
-              </TableCell>
-              <TableCell sx={{ font: font, textAlign: "center" }}>
-                Status
-              </TableCell>
-              <TableCell sx={{ font: font, textAlign: "center" }}>
-                Assigns
-              </TableCell>
+              </SimpleStyledTableCell>
+              <SimpleStyledTableCell font={font}>Status</SimpleStyledTableCell>
+              <SimpleStyledTableCell font={font}>Assigns</SimpleStyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -194,11 +189,11 @@ export default function ApplicationTable() {
                   {application.organization.length >
                   getFittingCharacters(
                     application.organization,
-                    maxWidthByColumn.organization,
+                    maxWidthByColumn.organization - 5,
                     font
                   ) ? (
                     <Tooltip
-                      id={ind.toString() + "organization"}
+                      id={`tooltip-${application._id}` + "o"}
                       title={application.organization}
                     >
                       <span>{application.organization}</span>
@@ -221,15 +216,18 @@ export default function ApplicationTable() {
                   {application.contactName.length >
                   getFittingCharacters(
                     application.contactName,
-                    maxWidthByColumn.contactName,
+                    maxWidthByColumn.contactName - 5,
                     font
                   ) ? (
-                    <Tooltip
-                      title={application.contactName}
-                      id={ind.toString() + "contactName"}
-                    >
-                      <span>{application.contactName}</span>
-                    </Tooltip>
+                    (console.log(`tooltip-${application._id}`),
+                    (
+                      <Tooltip
+                        title={application.contactName}
+                        id={`tooltip-${application._id}` + "c"}
+                      >
+                        <span>{application.contactName}</span>
+                      </Tooltip>
+                    ))
                   ) : (
                     <span>{application.contactName}</span>
                   )}
@@ -257,7 +255,7 @@ export default function ApplicationTable() {
                   {application.requestText.length >
                   getFittingCharacters(
                     application.requestText,
-                    maxWidthByColumn.requestText,
+                    maxWidthByColumn.requestText - 5,
                     font
                   ) ? (
                     <Tooltip
@@ -284,7 +282,7 @@ export default function ApplicationTable() {
                   {application.status.length >
                   getFittingCharacters(
                     application.status,
-                    maxWidthByColumn.status,
+                    maxWidthByColumn.status - 5,
                     font
                   ) ? (
                     <Tooltip
@@ -310,7 +308,7 @@ export default function ApplicationTable() {
                   {application.associatedResources.join(", ").length >
                   getFittingCharacters(
                     application.associatedResources.join(", "),
-                    maxWidthByColumn.associatedResources,
+                    maxWidthByColumn.associatedResources - 5,
                     font
                   ) ? (
                     <Tooltip
