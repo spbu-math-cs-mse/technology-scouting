@@ -26,8 +26,8 @@ services:
     image: mongo:6.0
     environment:
       - MONGO_INITDB_DATABASE=${MONGODB_DBNAME}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      # - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      # - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
     volumes:
       - mongodb_data:/data/db
 
