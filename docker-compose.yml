@@ -24,8 +24,6 @@ services:
 
   mongodb:
     image: mongo:6.0
-    ports:
-      - "${MONGODB_PORT:-27017}:27017"
     environment:
       - MONGO_INITDB_DATABASE=${MONGODB_DBNAME}
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
