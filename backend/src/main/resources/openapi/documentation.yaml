@@ -21,12 +21,16 @@ components:
         contactName:
           type: string
         telegramId:
-          type: string
+          type: long
         requestText:
           type: string
         status:
           type: string
           enum: ["incoming", "resources search", "resources attached", "in work", "ended", "declined by scout", "declined by client"]
+        associatedResources:
+          type: array
+          items:
+            type: string
 
     applicationWithId:
       allOf:
@@ -43,7 +47,7 @@ components:
         contactName:
           type: string
         telegramId:
-          type: string
+          type: long
         competenceField:
           type: string
         description:
@@ -55,11 +59,16 @@ components:
         status:
           type: string
           enum: ["in work", "available"] #TODO: тут ещё скорее всего какие-то есть, не придумалось с ходу
-    
+        associatedApplications:
+          type: array
+          items:
+            type: string
+
     resourceWithId:
       allOf:
         - $ref: "#/components/schemas/resource"
         - $ref: "#/components/schemas/id"
+
 
     logIn:
       type:
@@ -76,10 +85,23 @@ components:
       properties:
         token: string
 
+    attacher:
+      type:
+        object
+      properties:
+        applicationId:
+          type: string
+        resourceIds:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
-  
+
   securitySchemes:
     bearerAuth:
       type: http
@@ -202,7 +224,7 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: Application with given _id is not found
-  
+
   /api/update_resource:
     post:
       summary: Update existing resource by its _id
@@ -218,7 +240,7 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: Resource with given _id is not found
-  
+
   /api/add_new_admin:
     post:
       summary: Add new admin
@@ -255,3 +277,16 @@ paths:
                 $ref: "#/components/schemas/token"
         '401':
           $ref: "#/components/responses/UnauthorizedError"
+  /api/assign_resources:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/attacher"
+      responses:
+        "200":
+          description: Message was sent
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+

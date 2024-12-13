@@ -1,5 +1,7 @@
 package com.technologyScouting.plugins
 
+import com.github.kotlintelegrambot.Bot
+import com.github.kotlintelegrambot.bot
 import com.technologyScouting.*
 import com.technologyScouting.resources.*
 import io.ktor.http.*
@@ -30,7 +32,7 @@ val resourcesService = ResourcesService(dbService.database)
 val adminAuthService = AdminAuthService(dbService.database)
 val tokenStorage = dbService.database.getCollection("tokens")
 
-fun Application.configureRouting() {
+fun Application.configureRouting(bot: Bot) {
     routing {
         staticResources("static", "static")
 
@@ -55,7 +57,7 @@ fun Application.configureRouting() {
             }
         }
 
-        post("/api/log-in") {
+        post("/api/login") {
             try {
                 val credentials = call.receive<LogIn>()
 
@@ -63,7 +65,7 @@ fun Application.configureRouting() {
 
                 if (isValidUser) {
                     val token = UUID.randomUUID().toString()
-                    println(token)
+                    println("valid user confirmed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + token)
                     val expiryTime = Instant.now().plusSeconds(3600).toEpochMilli() // Токен на 1 час
 
                     tokenStorage.insertOne(
@@ -89,6 +91,7 @@ fun Application.configureRouting() {
 
                     call.respond(Applications(applications))
                 } catch (e: Exception) {
+                    println()
                     call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
                 }
             }
@@ -136,7 +139,17 @@ fun Application.configureRouting() {
                 }
             }
             post("/api/create_resource") {
-                val resource = call.receive<Resource>()
+                val resource = call.receive<InputResource>()
+                var status: ResourceStatus = ResourceStatus.IN_WORK
+                if (!ResourceStatus.entries.toTypedArray().map {
+                            it ->
+                        it.toString()
+                    }.contains(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                ) {
+                    call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                } else {
+                    status = ResourceStatus.valueOf(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                }
 
                 try {
                     val newId =
@@ -148,7 +161,7 @@ fun Application.configureRouting() {
                                 resource.competenceField,
                                 resource.description,
                                 resource.tags,
-                                resource.status,
+                                status,
                             )
 
                     if (newId == null) {
@@ -161,7 +174,17 @@ fun Application.configureRouting() {
                 }
             }
             post("/api/create_application") {
-                val application = call.receive<com.technologyScouting.Application>()
+                val application = call.receive<com.technologyScouting.InputApplication>()
+                var status: Status = Status.INCOMING
+                if (!Status.entries.toTypedArray().map {
+                            it ->
+                        it.toString()
+                    }.contains(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                ) {
+                    call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                } else {
+                    status = Status.valueOf(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                }
 
                 try {
                     val newId =
@@ -171,7 +194,7 @@ fun Application.configureRouting() {
                                 application.contactName,
                                 application.telegramId,
                                 application.requestText,
-                                application.status,
+                                status,
                             )
 
                     if (newId == null) {
@@ -180,6 +203,7 @@ fun Application.configureRouting() {
 
                     call.respond(HttpStatusCode.OK, Id(newId))
                 } catch (e: Exception) {
+                    println(e.message)
                     call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }
             }
@@ -187,17 +211,27 @@ fun Application.configureRouting() {
                 val newApplication = call.receive<ApplicationWithId>()
 
                 try {
+                    var status: Status = Status.INCOMING
+                    if (!Status.entries.toTypedArray().map {
+                                it ->
+                            it.toString()
+                        }.contains(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    ) {
+                        call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                    } else {
+                        status = Status.valueOf(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    }
+
                     val updatedValues =
                         mapOf(
                             ApplicationFields.ID to newApplication._id,
-                            ApplicationFields.STATUS to newApplication.status,
                             ApplicationFields.DATE to newApplication.date,
                             ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
                             ApplicationFields.CONTACT_NAME to newApplication.contactName,
                             ApplicationFields.ORGANIZATION to newApplication.organization,
                             ApplicationFields.REQUEST_TEXT to newApplication.requestText,
+                            ApplicationFields.STATUS to status,
                         )
-
                     applicationsService.updateApplication(newApplication._id, updatedValues)
 
                     call.respond((HttpStatusCode.OK))
@@ -209,12 +243,22 @@ fun Application.configureRouting() {
                 val newResource = call.receive<ResourceWithId>()
 
                 try {
+                    var status: ResourceStatus = ResourceStatus.IN_WORK
+                    if (!ResourceStatus.entries.toTypedArray().map {
+                                it ->
+                            it.toString()
+                        }.contains(newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    ) {
+                        call.respond(HttpStatusCode.NotFound, UnauthorizedError)
+                    } else {
+                        status = ResourceStatus.valueOf(newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    }
                     val updatedValues =
                         mapOf(
                             ResourceFields.ID to newResource._id,
                             ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
                             ResourceFields.TAGS to newResource.tags,
-                            ResourceFields.STATUS to newResource.status,
+                            ResourceFields.STATUS to status,
                             ResourceFields.DATE to newResource.date,
                             ResourceFields.CONTACT_NAME to newResource.contactName,
                             ResourceFields.DESCRIPTION to newResource.description,
@@ -234,6 +278,28 @@ fun Application.configureRouting() {
 
                 try {
                     adminAuthService.addAdmin(newAdmin.login, newAdmin.password)
+
+                    call.respond((HttpStatusCode.OK))
+                } catch (e: Exception) {
+                    println()
+                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+                }
+            }
+
+            post("/api/assign_resources") {
+                val attacher = call.receive<Attacher>()
+
+                try {
+                    val applicationId = attacher.applicationId
+
+                    applicationsService.setApplicationStatus(applicationId, Status.IN_WORK)
+                    for (resourceId in attacher.resourceIds) {
+                        applicationsService.addResourceToApplication(applicationId, resourceId)
+                        resourcesService.addApplicationToResource(resourceId, applicationId)
+                        resourcesService.setResourceStatus(resourceId, ResourceStatus.IN_WORK)
+                        var tg = resourcesService.getResource(resourceId)?.telegramId
+                        bot.sendMessagesToUsersByUsername(tg!!, attacher.message)
+                    }
 
                     call.respond((HttpStatusCode.OK))
                 } catch (e: Exception) {

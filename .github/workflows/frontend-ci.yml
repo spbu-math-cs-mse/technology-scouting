@@ -30,14 +30,10 @@ jobs:
         cd frontend
         npm install
 
-    - name: Run Prettier with Reviewdog
-      uses: EPMatt/reviewdog-action-prettier@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: github-pr-review
-        level: error
-        workdir: frontend
-        prettier_flags: '.'
+    - name: Run Prettier
+      run: |
+        cd frontend
+        npx prettier --check .
 
     - name: Run tests
       run: |

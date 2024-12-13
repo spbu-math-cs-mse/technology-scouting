@@ -31,11 +31,25 @@ fun createBot(): Bot =
         }
     }
 
+fun Bot.sendMessagesToUsersByUsername(
+    id: Long,
+    message: String,
+) {
+    try {
+        this.sendMessage(
+            chatId = ChatId.fromId(id),
+            text = message,
+        )
+    } catch (e: Exception) {
+        logger.error("Failed to send message to user $id: ${e.message}")
+    }
+}
+
 private var currentStep: String? = null
 
 private fun Dispatcher.setUpCommands() {
-    var newResource = Resource("", "", "", "", "", "", "", emptyList(), ResourceStatus.AVAILABLE)
-    var newApplication = Application("", "", "", "", "", Status.INCOMING)
+    var newResource = Resource("", "", "", 0, "", "", emptyList(), ResourceStatus.AVAILABLE, emptyList())
+    var newApplication = Application("", "", "", 0, "", Status.INCOMING, emptyList())
     command("start") {
         val inlineKeyboardMarkup =
             InlineKeyboardMarkup.create(
@@ -85,17 +99,13 @@ private fun Dispatcher.setUpCommands() {
             "resource_organization" -> {
                 newResource = newResource.copy(organization = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
-                currentStep = "resource_contact"
+                currentStep = "resource_contact_tg"
             }
 
-            "resource_contact" -> {
+            "resource_contact_tg" -> {
                 newResource = newResource.copy(contactName = message.text.toString())
-                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
-                currentStep = "resource_tg"
-            }
-
-            "resource_tg" -> {
-                newResource = newResource.copy(telegramId = message.text.toString())
+                // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт (ник в telegram):")
+                newResource = newResource.copy(telegramId = message.chat.id)
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите тему ресурса:")
                 currentStep = "resource_competenceField"
             }
@@ -148,17 +158,13 @@ private fun Dispatcher.setUpCommands() {
             "request_organization" -> {
                 newApplication = newApplication.copy(organization = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
-                currentStep = "request_contact"
+                currentStep = "request_contact_tg"
             }
 
-            "request_contact" -> {
+            "request_contact_tg" -> {
                 newApplication = newApplication.copy(contactName = message.text.toString())
-                bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
-                currentStep = "request_tg"
-            }
-
-            "request_tg" -> {
-                newApplication = newApplication.copy(telegramId = message.text.toString())
+                // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
+                newApplication = newApplication.copy(telegramId = message.chat.id)
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите свой запрос:")
                 currentStep = "request_text"
             }

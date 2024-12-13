@@ -7,6 +7,7 @@ import {
 import { ResourceDataTableResponse, ResourceWithId, Resource } from "./types";
 
 // Function to perform login and store token
+// Function to perform login and store token
 export async function postLogin(
   username: string,
   password: string
@@ -241,11 +242,11 @@ export function postAssignResources(
   message: string
 ) {
   const requestBody = {
-    applicationId,
-    resourceIds,
-    message,
+    "applicationId": applicationId,
+    "resourceIds": resourceIds,
+    "message": message,
   };
-  fetch("/api/update_resource", {
+  fetch("/api/assign_resources", {
     method: "POST",
     headers: {
       "Content-type": "application/json",

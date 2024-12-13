@@ -8,13 +8,10 @@ import {
   TextField,
   Button,
   MenuItem,
-  MenuList,
-  Popover,
   Select,
   FormControl,
   InputLabel,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Application,
   APPLICATION_STATUSES,
@@ -46,7 +43,13 @@ export default function ApplicatonEditDialog({
     key: string,
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setEditedState({ ...editedState, [key]: e.target.value });
+    setEditedState({
+      ...editedState,
+      [key]:
+        key === "associatedResources"
+          ? e.target.value.split(", ")
+          : e.target.value,
+    });
   };
 
   const handleEdit = () => {
