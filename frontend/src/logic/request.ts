@@ -242,9 +242,9 @@ export function postAssignResources(
   message: string
 ) {
   const requestBody = {
-    "applicationId": applicationId,
-    "resourceIds": resourceIds,
-    "message": message,
+    applicationId: applicationId,
+    resourceIds: resourceIds,
+    message: message,
   };
   fetch("/api/assign_resources", {
     method: "POST",
