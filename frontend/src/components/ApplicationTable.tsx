@@ -130,7 +130,7 @@ export default function ApplicationTable() {
     return () => {
       clearInterval(interval);
     };
-  });
+  }, [getApplicationDataTable]);
 
   return (
     <>

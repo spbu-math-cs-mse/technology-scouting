@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useAuth } from "./AuthProvider";
 import {
   getApplicationDataTable,
@@ -26,24 +27,50 @@ export default function usePrivateAPI() {
     );
 
   return {
-    getApplicationDataTable: () => getApplicationDataTable(token),
-    getResourcesDataTable: () => getResourcesDataTable(token),
-    postDeleteApplication: (id: string) => postDeleteApplication(token, id),
-    postDeleteResource: (id: string) => postDeleteResource(token, id),
-    postCreateApplication: (createdApplication: Application) =>
-      postCreateApplication(token, createdApplication),
-    postCreateResource: (createdResource: Resource) =>
-      postCreateResource(token, createdResource),
-    postEditApplication: (editedAplication: ApplicationWithId) =>
-      postEditApplication(token, editedAplication),
-    postEditResource: (editedResource: ResourceWithId) =>
-      postEditResource(token, editedResource),
-    postAddNewAdmin: (login: string, password: string) =>
-      postAddNewAdmin(token, login, password),
-    postAssignResources: (
-      applicationId: string,
-      resourceIds: string[],
-      message: string
-    ) => postAssignResources(token, applicationId, resourceIds, message),
+    getApplicationDataTable: useCallback(
+      () => getApplicationDataTable(token),
+      [token]
+    ),
+    getResourcesDataTable: useCallback(
+      () => getResourcesDataTable(token),
+      [token]
+    ),
+    postDeleteApplication: useCallback(
+      (id: string) => postDeleteApplication(token, id),
+      [token]
+    ),
+    postDeleteResource: useCallback(
+      (id: string) => postDeleteResource(token, id),
+      [token]
+    ),
+    postCreateApplication: useCallback(
+      (createdApplication: Application) =>
+        postCreateApplication(token, createdApplication),
+      [token]
+    ),
+    postCreateResource: useCallback(
+      (createdResource: Resource) => postCreateResource(token, createdResource),
+      [token]
+    ),
+    postEditApplication: useCallback(
+      (editedAplication: ApplicationWithId) =>
+        postEditApplication(token, editedAplication),
+      [token]
+    ),
+    postEditResource: useCallback(
+      (editedResource: ResourceWithId) =>
+        postEditResource(token, editedResource),
+      [token]
+    ),
+    postAddNewAdmin: useCallback(
+      (login: string, password: string) =>
+        postAddNewAdmin(token, login, password),
+      [token]
+    ),
+    postAssignResources: useCallback(
+      (applicationId: string, resourceIds: string[], message: string) =>
+        postAssignResources(token, applicationId, resourceIds, message),
+      [token]
+    ),
   };
 }

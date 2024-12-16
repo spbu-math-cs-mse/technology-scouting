@@ -86,7 +86,7 @@ export default function ResourceTable() {
     return () => {
       clearInterval(interval);
     };
-  });
+  }, [getResourcesDataTable]);
 
   return (
     <>
