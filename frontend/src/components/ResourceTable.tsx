@@ -9,10 +9,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  DialogActions,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,6 +17,7 @@ import ResourceEditDialog from "./ResourceEditDialog.tsx";
 import ResourceCreateDialog from "./ResourceCreationDialog.tsx";
 import { SimpleStyledTableCell } from "./TableFitting.tsx";
 import usePrivateAPI from "../logic/usePrivateApi.ts";
+import DeleteConfirmDialog from "./DeleteConfirmDialog.tsx";
 
 export default function ResourceTable() {
   const {
@@ -45,9 +42,11 @@ export default function ResourceTable() {
 
   const [resourcesTable, setResourcesTable] = useState<ResourceWithId[]>([]);
 
-  const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
-    string | null
-  >(null);
+  const [resourceIdToDelete, setResourceIdToDelete] = useState<
+    string | undefined
+  >(undefined);
+  const [resourceDeleteDialogOpen, setResourceDeleteDialogOpen] =
+    useState(false);
 
   const [resourceCreateDialogOpen, setResourceCreateDialogOpen] =
     useState(false);
@@ -60,23 +59,6 @@ export default function ResourceTable() {
   const [editingResource, setEditingResource] = useState<
     ResourceWithId | undefined
   >(undefined);
-
-  const handleOpenDialogForDelete = (id: string) => {
-    setSelectedForDeleteRequestId(id);
-  };
-  const handleCloseDialogForDelete = () => {
-    setSelectedForDeleteRequestId(null);
-  };
-
-  const handleConfirmDelete = (id: string) => {
-    setSelectedForDeleteRequestId(null);
-    postDeleteResource(id);
-    setTimeout(
-      () =>
-        getResourcesDataTable().then((messages) => setResourcesTable(messages)),
-      500
-    );
-  };
 
   useEffect(() => {
     getResourcesDataTable().then((messages) => setResourcesTable(messages));
@@ -134,36 +116,13 @@ export default function ResourceTable() {
                     aria-label="delete"
                     size="large"
                     color="error"
-                    onClick={() => handleOpenDialogForDelete(resource._id)}
+                    onClick={() => {
+                      setResourceIdToDelete(resource._id);
+                      setResourceDeleteDialogOpen(true);
+                    }}
                   >
                     <DeleteIcon />
                   </IconButton>
-                  <Dialog
-                    open={selectedForDeleteRequestId != null}
-                    onClose={handleCloseDialogForDelete}
-                  >
-                    <DialogTitle>Are you sure?</DialogTitle>
-                    <DialogContent>
-                      Do you really want to delete item with id{" "}
-                      {selectedForDeleteRequestId}. This action cannot be
-                      undone.
-                    </DialogContent>
-                    <DialogActions>
-                      <Button
-                        onClick={handleCloseDialogForDelete}
-                        color="primary"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={() => handleConfirmDelete(resource._id)}
-                        color="error"
-                        variant="contained"
-                      >
-                        Delete
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
                 </TableCell>
                 <TableCell>
                   <Button
@@ -208,6 +167,22 @@ export default function ResourceTable() {
             );
           }}
           initialState={editingResource}
+        />
+      )}
+
+      {resourceIdToDelete && (
+        <DeleteConfirmDialog
+          open={resourceDeleteDialogOpen}
+          setOpen={setResourceDeleteDialogOpen}
+          idToDelete={resourceIdToDelete}
+          deleteAction={(id: string) => {
+            postDeleteResource(id);
+            setTimeout(() => {
+              getResourcesDataTable().then((messages) =>
+                setResourcesTable(messages)
+              );
+            }, 500);
+          }}
         />
       )}
     </>

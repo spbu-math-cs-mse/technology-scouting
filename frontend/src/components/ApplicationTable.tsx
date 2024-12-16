@@ -28,6 +28,7 @@ import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
 import { SimpleStyledTableCell } from "./TableFitting.tsx";
 import usePrivateAPI from "../logic/usePrivateApi.ts";
+import ApplicationDeleteConfirmDialog from "./DeleteConfirmDialog.tsx";
 
 function getFittingCharacters(
   text: string,
@@ -76,9 +77,11 @@ export default function ApplicationTable() {
     []
   );
 
-  const [selectedForDeleteRequestId, setSelectedForDeleteRequestId] = useState<
-    string | null
-  >(null);
+  const [applicationIdToDelete, setApplicationIdToDelete] = useState<
+    string | undefined
+  >(undefined);
+  const [applicationDeleteDialogOpen, setApplicationDeleteDialogOpen] =
+    useState(false);
 
   const [applicationEditDialogOpen, setApplicationEditDialogOpen] =
     useState(false);
@@ -100,25 +103,6 @@ export default function ApplicationTable() {
   const [applicationAssignTo, setApplicationAssignTo] = useState<
     ApplicationWithId | undefined
   >(undefined);
-
-  const handleOpenDialogForDelete = (id: string) => {
-    setSelectedForDeleteRequestId(id);
-  };
-  const handleCloseDialogForDelete = () => {
-    setSelectedForDeleteRequestId(null);
-  };
-
-  const handleConfirmDelete = (id: string) => {
-    setSelectedForDeleteRequestId(null);
-    postDeleteApplication(id);
-    setTimeout(
-      () =>
-        getApplicationDataTable().then((messages) =>
-          setApplicationTable(messages)
-        ),
-      500
-    );
-  };
 
   useEffect(() => {
     getApplicationDataTable().then((messages) => setApplicationTable(messages));
@@ -328,36 +312,13 @@ export default function ApplicationTable() {
                     aria-label="delete"
                     size="large"
                     color="error"
-                    onClick={() => handleOpenDialogForDelete(application._id)}
+                    onClick={() => {
+                      setApplicationDeleteDialogOpen(true);
+                      setApplicationIdToDelete(application._id);
+                    }}
                   >
                     <DeleteIcon />
                   </IconButton>
-                  <Dialog
-                    open={selectedForDeleteRequestId != null}
-                    onClose={handleCloseDialogForDelete}
-                  >
-                    <DialogTitle>Are you sure?</DialogTitle>
-                    <DialogContent>
-                      Do you really want to delete item with id{" "}
-                      {selectedForDeleteRequestId}. This action cannot be
-                      undone.
-                    </DialogContent>
-                    <DialogActions>
-                      <Button
-                        onClick={handleCloseDialogForDelete}
-                        color="primary"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={() => handleConfirmDelete(application._id)}
-                        color="error"
-                        variant="contained"
-                      >
-                        Delete
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
                 </TableCell>
                 <TableCell sx={{ gap: 1 }}>
                   <Button
@@ -425,9 +386,11 @@ export default function ApplicationTable() {
           setOpen={setApplicationEditDialogOpen}
           editApplication={(editedState: ApplicationWithId) => {
             postEditApplication(editedState);
-            getApplicationDataTable().then((messages) =>
-              setApplicationTable(messages)
-            );
+            setTimeout(() => {
+              getApplicationDataTable().then((messages) =>
+                setApplicationTable(messages)
+              );
+            }, 500);
           }}
           initialState={editingApplication}
         />
@@ -437,10 +400,30 @@ export default function ApplicationTable() {
         <ResourceAssignDialog
           open={resourceAssignDialogOpen}
           setOpen={setResourceAssignDialogOpen}
-          assignResources={(resourceIds: string[], message: string) =>
-            postAssignResources(applicationAssignTo._id, resourceIds, message)
-          }
+          assignResources={(resourceIds: string[], message: string) => {
+            postAssignResources(applicationAssignTo._id, resourceIds, message);
+            setTimeout(() => {
+              getApplicationDataTable().then((messages) =>
+                setApplicationTable(messages)
+              );
+            }, 500);
+          }}
           resources={resourcesToAssign}
+        />
+      )}
+      {applicationIdToDelete && (
+        <ApplicationDeleteConfirmDialog
+          open={applicationDeleteDialogOpen}
+          setOpen={setApplicationDeleteDialogOpen}
+          idToDelete={applicationIdToDelete}
+          deleteAction={(id: string) => {
+            postDeleteApplication(id);
+            setTimeout(() => {
+              getApplicationDataTable().then((messages) =>
+                setApplicationTable(messages)
+              );
+            }, 500);
+          }}
         />
       )}
     </>
