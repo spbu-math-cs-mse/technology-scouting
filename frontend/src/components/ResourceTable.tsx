@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 import { ResourceWithId, Resource, DEFAULT_RESOURCE } from "../logic/types.ts";
 import {
-  getResourcesDataTable,
-  //getResourcesDataTableMock as getResourcesDataTable,
-  postDeleteResource,
-  postEditResource,
-  postCreateResource,
-} from "../logic/request.ts";
-import {
   Box,
   Table,
   TableBody,
@@ -27,8 +20,16 @@ import IconButton from "@mui/material/IconButton";
 import ResourceEditDialog from "./ResourceEditDialog.tsx";
 import ResourceCreateDialog from "./ResourceCreationDialog.tsx";
 import { SimpleStyledTableCell } from "./TableFitting.tsx";
+import usePrivateAPI from "../logic/usePrivateApi.ts";
 
 export default function ResourceTable() {
+  const {
+    postDeleteResource,
+    getResourcesDataTable,
+    postCreateResource,
+    postEditResource,
+  } = usePrivateAPI();
+
   const font = "14px Times New Roman";
   const maxWidthByColumn = {
     date: 50,
@@ -85,7 +86,7 @@ export default function ResourceTable() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  });
 
   return (
     <>

@@ -15,6 +15,11 @@ type AdminRegistrationDialogProps = {
   addAdmin: (login: string, password: string) => void;
 };
 
+/**
+ * Admin creation dialog.
+ * @param open is a react state which controls opening and closing this dialog
+ * @param addAdmin is a callback function which should take login and password as arguments and create a new admin with this credentials.
+ */
 export default function AdminRegistrationDialog({
   open,
   setOpen,

@@ -6,16 +6,6 @@ import {
   DEFAULT_APPLICATION,
 } from "../logic/types.ts";
 import {
-  getResourcesDataTable,
-  //getResourcesDataTableMock as getResourcesDataTable,
-  getApplicationDataTable,
-  //getApplicationDataTableMock as getApplicationDataTable,
-  postDeleteApplication,
-  postEditApplication,
-  postAssignResources,
-  postCreateApplication,
-} from "../logic/request.ts";
-import {
   Box,
   Table,
   TableBody,
@@ -37,6 +27,7 @@ import ApplicationEditDialog from "./ApplicationEditDialog.tsx";
 import ApplicatonCreateDialog from "./ApplicationCreationDialog.tsx";
 import ResourceAssignDialog from "./ResourceAssignDialog.tsx";
 import { SimpleStyledTableCell } from "./TableFitting.tsx";
+import usePrivateAPI from "../logic/usePrivateApi.ts";
 
 function getFittingCharacters(
   text: string,
@@ -59,6 +50,15 @@ function getFittingCharacters(
 }
 
 export default function ApplicationTable() {
+  const {
+    postDeleteApplication,
+    getApplicationDataTable,
+    getResourcesDataTable,
+    postCreateApplication,
+    postEditApplication,
+    postAssignResources,
+  } = usePrivateAPI();
+
   const font = "12px Times New Roman";
   const maxWidthByColumn = {
     organization: 100,
@@ -130,7 +130,7 @@ export default function ApplicationTable() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  });
 
   return (
     <>
@@ -193,7 +193,7 @@ export default function ApplicationTable() {
                     font
                   ) ? (
                     <Tooltip
-                      id={`tooltip-${application._id}` + "o"}
+                      id={`tooltip-${application._id}o`}
                       title={application.organization}
                     >
                       <span>{application.organization}</span>
@@ -223,7 +223,7 @@ export default function ApplicationTable() {
                     (
                       <Tooltip
                         title={application.contactName}
-                        id={`tooltip-${application._id}` + "c"}
+                        id={`tooltip-${application._id}c`}
                       >
                         <span>{application.contactName}</span>
                       </Tooltip>

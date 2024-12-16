@@ -1,4 +1,3 @@
-import { getToken, storeToken } from "./authToken";
 import {
   ApplicationDataTableResponse,
   ApplicationWithId,
@@ -6,12 +5,13 @@ import {
 } from "./types";
 import { ResourceDataTableResponse, ResourceWithId, Resource } from "./types";
 
-// Function to perform login and store token
-// Function to perform login and store token
+/** Function to perform login on server.
+ * @return created in backend auth token
+ */
 export async function postLogin(
   username: string,
   password: string
-): Promise<boolean> {
+): Promise<string | undefined> {
   return fetch("/api/login", {
     method: "POST",
     headers: {
@@ -22,21 +22,25 @@ export async function postLogin(
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
-      storeToken(response.token);
-      return true;
+      return response.token;
     })
     .catch((error) => {
-      console.error("Get error from server: ", error);
-      return false;
+      console.error("Got error from server: ", error);
+      return undefined;
     });
 }
 
-export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
+/**
+ * Function to retrieve the whole application table from server.
+ */
+export function getApplicationDataTable(
+  authToken: string
+): Promise<ApplicationWithId[]> {
   return fetch("/api/applications", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
   })
     .then((response) => response.json())
@@ -45,17 +49,19 @@ export function getApplicationDataTable(): Promise<ApplicationWithId[]> {
       return (response as ApplicationDataTableResponse).applications;
     })
     .catch((error) => {
-      console.error("Get error from server: ", error);
+      console.error("Got error from server: ", error);
       return [];
     });
 }
 
-export function getResourcesDataTable(): Promise<ResourceWithId[]> {
+export function getResourcesDataTable(
+  authToken: string
+): Promise<ResourceWithId[]> {
   return fetch("/api/resources", {
     method: "GET",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
   })
     .then((response) => response.json())
@@ -69,12 +75,12 @@ export function getResourcesDataTable(): Promise<ResourceWithId[]> {
     });
 }
 
-export function postDeleteApplication(id: string) {
+export function postDeleteApplication(authToken: string, id: string) {
   fetch("/api/delete_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({ _id: id }),
   })
@@ -95,12 +101,12 @@ export function postDeleteApplication(id: string) {
     });
 }
 
-export function postDeleteResource(id: string) {
+export function postDeleteResource(authToken: string, id: string) {
   fetch("/api/delete_resource", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({ _id: id }),
   })
@@ -118,12 +124,15 @@ export function postDeleteResource(id: string) {
     });
 }
 
-export function postCreateApplication(createdApplication: Application) {
+export function postCreateApplication(
+  authToken: string,
+  createdApplication: Application
+) {
   fetch("/api/create_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(createdApplication),
   })
@@ -143,12 +152,15 @@ export function postCreateApplication(createdApplication: Application) {
     });
 }
 
-export function postCreateResource(createdResource: Resource) {
+export function postCreateResource(
+  authToken: string,
+  createdResource: Resource
+) {
   fetch("/api/create_resource", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(createdResource),
   })
@@ -165,12 +177,15 @@ export function postCreateResource(createdResource: Resource) {
     });
 }
 
-export function postEditApplication(editedAplication: ApplicationWithId) {
+export function postEditApplication(
+  authToken: string,
+  editedAplication: ApplicationWithId
+) {
   fetch("/api/update_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(editedAplication),
   })
@@ -190,12 +205,15 @@ export function postEditApplication(editedAplication: ApplicationWithId) {
     });
 }
 
-export function postEditResource(editedResource: ResourceWithId) {
+export function postEditResource(
+  authToken: string,
+  editedResource: ResourceWithId
+) {
   fetch("/api/update_resource", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(editedResource),
   })
@@ -214,17 +232,20 @@ export function postEditResource(editedResource: ResourceWithId) {
     });
 }
 
-export function postAddNewAdmin(login: string, password: string) {
+export function postAddNewAdmin(
+  authToken: string,
+  login: string,
+  password: string
+) {
   fetch("/api/add_new_admin", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({ login: login, password: password }),
   })
     .then(async (response) => {
-      await response.json();
       if (response.ok) console.log(`Admin ${login} added successfully.`);
       else return console.error("Failed to add admin", response.statusText);
     })
@@ -237,6 +258,7 @@ export function postAddNewAdmin(login: string, password: string) {
 }
 
 export function postAssignResources(
+  authToken: string,
   applicationId: string,
   resourceIds: string[],
   message: string
@@ -250,7 +272,7 @@ export function postAssignResources(
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(requestBody),
   })

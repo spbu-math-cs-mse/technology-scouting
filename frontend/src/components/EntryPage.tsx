@@ -13,13 +13,11 @@ import {
 import Grid from "@mui/material/Grid2";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { postLogin } from "../logic/request";
+import { useAuth } from "../logic/AuthProvider";
 
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -39,8 +37,8 @@ export default function EntryPageVisual() {
   const [inputPassword, setInputPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [targetUsernameValue] = useState("test");
-  const [targetPasswordValue] = useState("12345");
+  // const [targetUsernameValue] = useState("test");
+  // const [targetPasswordValue] = useState("12345");
   // const isMatch =
   //   inputUsername === targetUsernameValue &&
   //   inputPassword === targetPasswordValue;
@@ -53,14 +51,13 @@ export default function EntryPageVisual() {
   //   }
   // };
 
+  const { logIn } = useAuth();
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const success = await postLogin(inputUsername, inputPassword);
+    const error = await logIn(inputUsername, inputPassword);
 
-    if (success) {
-      navigate("/admin-panel"); // Переход на следующую страницу
-    } else {
+    if (error) {
       setErrorMessage("Invalid username or password.");
     }
   };

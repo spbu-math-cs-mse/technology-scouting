@@ -6,7 +6,7 @@ import ApplicationTable from "./ApplicationTable";
 import ResourceTable from "./ResourceTable";
 import { styled } from "@mui/material/styles";
 import AdminRegistrationDialog from "./AddAdminDialog";
-import { postAddNewAdmin } from "../logic/request";
+import usePrivateAPI from "../logic/usePrivateApi";
 
 const StyledBorderButton = styled(Button)<ButtonProps>({
   fontSize: "11px",
@@ -29,6 +29,8 @@ export default function AdminPanel() {
   >("applications");
 
   const [registrationDialogOpen, setRegistrationDialogOpen] = useState(false);
+
+  const { postAddNewAdmin } = usePrivateAPI();
 
   return (
     <Box sx={{ height: "100vh", display: "flex" }}>
