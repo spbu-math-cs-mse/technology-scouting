@@ -91,7 +91,7 @@ fun Application.configureRouting(bot: Bot) {
                 try {
                     val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
-                    call.respond(Applications(applications))
+                    call.respond(HttpStatusCode.OK, Applications(applications))
                 } catch (e: Exception) {
 
                     call.respond(HttpStatusCode.ServiceUnavailable) //бд сломалась
@@ -103,7 +103,7 @@ fun Application.configureRouting(bot: Bot) {
                 try {
                     val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
-                    call.respond(Resources(resources))
+                    call.respond(HttpStatusCode.OK, Resources(resources))
                 } catch (e: Exception) {
 
                     call.respond(HttpStatusCode.ServiceUnavailable) //бд сломалась
@@ -122,7 +122,7 @@ fun Application.configureRouting(bot: Bot) {
 
                     val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
-                    call.respond(Applications(applications))
+                    call.respond(HttpStatusCode.OK, Applications(applications))
 
                 } catch (notFound: NotFoundException) {
 
@@ -151,7 +151,7 @@ fun Application.configureRouting(bot: Bot) {
 
                     val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
-                    call.respond(Resources(resources))
+                    call.respond(HttpStatusCode.OK, Resources(resources))
 
                 } catch (notFound: NotFoundException) {
 
@@ -199,14 +199,18 @@ fun Application.configureRouting(bot: Bot) {
 
                     val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
-                    call.respond(Resources(resources))
+                    call.respond(HttpStatusCode.OK, Resources(resources))
 
                 } catch (invArg: IllegalArgumentException) {
 
                     call.respond(HttpStatusCode.BadRequest) //неверные аргументы
 
-                } catch (e: Exception) {
+                } catch (invArg: BadRequestException) {
 
+                    call.respond(HttpStatusCode.BadRequest) //неверные аргументы
+
+                } catch (e: Exception) {
+                    print(e.toString())
                     call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
 
                 }
@@ -242,9 +246,13 @@ fun Application.configureRouting(bot: Bot) {
 
                     val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
-                    call.respond(Applications(applications))
-
+                    call.respond(HttpStatusCode.OK, Applications(applications))
+                    
                 } catch (invArg: IllegalArgumentException) {
+
+                    call.respond(HttpStatusCode.BadRequest) //неверные аргументы
+
+                } catch (invArg: BadRequestException) {
 
                     call.respond(HttpStatusCode.BadRequest) //неверные аргументы
 
@@ -284,7 +292,7 @@ fun Application.configureRouting(bot: Bot) {
 
                         val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
-                        call.respond(Applications(applications))
+                        call.respond(HttpStatusCode.OK, Applications(applications))
 
                     } catch (notFound: NotFoundException) {
 
@@ -335,7 +343,7 @@ fun Application.configureRouting(bot: Bot) {
 
                         val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
-                        call.respond(Resources(resources))
+                        call.respond(HttpStatusCode.OK, Resources(resources))
 
                     } catch (notFound: NotFoundException) {
 
@@ -389,7 +397,9 @@ fun Application.configureRouting(bot: Bot) {
                             bot.sendMessagesToUsersByUsername(tg!!, attacher.message)
                         }
 
-                        call.respond((HttpStatusCode.OK))
+                        val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
+
+                        call.respond(HttpStatusCode.OK, Applications(applications))
 
                     } catch (notFound: NotFoundException) {
 
