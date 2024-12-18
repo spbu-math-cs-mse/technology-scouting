@@ -285,8 +285,8 @@ fun Application.configureRouting(bot: Bot) {
                         } else {
                             status =
                                 ResourceStatus.valueOf(
-                                newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'),
-                            )
+                                    newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'),
+                                )
                         }
                         val updatedValues =
                             mapOf(
