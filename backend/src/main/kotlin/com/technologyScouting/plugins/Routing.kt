@@ -80,9 +80,7 @@ fun Application.configureRouting(bot: Bot) {
                     throw SecurityException()
                 }
             } catch (e: SecurityException) {
-
                 call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
-
             }
         }
 
@@ -93,9 +91,7 @@ fun Application.configureRouting(bot: Bot) {
 
                     call.respond(HttpStatusCode.OK, Applications(applications))
                 } catch (e: Exception) {
-
                     call.respond(HttpStatusCode.ServiceUnavailable) //бд сломалась
-
                 }
             }
 
@@ -105,9 +101,7 @@ fun Application.configureRouting(bot: Bot) {
 
                     call.respond(HttpStatusCode.OK, Resources(resources))
                 } catch (e: Exception) {
-
-                    call.respond(HttpStatusCode.ServiceUnavailable) //бд сломалась
-
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд сломалась
                 }
             }
 
@@ -117,25 +111,20 @@ fun Application.configureRouting(bot: Bot) {
                 try {
                     val deleted = applicationsService.deleteApplication(id._id)
 
-                    if (!deleted)
+                    if (!deleted) {
                         throw NotFoundException()
+                    }
 
                     val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
                     call.respond(HttpStatusCode.OK, Applications(applications))
 
                 } catch (notFound: NotFoundException) {
-
-                    call.respond(HttpStatusCode.NotFound) //не найдено
-
+                    call.respond(HttpStatusCode.NotFound) // не найдено
                 } catch (invArg: IllegalArgumentException) {
-
-                    call.respond(HttpStatusCode.BadRequest) //длина 24
-
+                    call.respond(HttpStatusCode.BadRequest) // длина 24
                 } catch (e: Exception) {
-
-                    call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
-
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                 }
             }
 
@@ -154,17 +143,11 @@ fun Application.configureRouting(bot: Bot) {
                     call.respond(HttpStatusCode.OK, Resources(resources))
 
                 } catch (notFound: NotFoundException) {
-
-                    call.respond(HttpStatusCode.NotFound) //не найдено
-
+                    call.respond(HttpStatusCode.NotFound) // не найдено
                 } catch (invArg: IllegalArgumentException) {
-
-                    call.respond(HttpStatusCode.BadRequest) //длина 24
-
+                    call.respond(HttpStatusCode.BadRequest) // длина 24
                 } catch (e: Exception) {
-
-                    call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
-
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                 }
             }
 
@@ -202,17 +185,12 @@ fun Application.configureRouting(bot: Bot) {
                     call.respond(HttpStatusCode.OK, Resources(resources))
 
                 } catch (invArg: IllegalArgumentException) {
-
-                    call.respond(HttpStatusCode.BadRequest) //неверные аргументы
-
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
                 } catch (invArg: BadRequestException) {
-
-                    call.respond(HttpStatusCode.BadRequest) //неверные аргументы
-
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
                 } catch (e: Exception) {
                     print(e.toString())
-                    call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
-
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                 }
             }
 
@@ -247,18 +225,13 @@ fun Application.configureRouting(bot: Bot) {
                     val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
                     call.respond(HttpStatusCode.OK, Applications(applications))
-                    
+
                 } catch (invArg: IllegalArgumentException) {
-
-                    call.respond(HttpStatusCode.BadRequest) //неверные аргументы
-
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
                 } catch (invArg: BadRequestException) {
-
-                    call.respond(HttpStatusCode.BadRequest) //неверные аргументы
-
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
                 } catch (e: Exception) {
-
-                    call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                 }
 
                 post("/api/update_application") {
@@ -295,17 +268,11 @@ fun Application.configureRouting(bot: Bot) {
                         call.respond(HttpStatusCode.OK, Applications(applications))
 
                     } catch (notFound: NotFoundException) {
-
-                        call.respond(HttpStatusCode.NotFound) //не найдено
-
+                        call.respond(HttpStatusCode.NotFound) // не найдено
                     } catch (invArg: IllegalArgumentException) {
-
-                        call.respond(HttpStatusCode.BadRequest) //неверные аргументы
-
+                        call.respond(HttpStatusCode.BadRequest) // неверные аргументы
                     } catch (e: Exception) {
-
-                        call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
-
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                     }
                 }
 
@@ -346,17 +313,11 @@ fun Application.configureRouting(bot: Bot) {
                         call.respond(HttpStatusCode.OK, Resources(resources))
 
                     } catch (notFound: NotFoundException) {
-
-                        call.respond(HttpStatusCode.NotFound) //не найдено
-
+                        call.respond(HttpStatusCode.NotFound) // не найдено
                     } catch (invArg: IllegalArgumentException) {
-
-                        call.respond(HttpStatusCode.BadRequest) //неверные аргументы
-
+                        call.respond(HttpStatusCode.BadRequest) // неверные аргументы
                     } catch (e: Exception) {
-
-                        call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
-
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                     }
                 }
 
@@ -368,9 +329,7 @@ fun Application.configureRouting(bot: Bot) {
 
                         call.respond((HttpStatusCode.OK))
                     } catch (e: Exception) {
-
-                        call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
-
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                     }
                 }
 
@@ -398,17 +357,11 @@ fun Application.configureRouting(bot: Bot) {
                         }
 
                         val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
-
                         call.respond(HttpStatusCode.OK, Applications(applications))
-
                     } catch (notFound: NotFoundException) {
-
-                        call.respond(HttpStatusCode.NotFound) //не найдено
-
+                        call.respond(HttpStatusCode.NotFound) // не найдено
                     } catch (e: Exception) {
-
-                        call.respond(HttpStatusCode.ServiceUnavailable) //бд нету
-
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                     }
                 }
             }
