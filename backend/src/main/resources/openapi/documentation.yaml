@@ -83,7 +83,10 @@ components:
       type:
         object
       properties:
-        token: string
+        token:
+          type: string
+        expiration:
+          type: number
 
     attacher:
       type:
@@ -97,10 +100,6 @@ components:
             type: string
         message:
           type: string
-
-  responses:
-    UnauthorizedError:
-      description: Access token is missing or invalid
 
   securitySchemes:
     bearerAuth:
@@ -124,7 +123,9 @@ paths:
                 items:
                   $ref: "#/components/schemas/applicationWithId"
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
+        '503':
+          description: Connection to DataBase error
 
   /api/resources:
     get:
@@ -139,7 +140,9 @@ paths:
                 items:
                   $ref: "#/components/schemas/resourceWithId"
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
+        '503':
+          description: Connection to DataBase error
 
   /api/delete_application:
     post:
@@ -151,15 +154,24 @@ paths:
               $ref: "#/components/schemas/id"
       responses:
         "200":
-          description: Application successfully deleted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/applicationWithId"
+        '400':
+          description: Invalid arguments were given
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
         "404":
-          description: Application with given id is not found
+          description: Application with given id was not found
+        '503':
+          description: Connection to DataBase error
 
   /api/delete_resource:
     post:
-      summary: Deletes resuource from DataBase
+      summary: Deletes resource from DataBase
       requestBody:
         content:
           application/json:
@@ -167,11 +179,20 @@ paths:
               $ref: "#/components/schemas/id"
       responses:
         "200":
-          description: Resource successfully deleted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/resourceWithId"
+        '400':
+          description: Invalid arguments were given
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
         "404":
-          description: Resource with given id is not found
+          description: Resource with given id was not found
+        '503':
+          description: Connection to DataBase error
 
   /api/create_application:
     post:
@@ -183,13 +204,18 @@ paths:
               $ref: "#/components/schemas/application"
       responses:
         "200":
-          description: New application added
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/id"
+                type: array
+                items:
+                  $ref: "#/components/schemas/applicationWithId"
+        '400':
+          description: Invalid arguments were given
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
+        '503':
+          description: Connection to DataBase error
 
   /api/create_resource:
     post:
@@ -205,9 +231,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/id"
+                type: array
+                items:
+                  $ref: "#/components/schemas/resourceWithId"
+        '400':
+          description: Invalid arguments were given
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
+        '503':
+          description: Connection to DataBase error
 
   /api/update_application:
     post:
@@ -216,14 +248,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/applicationWithId"
+              type: array
+              items:
+                $ref: "#/components/schemas/applicationWithId"
       responses:
         "200":
           description: Application successfully updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/applicationWithId"
+        '400':
+          description: Invalid arguments were given
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
         "404":
-          description: Application with given _id is not found
+          description: Application with given id was not found
+        '503':
+          description: Connection to DataBase error
 
   /api/update_resource:
     post:
@@ -236,10 +280,20 @@ paths:
       responses:
         "200":
           description: Resource successfully updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/resourceWithId"
+        '400':
+          description: Invalid arguments were given
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
         "404":
-          description: Resource with given _id is not found
+          description: Resource with given id was not found
+        '503':
+          description: Connection to DataBase error
 
   /api/add_new_admin:
     post:
@@ -259,7 +313,9 @@ paths:
         "200":
           description: New admin added
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
+        '503':
+          description: Connection to DataBase error
 
   /api/log-in:
     post:
@@ -276,7 +332,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/token"
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization Error
+        '503':
+          description: Connection to DataBase error
   /api/assign_resources:
     post:
       requestBody:
@@ -286,7 +344,11 @@ paths:
               $ref: "#/components/schemas/attacher"
       responses:
         "200":
-          description: Message was sent
+          description: Resources were assigned
         '401':
-          $ref: "#/components/responses/UnauthorizedError"
+          description: Authorization error
+        "404":
+          description: Application or resource with given id was not found
+        '503':
+          description: Connection to DataBase error
 

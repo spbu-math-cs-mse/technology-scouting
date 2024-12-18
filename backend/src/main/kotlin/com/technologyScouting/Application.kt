@@ -133,6 +133,7 @@ data class LogIn(
 @Serializable
 data class Token(
     val token: String,
+    val expiration: Int,
 )
 
 @Serializable
