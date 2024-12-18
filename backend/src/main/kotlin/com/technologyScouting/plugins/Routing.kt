@@ -283,8 +283,9 @@ fun Application.configureRouting(bot: Bot) {
                         ) {
                             throw IllegalArgumentException()
                         } else {
-                            status = ResourceStatus.valueOf(
-                                newResource.status.uppercase(Locale.getDefault()).replace(' ', '_')
+                            status =
+                                ResourceStatus.valueOf(
+                                newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'),
                             )
                         }
                         val updatedValues =
@@ -308,7 +309,6 @@ fun Application.configureRouting(bot: Bot) {
                         val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
                         call.respond(HttpStatusCode.OK, Resources(resources))
-
                     } catch (notFound: NotFoundException) {
                         call.respond(HttpStatusCode.NotFound) // не найдено
                     } catch (invArg: IllegalArgumentException) {
@@ -345,9 +345,9 @@ fun Application.configureRouting(bot: Bot) {
 
                             resourcesService.setResourceStatus(resourceId, ResourceStatus.IN_WORK)
 
-                            if (!resourceAttached or !applicationAttached){
+                            if (!resourceAttached or !applicationAttached) {
                                 throw NotFoundException()
-                                }
+                            }
 
                             var tg = resourcesService.getResource(resourceId)?.telegramId
 
