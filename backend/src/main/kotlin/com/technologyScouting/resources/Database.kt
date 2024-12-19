@@ -38,6 +38,9 @@ class DatabaseService {
     }
 }
 
+/**
+ * Поля коллекции "Заявки".
+ */
 object ApplicationFields {
     const val ID = "_id"
     const val DATE = "date"
@@ -48,6 +51,10 @@ object ApplicationFields {
     const val STATUS = "status"
     const val ASSOCIATED_RESOURCES = "associatedResources"
 }
+
+/**
+ * Принимает изменения и названия полей, которые надо поменять. Возвращает соответствующий документ.
+ */
 
 object FieldValidator {
     fun validateFields(
@@ -68,11 +75,6 @@ class ApplicationsService(
     private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("applications")
-
-    init {
-        connection.deleteMany(Document())
-    }
-
     private val allowedFields =
         listOf(
             ApplicationFields.ORGANIZATION,
@@ -123,6 +125,10 @@ class ApplicationsService(
         return updateResult.matchedCount > 0
     }
 
+    /**
+     * Обновление статуса заявки
+     */
+
     fun setApplicationStatus(
         applicationId: String,
         status: Status,
@@ -130,6 +136,10 @@ class ApplicationsService(
         val updates = mapOf(ApplicationFields.STATUS to status)
         return updateApplication(applicationId, updates)
     }
+
+    /**
+     * Добавляение ресурса к заявке
+     */
 
     fun addResourceToApplication(
         applicationId: String,
@@ -143,6 +153,9 @@ class ApplicationsService(
         return applicationResult.matchedCount > 0
     }
 
+    /**
+     * Удадяет заявку. Возвращает True только если удаление успешно.
+     */
     fun deleteApplication(applicationId: String): Boolean {
         val objectId = ObjectId(applicationId)
         val filter = Document(ApplicationFields.ID, objectId)
@@ -150,12 +163,20 @@ class ApplicationsService(
         return deleteResult.deletedCount > 0
     }
 
+    /**
+     * Возвращает заявку по $id$
+     */
+
     fun getApplication(applicationId: String): ApplicationWithId? {
         val objectId = ObjectId(applicationId)
         val filter = Document(ApplicationFields.ID, objectId)
         val document = connection.find(filter).firstOrNull()
         return document?.toApplicationWithId()
     }
+
+    /**
+     * Возвращает все $telegram id$, соответствующие данном усписку заявок.
+     */
 
     fun getTelegramIdsFromApplications(applicationIds: List<String>): List<String> {
         return applicationIds.mapNotNull { applicationId ->
@@ -165,8 +186,14 @@ class ApplicationsService(
         }
     }
 
+    /**
+     *  Возвращает массив всех существующих заявок.
+     */
     fun getAllApplications(): List<ApplicationWithId> = connection.find().map { it.toApplicationWithId() }.toList()
 
+    /**
+     * По документу mongo возвращает экземрляр стрктуры заявки
+     */
     private fun Document.toApplicationWithId(): ApplicationWithId =
         ApplicationWithId(
             _id = this.getObjectId(ApplicationFields.ID).toHexString(),
@@ -176,9 +203,15 @@ class ApplicationsService(
             telegramId = this.getLong(ApplicationFields.TELEGRAM_ID),
             requestText = this.getString(ApplicationFields.REQUEST_TEXT),
             status = Status.valueOf(this.getString(ApplicationFields.STATUS)).s,
-            associatedResources = this.getList(ApplicationFields.ASSOCIATED_RESOURCES, String::class.java) ?: emptyList(),
+            associatedResources =
+                this.getList(ApplicationFields.ASSOCIATED_RESOURCES, String::class.java)
+                    ?: emptyList(),
         )
 }
+
+/**
+ * Поля коллекции "Ресурсы"
+ */
 
 object ResourceFields {
     const val ID = "_id"
@@ -197,11 +230,6 @@ class ResourcesService(
     private val database: MongoDatabase,
 ) {
     private val connection: MongoCollection<Document> = database.getCollection("resources")
-
-    init {
-        connection.deleteMany(Document())
-    }
-
     private val allowedFields =
         listOf(
             ResourceFields.ORGANIZATION,
@@ -213,6 +241,9 @@ class ResourcesService(
             ResourceFields.STATUS,
         )
 
+    /**
+     * Добавление ресурса.
+     */
     fun addResource(
         organization: String,
         contactName: String,
@@ -241,6 +272,10 @@ class ResourcesService(
             ?.toHexString()
     }
 
+    /**
+     * Привязывает данную заявку к ресурсу
+     */
+
     fun addApplicationToResource(
         resourceId: String,
         applicationId: String,
@@ -253,6 +288,9 @@ class ResourcesService(
         return resourceResult.matchedCount > 0
     }
 
+    /**
+     * Обновление ресурса
+     */
     fun updateResource(
         resourceId: String,
         updates: Map<String, Any?>,
@@ -264,12 +302,14 @@ class ResourcesService(
         if (updateDocument.isEmpty()) {
             throw IllegalArgumentException("No valid fields provided for update.")
         }
-
         val update = Document("\$set", updateDocument)
         val updateResult = connection.updateOne(filter, update)
         return updateResult.matchedCount > 0
     }
 
+    /**
+     * Обновление статуса ресурса.
+     */
     fun setResourceStatus(
         resourceId: String,
         status: ResourceStatus,
@@ -278,12 +318,18 @@ class ResourcesService(
         return updateResource(resourceId, updates)
     }
 
+    /**
+     * Удаление ресурса. Возвращает True только если удаление успешно
+     */
+
     fun deleteResource(resourceId: String): Boolean {
         val objectId = ObjectId(resourceId)
         val filter = Document(ResourceFields.ID, objectId)
         val deleteResult = connection.deleteOne(filter)
         return deleteResult.deletedCount > 0
     }
+
+    /** Получение массива $telegram id$ соответствующих данному массиву ресурсов */
 
     fun getTelegramIdsFromResources(resourceObjectIds: List<String>): List<String> {
         return resourceObjectIds.mapNotNull { resourceId ->
@@ -293,6 +339,9 @@ class ResourcesService(
         }
     }
 
+    /**
+     * Получение ресурса по $id$
+     */
     fun getResource(resourceId: String): ResourceWithId? {
         val objectId = ObjectId(resourceId)
         val filter = Document(ResourceFields.ID, objectId)
@@ -300,7 +349,14 @@ class ResourcesService(
         return document?.toResourceWithId()
     }
 
+    /**
+     * Возвращает все имеющиеся ресурсы
+     */
     fun getAllResources(): List<ResourceWithId> = connection.find().map { it.toResourceWithId() }.toList()
+
+    /**
+     * Превращает документ mongo в экземпляр структуры ресурса.
+     */
 
     private fun Document.toResourceWithId(): ResourceWithId =
         ResourceWithId(
@@ -318,14 +374,28 @@ class ResourcesService(
 }
 
 object PasswordHelper {
+    /**
+     * Хеширует пароль.
+     */
     fun hashPassword(password: String): String = BCrypt.hashpw(password, BCrypt.gensalt())
 
+    /**
+     * Проверяет что данный хещ соответствует данному паролю.
+     */
     fun verifyPassword(
         password: String,
         hashedPassword: String,
     ): Boolean = BCrypt.checkpw(password, hashedPassword)
 }
 
+enum class AddAdminStatus {
+    SUCCESS,
+    ALREADY_EXISTS,
+}
+
+/**
+ * Поля коллекции "Админы"
+ */
 object AdminFields {
     const val ID = "_id"
     const val USERNAME = "username"
@@ -341,23 +411,41 @@ class AdminAuthService(
         ensureDefaultAdminExists()
     }
 
+    /**
+     * Добавляет админа с данным логином и паролем.
+     */
     fun addAdmin(
         username: String,
         password: String,
-    ) {
-        val document =
-            Document()
-                .append(AdminFields.USERNAME, username)
-                .append(AdminFields.PASSWORD, PasswordHelper.hashPassword(password))
-        connection.insertOne(document)
+    ): AddAdminStatus {
+        val filter = Document(AdminFields.USERNAME, username)
+        val existingAdmin = connection.find(filter).firstOrNull()
+        return if (existingAdmin != null) {
+            AddAdminStatus.ALREADY_EXISTS
+        } else {
+            val document =
+                Document()
+                    .append(AdminFields.USERNAME, username)
+                    .append(AdminFields.PASSWORD, PasswordHelper.hashPassword(password))
+
+            connection.insertOne(document)
+            AddAdminStatus.SUCCESS
+        }
     }
 
+    /**
+     * Удаляет админа по его $id$. Если удаление успешно, возвращает True, иначе False
+     */
     fun deleteAdmin(adminId: String): Boolean {
         val objectId = ObjectId(adminId)
         val filter = Document(AdminFields.ID, objectId)
         val deleteResult = connection.deleteOne(filter)
         return deleteResult.deletedCount > 0
     }
+
+    /**
+     * Проверяет что такой админ существует.
+     */
 
     fun verifyAdmin(
         username: String,
@@ -372,13 +460,14 @@ class AdminAuthService(
         } ?: false
     }
 
+    /**
+     * Устанавливает дефолтного админа с логином "test", и паролем "12345"
+     */
     private fun ensureDefaultAdminExists() {
         val defaultUsername = "test"
         val defaultPassword = "12345"
-
         val filter = Document(AdminFields.USERNAME, defaultUsername)
         val existingAdmin = connection.find(filter).firstOrNull()
-
         if (existingAdmin == null) {
             addAdmin(defaultUsername, defaultPassword)
         }
