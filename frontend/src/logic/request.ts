@@ -44,9 +44,9 @@ export function getApplicationDataTable(
     },
   })
     .then((response) => response.json())
-    .then(async (response) => {
+    .then((response: ApplicationDataTableResponse) => {
       console.log("Get response from server: ", response);
-      return (response as ApplicationDataTableResponse).applications;
+      return response.applications;
     })
     .catch((error) => {
       console.error("Got error from server: ", error);
@@ -65,9 +65,9 @@ export function getResourcesDataTable(
     },
   })
     .then((response) => response.json())
-    .then(async (response) => {
+    .then((response: ResourceDataTableResponse) => {
       console.log("Get response from server: ", response);
-      return (response as ResourceDataTableResponse).resources;
+      return response.resources;
     })
     .catch((error) => {
       console.error("Get error from server: ", error);
@@ -75,8 +75,11 @@ export function getResourcesDataTable(
     });
 }
 
-export function postDeleteApplication(authToken: string, id: string) {
-  fetch("/api/delete_application", {
+export function postDeleteApplication(
+  authToken: string,
+  id: string
+): Promise<ApplicationWithId[]> {
+  return fetch("/api/delete_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -84,25 +87,22 @@ export function postDeleteApplication(authToken: string, id: string) {
     },
     body: JSON.stringify({ _id: id }),
   })
-    .then(async (response) => {
-      if (response.ok)
-        console.log(`Application with ID ${id} deleted successfully.`);
-      else
-        return console.error(
-          "Failed to delete application",
-          response.statusText
-        );
+    .then((response) => response.json())
+    .then((response: ApplicationDataTableResponse) => {
+      console.log(`Application with ID ${id} deleted successfully.`);
+      return response.applications;
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
+      return [];
     });
 }
 
-export function postDeleteResource(authToken: string, id: string) {
-  fetch("/api/delete_resource", {
+export function postDeleteResource(
+  authToken: string,
+  id: string
+): Promise<ResourceWithId[]> {
+  return fetch("/api/delete_resource", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -110,25 +110,22 @@ export function postDeleteResource(authToken: string, id: string) {
     },
     body: JSON.stringify({ _id: id }),
   })
-    .then(async (response) => {
-      if (response.ok)
-        console.log(`Resource with ID ${id} deleted successfully.`);
-      else
-        return console.error("Failed to delete resource", response.statusText);
+    .then((response) => response.json())
+    .then((response: ResourceDataTableResponse) => {
+      console.log(`Resource with ID ${id} deleted successfully.`);
+      return response.resources;
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
+      return [];
     });
 }
 
 export function postCreateApplication(
   authToken: string,
   createdApplication: Application
-) {
-  fetch("/api/create_application", {
+): Promise<ApplicationWithId[]> {
+  return fetch("/api/create_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -136,27 +133,22 @@ export function postCreateApplication(
     },
     body: JSON.stringify(createdApplication),
   })
-    .then(async (response) => {
-      if (response.ok) console.log(`New applicataion created successfully.`);
-      else
-        return console.error(
-          "Failed to create application",
-          response.statusText
-        );
+    .then((response) => response.json())
+    .then((response: ApplicationDataTableResponse) => {
+      console.log(`New applicataion created successfully.`);
+      return response.applications;
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
+      return [];
     });
 }
 
 export function postCreateResource(
   authToken: string,
   createdResource: Resource
-) {
-  fetch("/api/create_resource", {
+): Promise<ResourceWithId[]> {
+  return fetch("/api/create_resource", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -164,16 +156,14 @@ export function postCreateResource(
     },
     body: JSON.stringify(createdResource),
   })
-    .then(async (response) => {
-      if (response.ok) console.log(`New resource created successfully.`);
-      else
-        return console.error("Failed to create resource", response.statusText);
+    .then((response) => response.json())
+    .then((response: ResourceDataTableResponse) => {
+      console.log(`New resource created successfully.`);
+      return response.resources;
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
+      return [];
     });
 }
 
@@ -181,7 +171,7 @@ export function postEditApplication(
   authToken: string,
   editedAplication: ApplicationWithId
 ) {
-  fetch("/api/update_application", {
+  return fetch("/api/update_application", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -189,19 +179,16 @@ export function postEditApplication(
     },
     body: JSON.stringify(editedAplication),
   })
-    .then(async (response) => {
-      if (response.ok)
-        console.log(
-          `Applicataion with ID ${editedAplication._id} edited successfully.`
-        );
-      else
-        return console.error("Failed to edit application", response.statusText);
+    .then((response) => response.json())
+    .then((response: ApplicationDataTableResponse) => {
+      console.log(
+        `Applicataion with ID ${editedAplication._id} edited successfully.`
+      );
+      return response.applications;
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
+      return [];
     });
 }
 
@@ -209,7 +196,7 @@ export function postEditResource(
   authToken: string,
   editedResource: ResourceWithId
 ) {
-  fetch("/api/update_resource", {
+  return fetch("/api/update_resource", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -217,18 +204,16 @@ export function postEditResource(
     },
     body: JSON.stringify(editedResource),
   })
-    .then(async (response) => {
-      if (response.ok)
-        console.log(
-          `Resource with ID ${editedResource._id} editted successfully.`
-        );
-      else return console.error("Failed to edit resource", response.statusText);
+    .then((response) => response.json())
+    .then((response: ResourceDataTableResponse) => {
+      console.log(
+        `Resource with ID ${editedResource._id} editted successfully.`
+      );
+      return response.resources;
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
+      return [];
     });
 }
 
@@ -247,13 +232,10 @@ export function postAddNewAdmin(
   })
     .then(async (response) => {
       if (response.ok) console.log(`Admin ${login} added successfully.`);
-      else return console.error("Failed to add admin", response.statusText);
+      else return console.error("Failed to add admin: ", response.statusText);
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
     });
 }
 
@@ -262,13 +244,13 @@ export function postAssignResources(
   applicationId: string,
   resourceIds: string[],
   message: string
-) {
+): Promise<ApplicationWithId[]> {
   const requestBody = {
     applicationId: applicationId,
     resourceIds: resourceIds,
     message: message,
   };
-  fetch("/api/assign_resources", {
+  return fetch("/api/assign_resources", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -276,18 +258,16 @@ export function postAssignResources(
     },
     body: JSON.stringify(requestBody),
   })
-    .then(async (response) => {
-      if (response.ok)
-        console.log(
-          `Resources added to application with ID ${requestBody.applicationId} successfully.`
-        );
-      else return console.error("Failed to add resources", response.statusText);
+    .then((response) => response.json())
+    .then((response: ApplicationDataTableResponse) => {
+      console.log(
+        `Resources added to application with ID ${requestBody.applicationId} successfully.`
+      );
+      return response.applications;
     })
     .catch((error) => {
-      console.error(error);
-      return {
-        error: error,
-      };
+      console.error("Get error from server: ", error);
+      return [];
     });
 }
 

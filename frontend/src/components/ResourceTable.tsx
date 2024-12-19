@@ -147,12 +147,9 @@ export default function ResourceTable() {
         <ResourceCreateDialog
           open={resourceCreateDialogOpen}
           setOpen={setResourceCreateDialogOpen}
-          createResource={(createdState: Resource) => {
-            postCreateResource(createdState);
-            getResourcesDataTable().then((messages) =>
-              setResourcesTable(messages)
-            );
-          }}
+          createResource={async (createdState: Resource) =>
+            setResourcesTable(await postCreateResource(createdState))
+          }
         />
       )}
 
@@ -160,12 +157,9 @@ export default function ResourceTable() {
         <ResourceEditDialog
           open={resourceEditDialogOpen}
           setOpen={setResourceEditDialogOpen}
-          editResource={(resource) => {
-            postEditResource(resource);
-            getResourcesDataTable().then((messages) =>
-              setResourcesTable(messages)
-            );
-          }}
+          editResource={async (resource) =>
+            setResourcesTable(await postEditResource(resource))
+          }
           initialState={editingResource}
         />
       )}
@@ -175,14 +169,9 @@ export default function ResourceTable() {
           open={resourceDeleteDialogOpen}
           setOpen={setResourceDeleteDialogOpen}
           idToDelete={resourceIdToDelete}
-          deleteAction={(id: string) => {
-            postDeleteResource(id);
-            setTimeout(() => {
-              getResourcesDataTable().then((messages) =>
-                setResourcesTable(messages)
-              );
-            }, 500);
-          }}
+          deleteAction={async (id: string) =>
+            setResourcesTable(await postDeleteResource(id))
+          }
         />
       )}
     </>
