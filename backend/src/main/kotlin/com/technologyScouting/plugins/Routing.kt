@@ -32,7 +32,6 @@ val resourcesService = ResourcesService(dbService.database)
 val adminAuthService = AdminAuthService(dbService.database)
 val tokenStorage = dbService.database.getCollection("tokens")
 
-
 fun Application.configureRouting(bot: Bot) {
     routing {
         staticResources("static", "static")
@@ -81,8 +80,7 @@ fun Application.configureAuthentication() {
         }
     }
 }
-fun Route.authenticatedEndpoints(bot: Bot)
-{
+fun Route.authenticatedEndpoints(bot: Bot) {
     // ручки, использование которых доступно только авторизованным пользователям
     authenticate("auth-bearer") {
         getApplicationsEndpoint()
