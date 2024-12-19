@@ -27,7 +27,7 @@ export default function ResourceTable() {
     postEditResource,
   } = usePrivateAPI();
 
-  const font = "14px Times New Roman";
+  const font = "14px Arial";
   const maxWidthByColumn = {
     date: 50,
     organization: 80,
