@@ -17,11 +17,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   );
   const navigate = useNavigate();
   const logIn = async (login: string, password: string) => {
-    const token = await postLogin(login, password);
-    if (token) {
-      setToken(token);
-      localStorage.setItem(AUTH_TOKEN_LOCALSTORAGE_PATH, token);
+    const tokenInfo = await postLogin(login, password);
+    if (tokenInfo) {
+      setToken(tokenInfo.value);
+      localStorage.setItem(AUTH_TOKEN_LOCALSTORAGE_PATH, tokenInfo.value);
       navigate(MAIN_PAGE_PATH);
+      setInterval(
+        () => logOut(),
+        tokenInfo.expiration * 1000 /* secs to millisecs */
+      );
       return null;
     } else return "Error"; //TODO: add error parsing
   };

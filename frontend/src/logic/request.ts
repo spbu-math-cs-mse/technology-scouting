@@ -2,6 +2,7 @@ import {
   ApplicationDataTableResponse,
   ApplicationWithId,
   Application,
+  TokenInfo,
 } from "./types";
 import { ResourceDataTableResponse, ResourceWithId, Resource } from "./types";
 
@@ -22,12 +23,12 @@ function buildRequest(method: "POST" | "GET", body?: any, authToken?: string) {
 export async function postLogin(
   login: string,
   password: string
-): Promise<string | undefined> {
+): Promise<TokenInfo | undefined> {
   return fetch("/api/login", buildRequest("POST", { login, password }))
     .then((response) => response.json())
-    .then(async (response) => {
+    .then((response: TokenInfo) => {
       console.log("Get response from server: ", response);
-      return response.token;
+      return response;
     })
     .catch((error) => {
       console.error("Got error from server: ", error);
