@@ -2,10 +2,6 @@ package com.technologyScouting.plugins
 
 import com.github.kotlintelegrambot.Bot
 import com.technologyScouting.*
-import com.technologyScouting.plugins.adminAuthService
-import com.technologyScouting.plugins.applicationsService
-import com.technologyScouting.plugins.resourcesService
-import com.technologyScouting.plugins.tokenStorage
 import com.technologyScouting.resources.ApplicationFields
 import com.technologyScouting.resources.ResourceFields
 import com.technologyScouting.resources.sendMessagesToUsersByUsername
@@ -18,7 +14,7 @@ import org.bson.Document
 import java.time.Instant
 import java.util.*
 
-fun Route.loginEndpoint(){ // ручка, отвечающая за авторизацию пользователя.
+fun Route.loginEndpoint() { // ручка, отвечающая за авторизацию пользователя.
     // при помощи метода VerifyAdmin проверяется корректность логина и пароля
     // при успешной авторизации возвращает объект типа Token
     post("/api/login") {
@@ -49,8 +45,7 @@ fun Route.loginEndpoint(){ // ручка, отвечающая за автори
     }
 }
 
-
-fun Route.getApplicationsEndpoint(){
+fun Route.getApplicationsEndpoint() {
     // Возвращает список всех хранящихся на данный момент в БД заявок.
     get("/api/applications") {
         try {
@@ -63,7 +58,7 @@ fun Route.getApplicationsEndpoint(){
     }
 }
 
-fun Route.getResourcesEndpoint(){
+fun Route.getResourcesEndpoint() {
     // возвращает список всех хранящихся на данный момент в БД ресурсов
     get("/api/resources") {
         try {
@@ -76,7 +71,7 @@ fun Route.getResourcesEndpoint(){
     }
 }
 
-fun Route.deleteApplicationEndpoint(){
+fun Route.deleteApplicationEndpoint() {
     // удаляет заявку с указанным id из бд при помощи метода deleteApplication
     // если такой заявки не было - возвращает код 404
     // если был передан id в неверном формате - возвращает код 400
@@ -104,7 +99,7 @@ fun Route.deleteApplicationEndpoint(){
     }
 }
 
-fun Route.deleteResourceEndpoint(){
+fun Route.deleteResourceEndpoint() {
     // удаляет ресурс с указанным id из бд при помощи метода deleteResource
     // если такой заявки не было - возвращает код 404
     // если был передан id в неверном формате - возвращает код 400
@@ -132,7 +127,7 @@ fun Route.deleteResourceEndpoint(){
     }
 }
 
-fun Route.createApplicationEndpoint(){
+fun Route.createApplicationEndpoint() {
     // создает заявку с переданными в объекте InputApplication параметрами
     // и добавляет ее в БД при помощи метода addApplication
     // если были переданы неправильные аргументы - возвращает код 400
@@ -178,7 +173,7 @@ fun Route.createApplicationEndpoint(){
     }
 }
 
-fun Route.createResourceEndpoint(){
+fun Route.createResourceEndpoint() {
     // создает ресурс с переданными в объекте InputResource параметрами
     // и добавляет его в БД при помощи метода addResource
     // если были переданы неправильные аргументы - возвращает код 400
@@ -228,7 +223,7 @@ fun Route.createResourceEndpoint(){
     }
 }
 
-fun Route.updateApplicationEndpoint(){
+fun Route.updateApplicationEndpoint() {
     // изменяет заявку в соответствии с новыми значениями полей, переданными в объекте ApplicationWithId
     // при помощи метода updateApplication
     // Если заявка с таким id не найдена - возвращается код 404
@@ -277,7 +272,7 @@ fun Route.updateApplicationEndpoint(){
     }
 }
 
-fun Route.updateResourceEndpoint(){
+fun Route.updateResourceEndpoint() {
     // изменяет ресурс в соответствии с новыми значениями полей, переданными в объекте ResourceWithId
     // при помощи метода updateResource
     // Если ресурс с таким id не найден - возвращается код 404
@@ -330,7 +325,7 @@ fun Route.updateResourceEndpoint(){
     }
 }
 
-fun Route.addNewAdminEndpoint(){
+fun Route.addNewAdminEndpoint() {
     // данная ручка служит для добавления нового администратора. В объекте NewAdmin передаются его
     // логин и пароль.
     post("/api/add_new_admin") {
@@ -346,7 +341,7 @@ fun Route.addNewAdminEndpoint(){
     }
 }
 
-fun Route.assignResourcesEndpoint(bot: Bot){
+fun Route.assignResourcesEndpoint(bot: Bot) {
     // при помощи данной ручки ресурс прикрепляется к заявке.
     // при помощи метода addResourceToApplication все ресурсы
     // из списка ресурсов, хранящегося в объекте Attacher, помечаются, как прикрепленные к данной заявке
