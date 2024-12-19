@@ -80,6 +80,7 @@ fun Application.configureAuthentication() {
         }
     }
 }
+
 fun Route.authenticatedEndpoints(bot: Bot) {
     // ручки, использование которых доступно только авторизованным пользователям
     authenticate("auth-bearer") {
