@@ -233,8 +233,8 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
     resolve([
       {
         _id: "1",
-        date: "20.12.2020",
-        organization: "a",
+        date: "20.12.20200000",
+        organization: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         contactName: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         telegramId: 123,
         requestText: "qweadsfgseh",
@@ -243,8 +243,8 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
       },
       {
         _id: "2",
-        date: "08.04.2024",
-        organization: "13e41",
+        date: "08.04.2024111",
+        organization: "13e41ффф",
         contactName: "wkjhlti",
         telegramId: 456,
         requestText: "asbw",
@@ -260,7 +260,7 @@ export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
     resolve([
       {
         _id: "1",
-        date: "1",
+        date: "07.01.2006",
         organization: "1",
         contactName: "1",
         telegramId: 1,

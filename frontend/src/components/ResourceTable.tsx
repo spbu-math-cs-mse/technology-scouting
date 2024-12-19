@@ -15,7 +15,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ResourceEditDialog from "./ResourceEditDialog.tsx";
 import ResourceCreateDialog from "./ResourceCreationDialog.tsx";
-import { SimpleStyledTableCell } from "./TableFitting.tsx";
+import {
+  SimpleStyledTableCell,
+  StyledTableCell,
+  renderWithTooltip,
+  maxWidthByColumn,
+} from "./TableFitting.tsx";
 import usePrivateAPI from "../logic/usePrivateApi.ts";
 import DeleteConfirmDialog from "./DeleteConfirmDialog.tsx";
 
@@ -26,19 +31,6 @@ export default function ResourceTable() {
     postCreateResource,
     postEditResource,
   } = usePrivateAPI();
-
-  const font = "14px Arial";
-  const maxWidthByColumn = {
-    date: 50,
-    organization: 80,
-    contactName: 50,
-    telegramId: 50,
-    requestText: 100,
-    competenceField: 100,
-    description: 100,
-    tags: 100,
-    status: 100,
-  };
 
   const [resourcesTable, setResourcesTable] = useState<ResourceWithId[]>([]);
 
@@ -84,8 +76,8 @@ export default function ResourceTable() {
           Create Resource
         </Button>
       </Box>
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ width: "100%" }}>
+        <Table sx={{ width: "100%" }}>
           <TableHead>
             <TableRow>
               <SimpleStyledTableCell>Date</SimpleStyledTableCell>
@@ -95,22 +87,62 @@ export default function ResourceTable() {
               <SimpleStyledTableCell>Competence field</SimpleStyledTableCell>
               <SimpleStyledTableCell>Description</SimpleStyledTableCell>
               <SimpleStyledTableCell>Tags</SimpleStyledTableCell>
-              <SimpleStyledTableCell>Status</SimpleStyledTableCell>
+              <SimpleStyledTableCell> Status</SimpleStyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {resourcesTable.map((resource, ind) => (
               <TableRow key={ind}>
-                <TableCell sx={{ font: font, textAlign: "center" }}>
-                  {resource.date}
-                </TableCell>
-                <TableCell>{resource.organization}</TableCell>
-                <TableCell>{resource.contactName}</TableCell>
-                <TableCell>{resource.telegramId}</TableCell>
-                <TableCell>{resource.competenceField}</TableCell>
-                <TableCell>{resource.description}</TableCell>
-                <TableCell>{resource.tags.join(", ")}</TableCell>
-                <TableCell>{resource.status}</TableCell>
+                <StyledTableCell maxWidth={maxWidthByColumn.date}>
+                  {renderWithTooltip(resource.date, maxWidthByColumn.date)}
+                </StyledTableCell>
+
+                <StyledTableCell maxWidth={maxWidthByColumn.organization}>
+                  {renderWithTooltip(
+                    resource.organization,
+                    maxWidthByColumn.organization
+                  )}
+                </StyledTableCell>
+
+                <StyledTableCell maxWidth={maxWidthByColumn.contactName}>
+                  {renderWithTooltip(
+                    resource.contactName,
+                    maxWidthByColumn.contactName
+                  )}
+                </StyledTableCell>
+
+                <StyledTableCell maxWidth={maxWidthByColumn.telegramId}>
+                  {renderWithTooltip(
+                    resource.telegramId.toString(),
+                    maxWidthByColumn.telegramId
+                  )}
+                </StyledTableCell>
+
+                <StyledTableCell maxWidth={maxWidthByColumn.requestText}>
+                  {renderWithTooltip(
+                    resource.competenceField,
+                    maxWidthByColumn.requestText
+                  )}
+                </StyledTableCell>
+
+                <StyledTableCell maxWidth={maxWidthByColumn.status}>
+                  {renderWithTooltip(
+                    resource.description,
+                    maxWidthByColumn.status
+                  )}
+                </StyledTableCell>
+
+                <StyledTableCell
+                  maxWidth={maxWidthByColumn.associatedResources}
+                >
+                  {renderWithTooltip(
+                    resource.tags.join(", "),
+                    maxWidthByColumn.associatedResources
+                  )}
+                </StyledTableCell>
+                <StyledTableCell maxWidth={maxWidthByColumn.status}>
+                  {renderWithTooltip(resource.status, maxWidthByColumn.status)}
+                </StyledTableCell>
                 <TableCell>
                   <IconButton
                     aria-label="delete"
