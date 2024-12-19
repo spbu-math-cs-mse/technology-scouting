@@ -3,12 +3,12 @@ import { styled, Tooltip, TableCell } from "@mui/material";
 export const font = "14px Arial";
 
 export const maxWidthByColumn = {
-  date: getTextWidth("21.01.2005", font),
+  date: getTextWidth("21.01.2005 ", font),
   organization: 50,
   contactName: 100,
   telegramId: 100,
   requestText: 100,
-  status: getTextWidth("declined by client", font),
+  status: getTextWidth("declined by client ", font),
   associatedResources: 40,
   competenceField: 100,
   description: 100,
@@ -28,12 +28,12 @@ function getTextWidth(text: string, font: string): number {
   }
 
   context.font = font;
-  return context.measureText(text + " ").width;
+  return context.measureText(text).width;
 }
 
 function doesTextFit(text: string, maxWidth: number, font: string): boolean {
   const textWidth = getTextWidth(text, font);
-  return textWidth <= maxWidth;
+  return textWidth < maxWidth;
 }
 
 export const renderWithTooltip = (text: string, maxWidth: number) => {
