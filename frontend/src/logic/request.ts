@@ -5,20 +5,25 @@ import {
 } from "./types";
 import { ResourceDataTableResponse, ResourceWithId, Resource } from "./types";
 
+function buildRequest(method: "POST" | "GET", body?: any, authToken?: string) {
+  return {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken && { Authorization: `Bearer ${authToken}` }),
+    },
+    ...(body && { body: JSON.stringify(body) }),
+  };
+}
+
 /** Function to perform login on server.
  * @return created in backend auth token
  */
 export async function postLogin(
-  username: string,
+  login: string,
   password: string
 ): Promise<string | undefined> {
-  return fetch("/api/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ login: username, password: password }),
-  })
+  return fetch("/api/login", buildRequest("POST", { login, password }))
     .then((response) => response.json())
     .then(async (response) => {
       console.log("Get response from server: ", response);
@@ -36,13 +41,7 @@ export async function postLogin(
 export function getApplicationDataTable(
   authToken: string
 ): Promise<ApplicationWithId[]> {
-  return fetch("/api/applications", {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-  })
+  return fetch("/api/applications", buildRequest("GET", undefined, authToken))
     .then((response) => response.json())
     .then((response: ApplicationDataTableResponse) => {
       console.log("Get response from server: ", response);
@@ -57,13 +56,7 @@ export function getApplicationDataTable(
 export function getResourcesDataTable(
   authToken: string
 ): Promise<ResourceWithId[]> {
-  return fetch("/api/resources", {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-  })
+  return fetch("/api/resources", buildRequest("GET", undefined, authToken))
     .then((response) => response.json())
     .then((response: ResourceDataTableResponse) => {
       console.log("Get response from server: ", response);
@@ -79,14 +72,10 @@ export function postDeleteApplication(
   authToken: string,
   id: string
 ): Promise<ApplicationWithId[]> {
-  return fetch("/api/delete_application", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify({ _id: id }),
-  })
+  return fetch(
+    "/api/delete_application",
+    buildRequest("POST", { _id: id }, authToken)
+  )
     .then((response) => response.json())
     .then((response: ApplicationDataTableResponse) => {
       console.log(`Application with ID ${id} deleted successfully.`);
@@ -102,14 +91,10 @@ export function postDeleteResource(
   authToken: string,
   id: string
 ): Promise<ResourceWithId[]> {
-  return fetch("/api/delete_resource", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify({ _id: id }),
-  })
+  return fetch(
+    "/api/delete_resource",
+    buildRequest("POST", { _id: id }, authToken)
+  )
     .then((response) => response.json())
     .then((response: ResourceDataTableResponse) => {
       console.log(`Resource with ID ${id} deleted successfully.`);
@@ -125,14 +110,10 @@ export function postCreateApplication(
   authToken: string,
   createdApplication: Application
 ): Promise<ApplicationWithId[]> {
-  return fetch("/api/create_application", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify(createdApplication),
-  })
+  return fetch(
+    "/api/create_application",
+    buildRequest("POST", createdApplication, authToken)
+  )
     .then((response) => response.json())
     .then((response: ApplicationDataTableResponse) => {
       console.log(`New applicataion created successfully.`);
@@ -148,14 +129,10 @@ export function postCreateResource(
   authToken: string,
   createdResource: Resource
 ): Promise<ResourceWithId[]> {
-  return fetch("/api/create_resource", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify(createdResource),
-  })
+  return fetch(
+    "/api/create_resource",
+    buildRequest("POST", createdResource, authToken)
+  )
     .then((response) => response.json())
     .then((response: ResourceDataTableResponse) => {
       console.log(`New resource created successfully.`);
@@ -171,14 +148,10 @@ export function postEditApplication(
   authToken: string,
   editedAplication: ApplicationWithId
 ) {
-  return fetch("/api/update_application", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify(editedAplication),
-  })
+  return fetch(
+    "/api/update_application",
+    buildRequest("POST", editedAplication, authToken)
+  )
     .then((response) => response.json())
     .then((response: ApplicationDataTableResponse) => {
       console.log(
@@ -196,14 +169,10 @@ export function postEditResource(
   authToken: string,
   editedResource: ResourceWithId
 ) {
-  return fetch("/api/update_resource", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify(editedResource),
-  })
+  return fetch(
+    "/api/update_resource",
+    buildRequest("POST", editedResource, authToken)
+  )
     .then((response) => response.json())
     .then((response: ResourceDataTableResponse) => {
       console.log(
@@ -222,14 +191,10 @@ export function postAddNewAdmin(
   login: string,
   password: string
 ) {
-  fetch("/api/add_new_admin", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify({ login: login, password: password }),
-  })
+  fetch(
+    "/api/add_new_admin",
+    buildRequest("POST", { login, password }, authToken)
+  )
     .then(async (response) => {
       if (response.ok) console.log(`Admin ${login} added successfully.`);
       else return console.error("Failed to add admin: ", response.statusText);
@@ -245,23 +210,14 @@ export function postAssignResources(
   resourceIds: string[],
   message: string
 ): Promise<ApplicationWithId[]> {
-  const requestBody = {
-    applicationId: applicationId,
-    resourceIds: resourceIds,
-    message: message,
-  };
-  return fetch("/api/assign_resources", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify(requestBody),
-  })
+  return fetch(
+    "/api/assign_resources",
+    buildRequest("POST", { applicationId, resourceIds, message }, authToken)
+  )
     .then((response) => response.json())
     .then((response: ApplicationDataTableResponse) => {
       console.log(
-        `Resources added to application with ID ${requestBody.applicationId} successfully.`
+        `Resources added to application with ID ${applicationId} successfully.`
       );
       return response.applications;
     })
