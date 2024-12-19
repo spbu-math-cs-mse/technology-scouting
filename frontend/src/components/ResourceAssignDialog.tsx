@@ -42,7 +42,6 @@ export default function ResourceAssignDialog({
   };
 
   const handleAssign = () => {
-    console.log(selectedIds);
     assignResources(selectedIds, assignMessage);
     setSelectedIds([]);
     setOpen(false);

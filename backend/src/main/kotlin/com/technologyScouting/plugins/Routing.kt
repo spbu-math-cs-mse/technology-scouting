@@ -75,11 +75,11 @@ fun Application.configureRouting(bot: Bot) {
                             .append("expiry", expiryTime),
                     )
 
-                    call.respond(Token(token))
+                    call.respond(Token(token, 3600))
                 } else {
-                    throw Exception()
+                    throw SecurityException()
                 }
-            } catch (e: Exception) {
+            } catch (e: SecurityException) {
                 call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
             }
         }
@@ -89,21 +89,22 @@ fun Application.configureRouting(bot: Bot) {
                 try {
                     val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
-                    call.respond(Applications(applications))
+                    call.respond(HttpStatusCode.OK, Applications(applications))
                 } catch (e: Exception) {
-                    println()
-                    call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд сломалась
                 }
             }
+
             get("/api/resources") {
                 try {
                     val resources: List<ResourceWithId> = resourcesService.getAllResources()
 
-                    call.respond(Resources(resources))
+                    call.respond(HttpStatusCode.OK, Resources(resources))
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.Unauthorized, Error("Failed to connect with database"))
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд сломалась
                 }
             }
+
             post("/api/delete_application") {
                 val id = call.receive<Id>()
 
@@ -114,13 +115,18 @@ fun Application.configureRouting(bot: Bot) {
                         throw NotFoundException()
                     }
 
-                    call.respond((HttpStatusCode.OK))
+                    val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
+
+                    call.respond(HttpStatusCode.OK, Applications(applications))
                 } catch (notFound: NotFoundException) {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respond(HttpStatusCode.NotFound) // не найдено
+                } catch (invArg: IllegalArgumentException) {
+                    call.respond(HttpStatusCode.BadRequest) // длина 24
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                 }
             }
+
             post("/api/delete_resource") {
                 val id = call.receive<Id>()
 
@@ -131,27 +137,31 @@ fun Application.configureRouting(bot: Bot) {
                         throw NotFoundException()
                     }
 
-                    call.respond((HttpStatusCode.OK))
+                    val resources: List<ResourceWithId> = resourcesService.getAllResources()
+
+                    call.respond(HttpStatusCode.OK, Resources(resources))
                 } catch (notFound: NotFoundException) {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respond(HttpStatusCode.NotFound) // не найдено
+                } catch (invArg: IllegalArgumentException) {
+                    call.respond(HttpStatusCode.BadRequest) // длина 24
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                 }
             }
-            post("/api/create_resource") {
-                val resource = call.receive<InputResource>()
-                var status: ResourceStatus = ResourceStatus.IN_WORK
-                if (!ResourceStatus.entries.toTypedArray().map {
-                            it ->
-                        it.toString()
-                    }.contains(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
-                ) {
-                    call.respond(HttpStatusCode.NotFound, UnauthorizedError)
-                } else {
-                    status = ResourceStatus.valueOf(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
-                }
 
+            post("/api/create_resource") {
                 try {
+                    val resource = call.receive<InputResource>()
+                    var status: ResourceStatus = ResourceStatus.IN_WORK
+                    if (!ResourceStatus.entries.toTypedArray().map { it ->
+                            it.toString()
+                        }.contains(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    ) {
+                        throw IllegalArgumentException()
+                    } else {
+                        status =
+                            ResourceStatus.valueOf(resource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    }
                     val newId =
                         resourcesService
                             .addResource(
@@ -165,28 +175,36 @@ fun Application.configureRouting(bot: Bot) {
                             )
 
                     if (newId == null) {
-                        throw Exception()
+                        throw BadRequestException("Database broke down")
                     }
 
-                    call.respond(HttpStatusCode.OK, Id(newId))
+                    val resources: List<ResourceWithId> = resourcesService.getAllResources()
+
+                    call.respond(HttpStatusCode.OK, Resources(resources))
+                } catch (invArg: IllegalArgumentException) {
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
+                } catch (invArg: BadRequestException) {
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+                    print(e.toString())
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                 }
             }
-            post("/api/create_application") {
-                val application = call.receive<com.technologyScouting.InputApplication>()
-                var status: Status = Status.INCOMING
-                if (!Status.entries.toTypedArray().map {
-                            it ->
-                        it.toString()
-                    }.contains(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
-                ) {
-                    call.respond(HttpStatusCode.NotFound, UnauthorizedError)
-                } else {
-                    status = Status.valueOf(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
-                }
 
+            post("/api/create_application") {
                 try {
+                    val application = call.receive<com.technologyScouting.InputApplication>()
+                    var status: Status = Status.INCOMING
+
+                    if (!Status.entries.toTypedArray().map { it ->
+                            it.toString()
+                        }.contains(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    ) {
+                        throw IllegalArgumentException()
+                    } else {
+                        status = Status.valueOf(application.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    }
+
                     val newId =
                         applicationsService
                             .addApplication(
@@ -201,118 +219,157 @@ fun Application.configureRouting(bot: Bot) {
                         throw Exception()
                     }
 
-                    call.respond(HttpStatusCode.OK, Id(newId))
-                } catch (e: Exception) {
-                    println(e.message)
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
-                }
-            }
-            post("/api/update_application") {
-                val newApplication = call.receive<ApplicationWithId>()
+                    val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
 
-                try {
-                    var status: Status = Status.INCOMING
-                    if (!Status.entries.toTypedArray().map {
-                                it ->
-                            it.toString()
-                        }.contains(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
-                    ) {
-                        call.respond(HttpStatusCode.NotFound, UnauthorizedError)
-                    } else {
-                        status = Status.valueOf(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                    call.respond(HttpStatusCode.OK, Applications(applications))
+                } catch (invArg: IllegalArgumentException) {
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
+                } catch (invArg: BadRequestException) {
+                    call.respond(HttpStatusCode.BadRequest) // неверные аргументы
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
+                }
+
+                post("/api/update_application") {
+                    val newApplication = call.receive<ApplicationWithId>()
+
+                    try {
+                        var status: Status = Status.INCOMING
+                        if (!Status.entries.toTypedArray().map { it ->
+                                it.toString()
+                            }.contains(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                        ) {
+                            throw IllegalArgumentException()
+                        } else {
+                            status =
+                                Status.valueOf(newApplication.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                        }
+
+                        val updatedValues =
+                            mapOf(
+                                ApplicationFields.ID to newApplication._id,
+                                ApplicationFields.DATE to newApplication.date,
+                                ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
+                                ApplicationFields.CONTACT_NAME to newApplication.contactName,
+                                ApplicationFields.ORGANIZATION to newApplication.organization,
+                                ApplicationFields.REQUEST_TEXT to newApplication.requestText,
+                                ApplicationFields.STATUS to status,
+                            )
+                        val cnt = applicationsService.updateApplication(newApplication._id, updatedValues)
+                        if (!cnt) {
+                            throw NotFoundException()
+                        }
+
+                        val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
+
+                        call.respond(HttpStatusCode.OK, Applications(applications))
+                    } catch (notFound: NotFoundException) {
+                        call.respond(HttpStatusCode.NotFound) // не найдено
+                    } catch (invArg: IllegalArgumentException) {
+                        call.respond(HttpStatusCode.BadRequest) // неверные аргументы
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                     }
-
-                    val updatedValues =
-                        mapOf(
-                            ApplicationFields.ID to newApplication._id,
-                            ApplicationFields.DATE to newApplication.date,
-                            ApplicationFields.TELEGRAM_ID to newApplication.telegramId,
-                            ApplicationFields.CONTACT_NAME to newApplication.contactName,
-                            ApplicationFields.ORGANIZATION to newApplication.organization,
-                            ApplicationFields.REQUEST_TEXT to newApplication.requestText,
-                            ApplicationFields.STATUS to status,
-                        )
-                    applicationsService.updateApplication(newApplication._id, updatedValues)
-
-                    call.respond((HttpStatusCode.OK))
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }
-            }
-            post("/api/update_resource") {
-                val newResource = call.receive<ResourceWithId>()
 
-                try {
-                    var status: ResourceStatus = ResourceStatus.IN_WORK
-                    if (!ResourceStatus.entries.toTypedArray().map {
-                                it ->
-                            it.toString()
-                        }.contains(newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
-                    ) {
-                        call.respond(HttpStatusCode.NotFound, UnauthorizedError)
-                    } else {
-                        status = ResourceStatus.valueOf(newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                post("/api/update_resource") {
+                    val newResource = call.receive<ResourceWithId>()
+
+                    try {
+                        var status: ResourceStatus = ResourceStatus.IN_WORK
+                        if (!ResourceStatus.entries.toTypedArray().map { it ->
+                                it.toString()
+                            }.contains(newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'))
+                        ) {
+                            throw IllegalArgumentException()
+                        } else {
+                            status =
+                                ResourceStatus.valueOf(
+                                    newResource.status.uppercase(Locale.getDefault()).replace(' ', '_'),
+                                )
+                        }
+                        val updatedValues =
+                            mapOf(
+                                ResourceFields.ID to newResource._id,
+                                ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
+                                ResourceFields.TAGS to newResource.tags,
+                                ResourceFields.STATUS to status,
+                                ResourceFields.DATE to newResource.date,
+                                ResourceFields.CONTACT_NAME to newResource.contactName,
+                                ResourceFields.DESCRIPTION to newResource.description,
+                                ResourceFields.ORGANIZATION to newResource.organization,
+                                ResourceFields.TELEGRAM_ID to newResource.telegramId,
+                            )
+
+                        val cnt = resourcesService.updateResource(newResource._id, updatedValues)
+                        if (!cnt) {
+                            throw NotFoundException()
+                        }
+
+                        val resources: List<ResourceWithId> = resourcesService.getAllResources()
+
+                        call.respond(HttpStatusCode.OK, Resources(resources))
+                    } catch (notFound: NotFoundException) {
+                        call.respond(HttpStatusCode.NotFound) // не найдено
+                    } catch (invArg: IllegalArgumentException) {
+                        call.respond(HttpStatusCode.BadRequest) // неверные аргументы
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                     }
-                    val updatedValues =
-                        mapOf(
-                            ResourceFields.ID to newResource._id,
-                            ResourceFields.COMPETENCE_FIELD to newResource.competenceField,
-                            ResourceFields.TAGS to newResource.tags,
-                            ResourceFields.STATUS to status,
-                            ResourceFields.DATE to newResource.date,
-                            ResourceFields.CONTACT_NAME to newResource.contactName,
-                            ResourceFields.DESCRIPTION to newResource.description,
-                            ResourceFields.ORGANIZATION to newResource.organization,
-                            ResourceFields.TELEGRAM_ID to newResource.telegramId,
-                        )
-
-                    resourcesService.updateResource(newResource._id, updatedValues)
-
-                    call.respond((HttpStatusCode.OK))
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
                 }
-            }
-            post("/api/add_new_admin") {
-                val newAdmin = call.receive<NewAdmin>()
 
-                try {
-                    adminAuthService.addAdmin(newAdmin.login, newAdmin.password)
+                post("/api/add_new_admin") {
+                    val newAdmin = call.receive<NewAdmin>()
 
-                    call.respond((HttpStatusCode.OK))
-                } catch (e: Exception) {
-                    println()
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
-                }
-            }
+                    try {
+                        adminAuthService.addAdmin(newAdmin.login, newAdmin.password)
 
-            post("/api/assign_resources") {
-                val attacher = call.receive<Attacher>()
-
-                try {
-                    val applicationId = attacher.applicationId
-
-                    applicationsService.setApplicationStatus(applicationId, Status.IN_WORK)
-                    for (resourceId in attacher.resourceIds) {
-                        applicationsService.addResourceToApplication(applicationId, resourceId)
-                        resourcesService.addApplicationToResource(resourceId, applicationId)
-                        resourcesService.setResourceStatus(resourceId, ResourceStatus.IN_WORK)
-                        var tg = resourcesService.getResource(resourceId)?.telegramId
-                        bot.sendMessagesToUsersByUsername(tg!!, attacher.message)
+                        call.respond((HttpStatusCode.OK))
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
                     }
+                }
 
-                    call.respond((HttpStatusCode.OK))
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.Unauthorized, UnauthorizedError)
+                post("/api/assign_resources") {
+                    val attacher = call.receive<Attacher>()
+
+                    try {
+                        val applicationId = attacher.applicationId
+
+                        applicationsService.setApplicationStatus(applicationId, Status.IN_WORK)
+                        for (resourceId in attacher.resourceIds) {
+                            val resourceAttached =
+                                applicationsService.addResourceToApplication(applicationId, resourceId)
+                            val applicationAttached =
+                                resourcesService.addApplicationToResource(resourceId, applicationId)
+
+                            resourcesService.setResourceStatus(resourceId, ResourceStatus.IN_WORK)
+
+                            if (!resourceAttached or !applicationAttached) {
+                                throw NotFoundException()
+                            }
+
+                            var tg = resourcesService.getResource(resourceId)?.telegramId
+
+                            bot.sendMessagesToUsersByUsername(tg!!, attacher.message)
+                        }
+
+                        val applications: List<ApplicationWithId> = applicationsService.getAllApplications()
+                        call.respond(HttpStatusCode.OK, Applications(applications))
+                    } catch (notFound: NotFoundException) {
+                        call.respond(HttpStatusCode.NotFound) // не найдено
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.ServiceUnavailable) // бд нету
+                    }
                 }
             }
-        }
 
-        swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml") {
-            version = "4.15.5"
-        }
-        openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml") {
-            codegen = StaticHtmlCodegen()
+            swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml") {
+                version = "4.15.5"
+            }
+            openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml") {
+                codegen = StaticHtmlCodegen()
+            }
         }
     }
 }

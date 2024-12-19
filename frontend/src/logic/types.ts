@@ -83,3 +83,8 @@ export type ApplicationDataTableResponse = {
 export type ResourceDataTableResponse = {
   resources: ResourceWithId[];
 };
+
+export type TokenInfo = {
+  value: string;
+  expiration: number;
+};

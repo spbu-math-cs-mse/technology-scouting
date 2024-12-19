@@ -371,12 +371,9 @@ export default function ApplicationTable() {
         <ApplicatonCreateDialog
           open={applicationCreateDialogOpen}
           setOpen={setApplicationCreateDialogOpen}
-          createApplication={(createdState: Application) => {
-            postCreateApplication(createdState);
-            getApplicationDataTable().then((messages) =>
-              setApplicationTable(messages)
-            );
-          }}
+          createApplication={async (createdState: Application) =>
+            setApplicationTable(await postCreateApplication(createdState))
+          }
         />
       )}
 
@@ -384,14 +381,9 @@ export default function ApplicationTable() {
         <ApplicationEditDialog
           open={applicationEditDialogOpen}
           setOpen={setApplicationEditDialogOpen}
-          editApplication={(editedState: ApplicationWithId) => {
-            postEditApplication(editedState);
-            setTimeout(() => {
-              getApplicationDataTable().then((messages) =>
-                setApplicationTable(messages)
-              );
-            }, 500);
-          }}
+          editApplication={async (editedState: ApplicationWithId) =>
+            setApplicationTable(await postEditApplication(editedState))
+          }
           initialState={editingApplication}
         />
       )}
@@ -400,14 +392,15 @@ export default function ApplicationTable() {
         <ResourceAssignDialog
           open={resourceAssignDialogOpen}
           setOpen={setResourceAssignDialogOpen}
-          assignResources={(resourceIds: string[], message: string) => {
-            postAssignResources(applicationAssignTo._id, resourceIds, message);
-            setTimeout(() => {
-              getApplicationDataTable().then((messages) =>
-                setApplicationTable(messages)
-              );
-            }, 500);
-          }}
+          assignResources={async (resourceIds: string[], message: string) =>
+            setApplicationTable(
+              await postAssignResources(
+                applicationAssignTo._id,
+                resourceIds,
+                message
+              )
+            )
+          }
           resources={resourcesToAssign}
         />
       )}
@@ -416,13 +409,8 @@ export default function ApplicationTable() {
           open={applicationDeleteDialogOpen}
           setOpen={setApplicationDeleteDialogOpen}
           idToDelete={applicationIdToDelete}
-          deleteAction={(id: string) => {
-            postDeleteApplication(id);
-            setTimeout(() => {
-              getApplicationDataTable().then((messages) =>
-                setApplicationTable(messages)
-              );
-            }, 500);
+          deleteAction={async (id: string) => {
+            setApplicationTable(await postDeleteApplication(id));
           }}
         />
       )}
