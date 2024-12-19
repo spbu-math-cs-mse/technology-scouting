@@ -86,6 +86,16 @@ export default function ApplicatonCreateDialog({
                       ))}
                     </Select>
                   </FormControl>
+                ) : key === "telegramId" ? (
+                  <TextField
+                    name={key}
+                    type="number"
+                    label={key.charAt(0).toUpperCase() + key.slice(1)}
+                    value={createdState[key]}
+                    onChange={(event) => handleChange(key, event)}
+                    fullWidth
+                    margin="normal"
+                  />
                 ) : (
                   <TextField
                     name={key}

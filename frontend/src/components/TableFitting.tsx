@@ -8,7 +8,7 @@ export const maxWidthByColumn = {
   contactName: 100,
   telegramId: 100,
   requestText: 100,
-  status: 50,
+  status: getTextWidth("declined by client", font),
   associatedResources: 40,
   competenceField: 100,
   description: 100,
