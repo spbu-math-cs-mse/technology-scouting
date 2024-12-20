@@ -37,6 +37,7 @@ export default function ResourceTable() {
   const [resourceIdToDelete, setResourceIdToDelete] = useState<
     string | undefined
   >(undefined);
+
   const [resourceDeleteDialogOpen, setResourceDeleteDialogOpen] =
     useState(false);
 
@@ -48,9 +49,12 @@ export default function ResourceTable() {
   );
 
   const [resourceEditDialogOpen, setResourceEditDialogOpen] = useState(false);
+
   const [editingResource, setEditingResource] = useState<
     ResourceWithId | undefined
   >(undefined);
+
+  /** every 5 seconds table updates automatically */
 
   useEffect(() => {
     getResourcesDataTable().then((messages) => setResourcesTable(messages));
@@ -62,6 +66,7 @@ export default function ResourceTable() {
     };
   }, [getResourcesDataTable]);
 
+  /* * shows table */
   return (
     <>
       <Box display="flex" justifyContent="flex-end" mt={2}>

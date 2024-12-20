@@ -19,6 +19,8 @@ import { useAuth } from "../logic/AuthProvider";
 export default function EntryPageVisual() {
   const [showPassword, setShowPassword] = useState(false);
 
+  /**  */
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (
@@ -33,10 +35,14 @@ export default function EntryPageVisual() {
     event.preventDefault();
   };
 
+  /** States to manage user input and error messages */ 
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
   const { logIn } = useAuth();
+
+/* * Handles the login button click, attempts login, if login fails - display an error message */
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -62,6 +68,7 @@ export default function EntryPageVisual() {
         padding: 0,
       }}
     >
+      {/* Centered login card */}
       <Box
         sx={{
           width: "400px",
@@ -78,7 +85,10 @@ export default function EntryPageVisual() {
         >
           Login
         </Typography>
+
         <Grid container spacing={3}>
+
+          {/* Username input */}
           <Grid size={{ xs: 12 }}>
             <TextField
               label="Username"
@@ -91,6 +101,8 @@ export default function EntryPageVisual() {
               }}
             />
           </Grid>
+
+          {/* Password input with visibility */}
           <Grid size={{ xs: 12 }}>
             <FormControl variant="filled" fullWidth>
               <InputLabel htmlFor="filled-adornment-password">
@@ -119,6 +131,8 @@ export default function EntryPageVisual() {
               />
             </FormControl>
           </Grid>
+
+          {/* Error message display, if login or password are incorrect */}
           {errorMessage && (
             <Grid size={{ xs: 12 }}>
               <Typography color="error" variant="body2">
@@ -126,6 +140,8 @@ export default function EntryPageVisual() {
               </Typography>
             </Grid>
           )}
+
+          {/* Login button */}
           <Grid size={{ xs: 12 }}>
             <Button
               variant="contained"
