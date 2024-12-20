@@ -54,6 +54,11 @@ export function getApplicationDataTable(
     });
 }
 
+/**
+ * Retrieves the resource table from the server.
+ * @returns A Promise resolving to a list of resources or an empty array in case of error.
+ */
+
 export function getResourcesDataTable(
   authToken: string
 ): Promise<ResourceWithId[]> {
@@ -228,6 +233,11 @@ export function postAssignResources(
     });
 }
 
+
+/** The `getApplicationDataTableMock` and `getResourcesDataTableMock` functions
+simulate data in tables for testing without connecting to the backend */
+
+
 export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
   return new Promise((resolve, _reject) =>
     resolve([
@@ -254,6 +264,7 @@ export function getApplicationDataTableMock(): Promise<ApplicationWithId[]> {
     ])
   );
 }
+
 
 export function getResourcesDataTableMock(): Promise<ResourceWithId[]> {
   return new Promise((resolve, _reject) =>

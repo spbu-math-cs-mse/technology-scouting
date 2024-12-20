@@ -1,27 +1,12 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
-import Button, { ButtonProps } from "@mui/material/Button";
 import ApplicationTable from "./ApplicationTable";
 import ResourceTable from "./ResourceTable";
 import { styled } from "@mui/material/styles";
 import AdminRegistrationDialog from "./AddAdminDialog";
 import usePrivateAPI from "../logic/usePrivateApi";
-
-const StyledBorderButton = styled(Button)<ButtonProps>({
-  fontSize: "11px",
-  width: "100%",
-  minWidth: "50px",
-  maxWidth: "120px",
-  height: "48px",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  textAlign: "center",
-  lineHeight: "1.2",
-  whiteSpace: "normal",
-  wordBreak: "break-word",
-});
+import {StyledBorderButton} from "./Style.tsx";
 
 export default function AdminPanel() {
   const [activeSection, setActiveSection] = useState<

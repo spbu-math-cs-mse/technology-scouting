@@ -27,7 +27,7 @@ import {
   renderWithTooltip,
   font,
   maxWidthByColumn,
-} from "./TableFitting.tsx";
+} from "./Style.tsx";
 import usePrivateAPI from "../logic/usePrivateApi.ts";
 import ApplicationDeleteConfirmDialog from "./DeleteConfirmDialog.tsx";
 

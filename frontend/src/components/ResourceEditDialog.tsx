@@ -57,6 +57,11 @@ export default function ResourceEditDialog({
     setOpen(false);
   };
 
+   /** Generate form fields dynamically based on resource keys
+   * for status - drop down
+   * for telegram id - only numbers can be entered
+   */
+
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>
@@ -88,6 +93,16 @@ export default function ResourceEditDialog({
                     ))}
                   </Select>
                 </FormControl>
+              ) : key === "telegramId" ? (
+                <TextField
+                  name={key}
+                  type="number"
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={editedState[key]}
+                  onChange={(event) => handleChange(key, event)}
+                  fullWidth
+                  margin="normal"
+                />
               ) : (
                 <TextField
                   name={key}

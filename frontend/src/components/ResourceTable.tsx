@@ -20,7 +20,7 @@ import {
   StyledTableCell,
   renderWithTooltip,
   maxWidthByColumn,
-} from "./TableFitting.tsx";
+} from "./Style.tsx";
 import usePrivateAPI from "../logic/usePrivateApi.ts";
 import DeleteConfirmDialog from "./DeleteConfirmDialog.tsx";
 

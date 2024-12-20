@@ -54,6 +54,11 @@ export default function ApplicatonCreateDialog({
     setOpen(false);
   };
 
+  /** Generate form fields dynamically based on resource keys
+   * for status - drop down
+   * for telegram id - only numbers can be entered
+   */
+
   return (
     <Dialog open={open}>
       <DialogTitle>Edit Information</DialogTitle>

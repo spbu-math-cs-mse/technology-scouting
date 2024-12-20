@@ -1,8 +1,9 @@
-import { styled, Tooltip, TableCell } from "@mui/material";
+import { styled, Tooltip, TableCell} from "@mui/material";
+import Button, { ButtonProps } from "@mui/material/Button";
 
 export const font = "14px Arial";
 
-/* * sizes of columns in tables */
+/** Max widths of columns in tables */
 export const maxWidthByColumn = {
   date: getTextWidth("21.01.2005 ", font),
   organization: 50,
@@ -38,7 +39,7 @@ function doesTextFit(text: string, maxWidth: number, font: string): boolean {
   return textWidth < maxWidth;
 }
 
-/** creates tooltip if text doesn't fit the column's max width */
+/** Creates tooltip if text doesn't fit the column's max width */
 
 export const renderWithTooltip = (text: string, maxWidth: number) => {
   const isTextOverflowing = !doesTextFit(text, maxWidth, font);
@@ -65,7 +66,7 @@ export const StyledTableCell = styled(TableCell)<StyledTableCellProps>(
   })
 );
 
-/* Table cell for table headers */
+/** Styled able cell for table headers */
 
 export const SimpleStyledTableCell = styled(TableCell)(({ theme }) => ({
   font: font,
@@ -73,3 +74,20 @@ export const SimpleStyledTableCell = styled(TableCell)(({ theme }) => ({
   whiteSpace: "normal",
   padding: "5px",
 }));
+
+/**Styled buttons */
+
+export const StyledBorderButton = styled(Button)<ButtonProps>({
+  fontSize: "11px",
+  width: "100%",
+  minWidth: "50px",
+  maxWidth: "120px",
+  height: "48px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  textAlign: "center",
+  lineHeight: "1.2",
+  whiteSpace: "normal",
+  wordBreak: "break-word",
+});

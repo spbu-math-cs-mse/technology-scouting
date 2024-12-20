@@ -17,9 +17,11 @@ import { useState } from "react";
 import { useAuth } from "../logic/AuthProvider";
 
 export default function EntryPageVisual() {
+  /** States to manage password visibilty, user input and error messages */ 
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  /**  */
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -35,14 +37,11 @@ export default function EntryPageVisual() {
     event.preventDefault();
   };
 
-  /** States to manage user input and error messages */ 
-  const [inputUsername, setInputUsername] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  
 
   const { logIn } = useAuth();
 
-/* * Handles the login button click, attempts login, if login fails - display an error message */
+/** Handles the login button click, attempts login, if login fails - display an error message */
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
