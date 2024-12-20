@@ -17,8 +17,39 @@ import com.technologyScouting.Status
 import com.technologyScouting.plugins.applicationsService
 import com.technologyScouting.plugins.logger
 import com.technologyScouting.plugins.resourcesService
+import java.util.concurrent.ConcurrentHashMap
 
 private val BOT_TOKEN = System.getenv("BOT_TOKEN")
+
+/**
+ * Класс хранит map из пользователя и состояния бота для этого пользователя.
+ * Метод getUserState возвращает состояние по id пользователя.
+ * Метод clearUserState очищает состояние для пользоваетя по id.
+ */
+class UserStateManager {
+    private val userStates = ConcurrentHashMap<Long, UserState>()
+
+    fun getUserState(userId: Long): UserState {
+        return userStates.getOrPut(userId) { UserState() }
+    }
+
+    fun clearUserState(userId: Long) {
+        userStates.remove(userId)
+    }
+}
+
+/**
+ * Класс хранит состояние бота для конкретного пользователя:
+ * указатель на текущий вопрос бота, состояния ресурса и запроса
+ * для текущего положения пользователя по пути в боте.
+ */
+data class UserState(
+    var currentStep: String? = null,
+    var newResource: Resource = Resource("", "", "", 0, "", "", emptyList(), ResourceStatus.AVAILABLE, emptyList()),
+    var newApplication: Application = Application("", "", "", 0, "", Status.INCOMING, emptyList()),
+)
+
+private val userStateManager = UserStateManager()
 
 fun createBot(): Bot =
     bot {
@@ -31,6 +62,9 @@ fun createBot(): Bot =
         }
     }
 
+/**
+ * Функция отправляет текст сообщения пользователю по его id.
+ */
 fun Bot.sendMessagesToUsersByUsername(
     id: Long,
     message: String,
@@ -45,11 +79,12 @@ fun Bot.sendMessagesToUsersByUsername(
     }
 }
 
-private var currentStep: String? = null
-
+/**
+ * Функция обрабатывает сообщения пользователя и
+ * записывает его ответы в нужный userState в map UserStateManager.
+ * Затем записывает полученный ресурс или запрос в базу данных.
+ */
 private fun Dispatcher.setUpCommands() {
-    var newResource = Resource("", "", "", 0, "", "", emptyList(), ResourceStatus.AVAILABLE, emptyList())
-    var newApplication = Application("", "", "", 0, "", Status.INCOMING, emptyList())
     command("start") {
         val inlineKeyboardMarkup =
             InlineKeyboardMarkup.create(
@@ -77,57 +112,65 @@ private fun Dispatcher.setUpCommands() {
     }
 
     callbackQuery("submit_resource") {
-        currentStep = "resource_organization"
+        val userId = callbackQuery.message!!.chat.id
+        val userState = userStateManager.getUserState(userId)
+        userState.currentStep = "resource_organization"
+
         bot.sendMessage(
-            chatId = ChatId.fromId(callbackQuery.message!!.chat.id),
+            chatId = ChatId.fromId(userId),
             text = "Введите название организации:",
         )
         bot.answerCallbackQuery(callbackQuery.id)
     }
 
     callbackQuery("submit_request") {
-        currentStep = "request_organization"
+        val userId = callbackQuery.message!!.chat.id
+        val userState = userStateManager.getUserState(userId)
+        userState.currentStep = "request_organization"
+
         bot.sendMessage(
-            chatId = ChatId.fromId(callbackQuery.message!!.chat.id),
+            chatId = ChatId.fromId(userId),
             text = "Введите название организации:",
         )
         bot.answerCallbackQuery(callbackQuery.id)
     }
 
     text {
-        when (currentStep) {
+        val userId = message.chat.id
+        val userState = userStateManager.getUserState(userId)
+
+        when (userState.currentStep) {
             "resource_organization" -> {
-                newResource = newResource.copy(organization = message.text.toString())
+                userState.newResource = userState.newResource.copy(organization = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
-                currentStep = "resource_contact_tg"
+                userState.currentStep = "resource_contact_tg"
             }
 
             "resource_contact_tg" -> {
-                newResource = newResource.copy(contactName = message.text.toString())
-                // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт (ник в telegram):")
-                newResource = newResource.copy(telegramId = message.chat.id)
+                userState.newResource = userState.newResource.copy(contactName = message.text.toString())
+                userState.newResource = userState.newResource.copy(telegramId = userId)
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите тему ресурса:")
-                currentStep = "resource_competenceField"
+                userState.currentStep = "resource_competenceField"
             }
 
             "resource_competenceField" -> {
-                newResource = newResource.copy(competenceField = message.text.toString())
+                userState.newResource = userState.newResource.copy(competenceField = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите описание ресурса:")
-                currentStep = "resource_description"
+                userState.currentStep = "resource_description"
             }
 
             "resource_description" -> {
-                newResource = newResource.copy(description = message.text.toString())
+                userState.newResource = userState.newResource.copy(competenceField = message.text.toString())
                 bot.sendMessage(
                     chatId = ChatId.fromId(message.chat.id),
                     text = "Введите ключевые слова для вашего ресурса (пишите тэги через запятую):",
                 )
-                currentStep = "resource_tags"
+                userState.currentStep = "resource_tags"
             }
 
             "resource_tags" -> {
-                newResource =
-                    newResource.copy(
+                userState.newResource =
+                    userState.newResource.copy(
                         tags =
                             message
                                 .text!!
@@ -136,56 +179,55 @@ private fun Dispatcher.setUpCommands() {
                                 .filter { it.isNotEmpty() },
                     )
 
-                newResource = newResource.copy(status = ResourceStatus.IN_WORK)
+                userState.newResource = userState.newResource.copy(status = ResourceStatus.IN_WORK)
                 try {
                     resourcesService.addResource(
-                        newResource.organization,
-                        newResource.contactName,
-                        newResource.telegramId,
-                        newResource.competenceField,
-                        newResource.description,
-                        newResource.tags,
-                        newResource.status,
+                        userState.newResource.organization,
+                        userState.newResource.contactName,
+                        userState.newResource.telegramId,
+                        userState.newResource.competenceField,
+                        userState.newResource.description,
+                        userState.newResource.tags,
+                        userState.newResource.status,
                     )
                 } catch (e: Exception) {
                     logger.info("wrong resource")
                 }
 
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Записал ваше сообщение")
-                currentStep = "end"
+                userStateManager.clearUserState(userId)
             }
 
             "request_organization" -> {
-                newApplication = newApplication.copy(organization = message.text.toString())
+                userState.newApplication = userState.newApplication.copy(organization = message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите фамилию и имя для связи:")
-                currentStep = "request_contact_tg"
+                userState.currentStep = "request_contact_tg"
             }
 
             "request_contact_tg" -> {
-                newApplication = newApplication.copy(contactName = message.text.toString())
-                // bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите ссылку на свой контакт:")
-                newApplication = newApplication.copy(telegramId = message.chat.id)
+                userState.newApplication = userState.newApplication.copy(contactName = message.text.toString())
+                userState.newApplication = userState.newApplication.copy(telegramId = userId)
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Введите свой запрос:")
-                currentStep = "request_text"
+                userState.currentStep = "request_text"
             }
 
             "request_text" -> {
-                newApplication = newApplication.copy(requestText = message.text.toString())
-                newApplication = newApplication.copy(status = Status.INCOMING)
+                userState.newApplication = userState.newApplication.copy(requestText = message.text.toString())
+                userState.newApplication = userState.newApplication.copy(status = Status.INCOMING)
                 try {
                     applicationsService.addApplication(
-                        newApplication.organization,
-                        newApplication.contactName,
-                        newApplication.telegramId,
-                        newApplication.requestText,
-                        newApplication.status,
+                        userState.newApplication.organization,
+                        userState.newApplication.contactName,
+                        userState.newApplication.telegramId,
+                        userState.newApplication.requestText,
+                        userState.newApplication.status,
                     )
                 } catch (e: Exception) {
                     logger.info("wrong application")
                 }
 
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Записал ваше сообщение")
-                currentStep = "end"
+                userStateManager.clearUserState(userId)
             }
         }
     }
