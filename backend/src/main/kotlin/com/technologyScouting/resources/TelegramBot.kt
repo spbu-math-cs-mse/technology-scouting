@@ -29,8 +29,8 @@ private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 class UserStateManager {
     private val userStates = ConcurrentHashMap<Long, UserState>()
 
-    fun getUserState(userId: Long): UserState =
-        userStates.getOrPut(userId) { UserState() }
+    fun getUserState(userId: Long):
+            UserState = userStates.getOrPut(userId) { UserState() }
 
     fun clearUserState(userId: Long) {
         userStates.remove(userId)
@@ -45,7 +45,7 @@ class UserStateManager {
 data class UserState(
     var currentStep: String? = null,
     var newResource: Resource = Resource("", "", "", 0, "", "", emptyList(), ResourceStatus.AVAILABLE, emptyList()),
-    var newApplication: Application = Application("", "", "", 0, "", Status.INCOMING, emptyList())
+    var newApplication: Application = Application("", "", "", 0, "", Status.INCOMING, emptyList()),
 )
 
 private val userStateManager = UserStateManager()
@@ -171,11 +171,11 @@ private fun Dispatcher.setUpCommands() {
                 userState.newResource =
                     userState.newResource.copy(
                         tags =
-                        message
-                            .text!!
-                            .split(",")
-                            .map { it.trim() }
-                            .filter { it.isNotEmpty() },
+                            message
+                                .text!!
+                                .split(",")
+                                .map { it.trim() }
+                                .filter { it.isNotEmpty() },
                     )
 
                 userState.newResource = userState.newResource.copy(status = ResourceStatus.IN_WORK)
