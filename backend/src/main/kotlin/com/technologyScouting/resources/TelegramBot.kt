@@ -29,8 +29,9 @@ private val BOT_TOKEN = System.getenv("BOT_TOKEN")
 class UserStateManager {
     private val userStates = ConcurrentHashMap<Long, UserState>()
 
-    fun getUserState(userId: Long):
-            UserState = userStates.getOrPut(userId) { UserState() }
+    fun getUserState(userId: Long): UserState {
+        return userStates.getOrPut(userId) { UserState() }
+    }
 
     fun clearUserState(userId: Long) {
         userStates.remove(userId)
